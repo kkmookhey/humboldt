@@ -1,6 +1,7 @@
-# Cloud Course Studio
+# Humboldt
 
 Narrated cloud-console training videos from one JSON file per module.
+Named for Alexander von Humboldt — the great teacher of the natural sciences.
 
 ## Setup
 Requires **ffmpeg** + **ffprobe** on PATH (`brew install ffmpeg`).
