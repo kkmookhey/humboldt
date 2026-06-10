@@ -4,6 +4,11 @@
   "voice": "alloy",
   "model": "gpt-4o-mini-tts",
   "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "redactions": [
+    { "section": "dashboard", "regions": [ { "x": 1290, "y": 150, "w": 590, "h": 330 } ] },
+    { "section": "users", "regions": [ { "x": 270, "y": 300, "w": 1560, "h": 430 } ] },
+    { "section": "trust", "regions": [ { "x": 150, "y": 56, "w": 600, "h": 100 }, { "x": 1090, "y": 225, "w": 580, "h": 52 } ] }
+  ],
   "title": {
     "kicker": "A guided tour",
     "title": "AWS IAM",
