@@ -1,0 +1,138 @@
+{
+  "id": "aws-securityhub",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "redactions": [
+    { "section": "summary", "regions": [ { "x": 1300, "y": 410, "w": 585, "h": 500 } ] },
+    { "section": "findings", "regions": [ { "x": 980, "y": 285, "w": 640, "h": 450 } ] },
+    { "section": "finding-detail", "regions": [ { "x": 980, "y": 285, "w": 640, "h": 450 }, { "x": 1300, "y": 118, "w": 600, "h": 800 } ] }
+  ],
+  "title": {
+    "kicker": "A guided tour",
+    "title": "AWS Security Hub",
+    "lines": ["Your single pane of glass for cloud security posture", "standards, findings, and automated response"]
+  },
+  "intro": "AWS Security Hub is your single pane of glass for security posture. It continuously checks your environment against best-practice standards, and it pulls findings from across AWS security services into one prioritized place. Let's walk through how to actually use it.",
+  "sections": [
+    {
+      "id": "summary",
+      "section": "Summary",
+      "url": "https://us-east-1.console.aws.amazon.com/securityhub/home?region=us-east-1#/summary",
+      "kicker": "Posture at a glance",
+      "cardTitle": "The summary dashboard",
+      "bullets": [
+        "Security Hub is a CSPM: it scores your posture, runs automated checks, and aggregates findings from other services.",
+        "The security score is a quick health signal — track the trend, not just the number.",
+        "Enable it in every region and account; one account is the delegated administrator for the whole organization."
+      ],
+      "narration": "The summary dashboard is your posture at a glance. Security Hub is a cloud security posture management tool: it continuously scores your environment, runs automated best-practice checks, and aggregates findings from across your other security services. That security score is a useful health signal, but watch the trend over time rather than fixating on the number. And remember to enable Security Hub in every region and every account, with one account designated as the delegated administrator so you get a single, organization-wide view."
+    },
+    {
+      "id": "standards",
+      "section": "Standards",
+      "url": "https://us-east-1.console.aws.amazon.com/securityhub/home?region=us-east-1#/standards",
+      "kicker": "What 'good' is measured against",
+      "cardTitle": "Security standards",
+      "bullets": [
+        "Standards are curated sets of controls: AWS Foundational Security Best Practices, CIS Benchmark, PCI DSS, NIST 800-53.",
+        "Start with AWS Foundational Security Best Practices — the broadest, AWS-maintained baseline.",
+        "Enable the standards that match your compliance obligations; each one lights up its own set of automated checks."
+      ],
+      "narration": "Standards are what 'good' is measured against. Each standard is a curated set of controls — AWS Foundational Security Best Practices, the CIS Benchmark, PCI DSS, and NIST 800-53. If you do nothing else, enable AWS Foundational Security Best Practices; it's the broadest, AWS-maintained baseline and a great default. Then turn on whichever standards map to your compliance obligations. Enabling a standard automatically lights up its underlying controls and starts scoring you against them."
+    },
+    {
+      "id": "controls",
+      "section": "Controls",
+      "url": "https://us-east-1.console.aws.amazon.com/securityhub/home?region=us-east-1#/controls",
+      "kicker": "The individual checks",
+      "cardTitle": "Controls and their status",
+      "bullets": [
+        "A control is one automated check — like 'S3 buckets should block public access' — each with a severity and pass/fail status.",
+        "Controls evaluate continuously as your resources change, so status stays current without manual scans.",
+        "Disable controls that genuinely don't apply to cut noise — but document why, so you don't hide real risk."
+      ],
+      "narration": "Drilling in, controls are the individual checks behind the standards. Each control is a single automated test — something like 'S3 buckets should block public access' — with its own severity and a pass or fail status. The key thing is they evaluate continuously as your resources change, so the picture stays current without anyone running a scan. You'll also want to disable the controls that genuinely don't apply to your environment, which cuts noise — but always document why, so you're trimming false positives rather than quietly hiding real risk."
+    },
+    {
+      "id": "findings",
+      "section": "Findings",
+      "url": "https://us-east-1.console.aws.amazon.com/securityhub/home?region=us-east-1#/findings",
+      "kicker": "Where you do the work",
+      "cardTitle": "Triaging findings",
+      "bullets": [
+        "Every result is normalized into the AWS Security Finding Format, so findings from every source look the same.",
+        "Triage by severity and workflow status — New, Notified, Resolved, Suppressed — and filter to cut through the volume.",
+        "Suppress true false-positives deliberately; route the rest to ticketing or chat so nothing stalls."
+      ],
+      "narration": "Findings are where you actually do the work.",
+      "drill": {
+        "id": "finding-detail",
+        "section": "Finding detail",
+        "kicker": "From alert to action",
+        "cardTitle": "Inside a finding",
+        "bullets": [
+          "Open a finding to see the affected resource, the severity, and step-by-step remediation guidance with links.",
+          "Everything is in the AWS Security Finding Format — consistent fields whether it came from a control, GuardDuty, or Inspector.",
+          "Set the workflow status as you work it, and capture the resource ARN so you can automate or hand it off cleanly."
+        ],
+        "narration": "Opening a single finding takes you from alert to action. You get the affected resource, the severity, and concrete, step-by-step remediation guidance with links to the docs. Because every finding uses the AWS Security Finding Format, the fields look the same whether it came from a control check, from GuardDuty, or from Inspector — which makes triage and automation far simpler. As you work it, update the workflow status, and grab the resource identifier so you can either remediate automatically or hand it off to the right team without losing context."
+      }
+    },
+    {
+      "id": "insights",
+      "section": "Insights",
+      "url": "https://us-east-1.console.aws.amazon.com/securityhub/home?region=us-east-1#/insights",
+      "kicker": "See the patterns",
+      "cardTitle": "Insights group the noise",
+      "bullets": [
+        "An insight is a saved grouping of findings by an attribute — like the resources with the most findings.",
+        "Managed insights ship out of the box; create custom ones for the questions your team asks repeatedly.",
+        "Use them to spot systemic problems — one bad pattern repeated across many resources — instead of chasing alerts one by one."
+      ],
+      "narration": "Insights help you see the patterns instead of drowning in individual alerts. An insight is simply a saved grouping of findings by some attribute — for example, the resources with the most findings, or findings by account. Security Hub ships with managed insights out of the box, and you can build custom ones for the questions your team asks over and over. The real value is spotting systemic issues — a single bad pattern repeated across dozens of resources — so you can fix the root cause once rather than chasing every alert individually."
+    },
+    {
+      "id": "integrations",
+      "section": "Integrations",
+      "url": "https://us-east-1.console.aws.amazon.com/securityhub/home?region=us-east-1#/integrations",
+      "kicker": "One hub, many sources",
+      "cardTitle": "Integrations feed the hub",
+      "bullets": [
+        "Security Hub ingests findings from GuardDuty, Inspector, Macie, IAM Access Analyzer, Config, and Firewall Manager.",
+        "Dozens of third-party partner products send findings in — and you can send findings out to your SIEM or ticketing.",
+        "This is what makes Security Hub the aggregation layer: enable the sources, and everything lands in one normalized view."
+      ],
+      "narration": "Integrations are what make Security Hub a true hub rather than just another scanner. It automatically ingests findings from the other AWS security services — GuardDuty for threat detection, Inspector for vulnerabilities, Macie for sensitive data, IAM Access Analyzer, Config, and Firewall Manager. On top of that, dozens of third-party partner products can send findings in, and you can send findings out to your SIEM or ticketing system. Turn on the sources you use, and everything arrives in one normalized view — which is exactly where you want to be triaging from."
+    },
+    {
+      "id": "automations",
+      "section": "Automations",
+      "url": "https://us-east-1.console.aws.amazon.com/securityhub/home?region=us-east-1#/automations",
+      "kicker": "Respond at scale",
+      "cardTitle": "Automate the response",
+      "bullets": [
+        "Automation rules can auto-update findings — raise severity, change status, suppress — based on criteria, the moment they arrive.",
+        "Send findings to EventBridge to trigger remediation with Lambda or Systems Manager, or to notify Slack and on-call.",
+        "Manage it all centrally with a delegated administrator and central configuration across your whole organization."
+      ],
+      "narration": "Finally, automation is how you respond at scale instead of clicking through findings by hand. Automation rules can update findings the moment they arrive — raising severity, changing workflow status, or suppressing known-noise — based on criteria you define. From there, route findings to EventBridge to trigger real remediation with Lambda or Systems Manager, or to notify Slack and your on-call. And you manage all of it centrally: a delegated administrator with central configuration applies your standards, controls, and rules consistently across every account in the organization."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember",
+      "title": "Security Hub in five rules",
+      "accent": "#56d364",
+      "lines": [
+        "1 · Enable it everywhere; one delegated admin.",
+        "2 · Turn on FSBP + your compliance standards.",
+        "3 · Tune controls; document exceptions.",
+        "4 · Triage findings by severity + workflow.",
+        "5 · Automate response; aggregate every source."
+      ]
+    },
+    "narration": "To get real value from Security Hub: enable it in every account and region with one delegated administrator; turn on the Foundational Security Best Practices standard plus whatever your compliance demands; tune the controls and document every exception; triage findings consistently by severity and workflow status; and automate your response while aggregating every security source into this one hub. Do that, and Security Hub stops being a dashboard you ignore — and becomes the control center for your cloud security."
+  }
+}

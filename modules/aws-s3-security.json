@@ -1,0 +1,129 @@
+{
+  "id": "aws-s3-security",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "redactions": [
+    { "section": "overview", "regions": [ { "x": 240, "y": 300, "w": 720, "h": 380 } ] },
+    { "section": "permissions", "regions": [ { "x": 240, "y": 300, "w": 720, "h": 380 } ] },
+    { "section": "data-protection", "regions": [ { "x": 240, "y": 300, "w": 720, "h": 380 } ] },
+    { "section": "perm-detail", "regions": [ { "x": 120, "y": 52, "w": 1100, "h": 92 } ] },
+    { "section": "props-detail", "regions": [ { "x": 120, "y": 52, "w": 1100, "h": 92 }, { "x": 330, "y": 300, "w": 1000, "h": 95 } ] },
+    { "section": "detection", "regions": [ { "x": 660, "y": 295, "w": 720, "h": 390 } ] }
+  ],
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Amazon S3 Security",
+    "lines": ["Keeping your buckets — and your data — private", "core controls + security best practices"]
+  },
+  "intro": "Amazon S3 is rock-solid storage, but it's also one of the most common sources of cloud data breaches — almost always because of misconfiguration, not a flaw in S3 itself. In this walkthrough we'll go through the controls that keep a bucket, and the data inside it, private and protected.",
+  "sections": [
+    {
+      "id": "overview",
+      "section": "Buckets",
+      "url": "https://us-east-1.console.aws.amazon.com/s3/buckets?region=us-east-1",
+      "kicker": "Know what you have",
+      "cardTitle": "Start with an inventory",
+      "bullets": [
+        "You can't secure what you can't see — start from the full list of buckets across every region.",
+        "Each bucket is private by default, but a single wrong setting or policy can expose everything in it.",
+        "Watch for sprawl: forgotten buckets from old projects are where breaches hide."
+      ],
+      "narration": "Every S3 review starts with an inventory. You can't secure what you can't see, so begin from the full list of buckets across all regions. Buckets are private by default, but it only takes one careless policy or a flipped setting to expose everything inside. Pay special attention to sprawl — the forgotten buckets left over from old projects are exactly where data leaks tend to happen."
+    },
+    {
+      "id": "account-bpa",
+      "section": "Block Public Access",
+      "url": "https://us-east-1.console.aws.amazon.com/s3/settings?region=us-east-1",
+      "kicker": "The master switch",
+      "cardTitle": "Block Public Access — account-wide",
+      "bullets": [
+        "Block Public Access is the single most important S3 control — turn all four settings ON at the account level.",
+        "Account-level BPA overrides any bucket policy or ACL that tries to make data public.",
+        "Leave it on as a guardrail; grant access deliberately through IAM and bucket policies, never by going public."
+      ],
+      "narration": "This is the single most important S3 control: Block Public Access. Turn on all four settings at the account level, and you create a guardrail that overrides any bucket policy or ACL that tries to make data public — even one added by mistake later. Almost no one actually needs a public bucket; if you think you do, that's usually a job for CloudFront instead. Set this once at the account level and you've closed off the most common cause of S3 breaches."
+    },
+    {
+      "id": "permissions",
+      "section": "Bucket permissions",
+      "url": "https://us-east-1.console.aws.amazon.com/s3/buckets?region=us-east-1",
+      "kicker": "Open a bucket",
+      "cardTitle": "Permissions: policy, ownership, ACLs",
+      "bullets": [
+        "Each bucket has its own Permissions tab — bucket-level Block Public Access, the bucket policy, Object Ownership, and ACLs.",
+        "Disable ACLs (Bucket owner enforced) so access is governed only by IAM and bucket policies — far easier to reason about.",
+        "Keep bucket-level Block Public Access on too — defense in depth under the account setting."
+      ],
+      "narration": "Let's open a bucket and look at its Permissions tab.",
+      "drill": {
+        "id": "perm-detail",
+        "section": "Permissions tab",
+        "clickText": "Permissions",
+        "kicker": "Least privilege, enforced",
+        "cardTitle": "Bucket policy + disable ACLs",
+        "bullets": [
+          "Set Object Ownership to 'Bucket owner enforced' — this disables ACLs, so access is controlled purely by IAM and the bucket policy.",
+          "Write a least-privilege bucket policy: specific principals, specific actions, specific prefixes — never Principal '*' with s3:*.",
+          "Add a policy that denies any request where aws:SecureTransport is false, forcing TLS for all access."
+        ],
+        "narration": "Here on the Permissions tab is where least privilege gets enforced. First, set Object Ownership to bucket-owner-enforced, which disables ACLs entirely — now access is governed only by IAM and the bucket policy, which is far easier to reason about. Then write a tight bucket policy: name specific principals, specific actions, and specific key prefixes, and never combine a wildcard principal with s3 colon star. Finally, add a statement that denies any request where secure-transport is false, so every connection is forced over TLS. Together these turn a bucket from open-by-accident into locked-by-design."
+      }
+    },
+    {
+      "id": "data-protection",
+      "section": "Data protection",
+      "url": "https://us-east-1.console.aws.amazon.com/s3/buckets?region=us-east-1",
+      "kicker": "Protect the objects",
+      "cardTitle": "Encryption, versioning, immutability",
+      "bullets": [
+        "Default encryption is on with SSE-S3; switch to SSE-KMS when you need audited, access-controlled keys.",
+        "Enable Versioning so overwrites and deletes are recoverable — your first line of defense against ransomware and mistakes.",
+        "For records that must never change, use Object Lock (WORM); turn on server access logging or CloudTrail data events for an audit trail."
+      ],
+      "narration": "Let's look at the bucket's Properties tab, where the data itself is protected.",
+      "drill": {
+        "id": "props-detail",
+        "section": "Properties tab",
+        "clickText": "Properties",
+        "kicker": "Encrypt, version, audit",
+        "cardTitle": "Encryption + versioning + logging",
+        "bullets": [
+          "Encryption is on by default with SSE-S3; choose SSE-KMS for audited, revocable keys, and enable an S3 Bucket Key to cut KMS costs.",
+          "Turn on Versioning so deletes and overwrites are recoverable — the practical defense against ransomware and fat-finger mistakes.",
+          "Use Object Lock for write-once-read-many compliance data, and enable access logging or CloudTrail data events so every object access is recorded."
+        ],
+        "narration": "The Properties tab is where you protect the objects themselves. Encryption is always on — by default with S3-managed keys, but switch to KMS when you need audited, revocable keys, and enable an S3 Bucket Key to keep KMS costs down. Turn on Versioning so that overwrites and deletes are recoverable; this is your most practical defense against both ransomware and simple mistakes. For compliance data that must never change, Object Lock gives you write-once-read-many immutability. And enable server access logging or CloudTrail data events so that every read and write leaves an audit trail you can investigate later."
+      }
+    },
+    {
+      "id": "detection",
+      "section": "Access Analyzer",
+      "url": "https://us-east-1.console.aws.amazon.com/access-analyzer/home?region=us-east-1#/findings",
+      "kicker": "Catch drift continuously",
+      "cardTitle": "Find exposure before attackers do",
+      "bullets": [
+        "IAM Access Analyzer flags any bucket that can be accessed publicly or from outside your account or organization.",
+        "Amazon Macie discovers sensitive data — PII, secrets — sitting in your buckets so you know what's actually at risk.",
+        "Wire findings into Security Hub and alerts, and review the S3 console's account snapshot and external-access summary regularly."
+      ],
+      "narration": "Configuration is only half the job — you also need to catch drift continuously. IAM Access Analyzer watches every bucket and flags any that can be reached publicly, or from outside your account or organization, so a mistake surfaces in minutes instead of months. Amazon Macie goes deeper, scanning the contents to find sensitive data like personal information or secrets, so you know which buckets actually carry risk. Feed all of this into Security Hub and your alerting, and make a habit of reviewing the account snapshot and external-access summary right here in the S3 console."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember",
+      "title": "S3 security in five rules",
+      "accent": "#56d364",
+      "lines": [
+        "1 · Block Public Access ON, account-wide.",
+        "2 · Disable ACLs — IAM + bucket policy only.",
+        "3 · Least-privilege policies, force TLS.",
+        "4 · Encrypt (KMS), version, and lock objects.",
+        "5 · Watch with Access Analyzer + Macie."
+      ]
+    },
+    "narration": "So, to lock down S3: turn Block Public Access on across the whole account; disable ACLs so access is governed only by IAM and bucket policies; write least-privilege policies and force every connection over TLS; encrypt with KMS, enable versioning, and lock the objects that must never change; and watch continuously with Access Analyzer and Macie. Get those five right, and your buckets stay private — by design, not by luck."
+  }
+}
