@@ -1,0 +1,104 @@
+{
+  "id": "aws-iam",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "AWS IAM",
+    "lines": ["Identity & Access Management", "— core concepts + security best practices —"]
+  },
+  "intro": "AWS Identity and Access Management — IAM — decides who can do what in your account. Let's walk through the core building blocks, and the security best practices that matter most.",
+  "sections": [
+    {
+      "id": "dashboard", "section": "IAM Dashboard",
+      "url": "https://console.aws.amazon.com/iam/home#/home",
+      "kicker": "Your security cockpit", "cardTitle": "Start at the IAM dashboard",
+      "bullets": [
+        "The root user has unlimited power. Lock it down: hardware MFA, no access keys, use it only for the handful of root-only tasks.",
+        "Read 'Security recommendations' first — AWS flags missing MFA, stale keys and risky settings here.",
+        "North star: zero standing IAM users. Federate human access through IAM Identity Center (SSO)."
+      ],
+      "narration": "This is the IAM dashboard, your security cockpit. Start with the security recommendations panel; AWS flags missing MFA, stale credentials, and risky settings right here. And remember, the root user has unlimited power, so protect it with hardware MFA, remove any root access keys, and use it only for the rare tasks that truly require it. Your long-term goal is zero standing IAM users."
+    },
+    {
+      "id": "users", "section": "Users",
+      "url": "https://console.aws.amazon.com/iam/home#/users",
+      "kicker": "Prefer roles over long-lived users", "cardTitle": "IAM Users = standing liability",
+      "bullets": [
+        "Each user is a permanent identity with long-lived credentials — a credential that can leak and never expires on its own.",
+        "If you must keep users: enforce MFA, never share accounts, rotate access keys, and remove console access when only programmatic access is needed.",
+        "Better pattern: humans sign in via Identity Center; applications assume roles instead of holding user access keys."
+      ],
+      "narration": "IAM users are permanent identities with long-lived credentials. Each one is a secret that can leak and never expires on its own — a standing liability. If you must use them, enforce MFA, never share accounts, rotate access keys, and remove console access when only programmatic access is needed. The better pattern is to let humans sign in through IAM Identity Center, and let applications assume roles instead of holding access keys."
+    },
+    {
+      "id": "groups", "section": "User groups",
+      "url": "https://console.aws.amazon.com/iam/home#/groups",
+      "kicker": "Attach permissions to groups, not people", "cardTitle": "Manage permissions with groups",
+      "bullets": [
+        "Attach policies to groups and put users in groups — never attach policies user-by-user.",
+        "Model groups on job functions: Admins, Developers, ReadOnly, Billing.",
+        "Result: least-privilege is auditable and offboarding is a single action."
+      ],
+      "narration": "Don't attach policies to users one at a time. Attach permissions to groups, and put users into those groups. Model your groups on job functions: admins, developers, read-only, billing. That keeps least privilege auditable, and offboarding someone becomes a single action."
+    },
+    {
+      "id": "roles", "section": "Roles",
+      "url": "https://console.aws.amazon.com/iam/home#/roles",
+      "kicker": "Temporary credentials, done right", "cardTitle": "Roles issue short-lived credentials",
+      "bullets": [
+        "A role holds NO long-lived secret. It is assumed to mint short-lived STS tokens that auto-expire.",
+        "Use roles for EC2/Lambda (service roles), cross-account access, and federated humans.",
+        "A role = a permissions policy (what it can do) + a trust policy (who is allowed to assume it)."
+      ],
+      "narration": "Roles are how you grant access the right way. A role holds no long-lived secret; it's assumed to issue short-lived tokens that expire automatically. Use roles for EC2 and Lambda, for cross-account access, and for federated users. Every role has two parts: a permissions policy for what it can do, and a trust policy for who is allowed to assume it.",
+      "drill": {
+        "id": "trust", "section": "Roles · Trust policy", "clickText": "Trust relationships",
+        "kicker": "Who may assume this role", "cardTitle": "The trust policy is the gate",
+        "bullets": [
+          "Principal = which account, service or federated identity can call sts:AssumeRole.",
+          "Lock cross-account roles with an ExternalId and aws:SourceArn condition to stop the confused-deputy problem.",
+          "Scope trust narrowly — a wide Principal ('*') is an open door."
+        ],
+        "narration": "Here is the trust policy. The principal defines exactly which account, service, or identity can assume the role. For cross-account access, always add an external ID and a source ARN condition to stop the confused-deputy problem. A wide-open principal is an open door, so keep it narrow."
+      }
+    },
+    {
+      "id": "policies", "section": "Policies",
+      "url": "https://console.aws.amazon.com/iam/home#/policies",
+      "kicker": "Least privilege is the whole game", "cardTitle": "Policies: grant only what's needed",
+      "bullets": [
+        "Types: AWS-managed, customer-managed, inline. Prefer customer-managed — reusable and version-controlled.",
+        "Avoid wildcards like Action:'*' or 's3:*'. Name the exact actions and resources.",
+        "Tighten with Conditions, Permission Boundaries, and IAM Access Analyzer to catch unused or over-broad access."
+      ],
+      "narration": "Policies are where least privilege lives. You'll see AWS-managed, customer-managed, and inline policies. Prefer customer-managed ones, because they are reusable and version-controlled. Avoid broad wildcards — don't allow every action, or every operation on a service; name the exact actions and resources you need. Then tighten further with conditions, permission boundaries, and IAM Access Analyzer to find unused or over-broad access."
+    },
+    {
+      "id": "account", "section": "Account settings",
+      "url": "https://console.aws.amazon.com/iam/home#/account_settings",
+      "kicker": "Baseline hygiene", "cardTitle": "Set a strong account password policy",
+      "bullets": [
+        "Require length >= 14, complexity, expiry, and prevent password reuse.",
+        "Disable STS in regions you don't use to shrink the attack surface.",
+        "Pair this with: root MFA, a credential report review, and key rotation on a schedule."
+      ],
+      "narration": "Finally, set a strong account password policy: at least fourteen characters, complexity, expiry, and no password reuse. Disable the security token service in regions you don't operate in to shrink your attack surface, and pair all of this with root MFA, regular credential-report reviews, and scheduled key rotation."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "IAM in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Lock the root user — MFA, no keys.",
+        "2 · Prefer roles & SSO over long-lived users.",
+        "3 · Permissions on groups, not people.",
+        "4 · Least privilege — no wildcards.",
+        "5 · MFA everywhere, rotate keys, review Access Analyzer."
+      ]
+    },
+    "narration": "In short: lock the root user; prefer roles and single sign-on over long-lived users; put permissions on groups, not people; grant least privilege with no wildcards; and turn on MFA everywhere while rotating keys and reviewing Access Analyzer. That's IAM, done right."
+  }
+}
