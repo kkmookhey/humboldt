@@ -3,6 +3,7 @@
 Narrated cloud-console training videos from one JSON file per module.
 
 ## Setup
+Requires **ffmpeg** + **ffprobe** on PATH (`brew install ffmpeg`).
 ```bash
 npm install && npx playwright install chromium
 echo "OPENAI_API_KEY=sk-..." > .env
