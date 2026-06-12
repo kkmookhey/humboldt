@@ -2,3 +2,7 @@
 node_modules/
 out/
 .auth/
+
+# Generated brand stings (regenerate via bin/make-sting.mjs)
+assets/
+.DS_Store
