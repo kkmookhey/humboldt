@@ -4,9 +4,11 @@
   "voice": "alloy",
   "model": "gpt-4o-mini-tts",
   "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 4 · Identity & Access Management",
   "redactions": [
     { "section": "dashboard", "regions": [ { "x": 1290, "y": 150, "w": 590, "h": 330 } ] },
-    { "section": "users", "regions": [ { "x": 270, "y": 300, "w": 1560, "h": 430 } ] },
+    { "section": "users", "regions": [ { "x": 270, "y": 345, "w": 1560, "h": 255 } ] },
+    { "section": "roles", "regions": [ { "x": 325, "y": 255, "w": 300, "h": 275 } ] },
     { "section": "trust", "regions": [ { "x": 150, "y": 56, "w": 600, "h": 100 }, { "x": 1090, "y": 225, "w": 580, "h": 52 } ] }
   ],
   "title": {
@@ -104,6 +106,34 @@
         "5 · MFA everywhere, rotate keys, review Access Analyzer."
       ]
     },
-    "narration": "In short: lock the root user; prefer roles and single sign-on over long-lived users; put permissions on groups, not people; grant least privilege with no wildcards; and turn on MFA everywhere while rotating keys and reviewing Access Analyzer. That's IAM, done right."
+    "narration": "In short: lock the root user; prefer roles and single sign-on over long-lived users; put permissions on groups, not people; grant least privilege with no wildcards; and turn on MFA everywhere while rotating keys and reviewing Access Analyzer. That's IAM, done right.",
+    "examTip": "Exam tip: know IAM users vs roles, a trust policy vs a permission policy, and when STS issues short-lived credentials."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-iam-1", "title": "Exercise 1 — Enforce least privilege", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Move a user from admin to scoped, audited access",
+          "1 · IAM → Users → create a throwaway user, attach AdministratorAccess",
+          "2 · Detach it; attach a customer-managed policy for s3:GetObject on ONE bucket",
+          "3 · Add a permissions boundary, then run IAM Access Analyzer",
+          "✓ DONE WHEN · The user reads only that bucket and Access Analyzer is clean"
+        ],
+        "narration": "Time to make this real. In your own lab account, create a throwaway IAM user and attach Administrator Access to it. Now take that away: detach the admin policy and replace it with a customer-managed policy that allows only s3 GetObject on a single bucket. Add a permissions boundary as a second guardrail, then open IAM Access Analyzer and review the findings. You're done when that user can read just the one bucket and nothing else, and Access Analyzer comes back clean."
+      },
+      {
+        "id": "lab-iam-2", "title": "Exercise 2 — Roles over long-lived keys", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Grant access with temporary credentials, not access keys",
+          "1 · IAM → Roles → create a role trusted by your own account",
+          "2 · Give it read-only S3; compare the trust policy vs the permission policy",
+          "3 · In CloudShell, run aws sts assume-role and export the temp creds",
+          "✓ DONE WHEN · You list buckets using expiring STS creds — zero access keys"
+        ],
+        "narration": "Second exercise: practice the pattern you'll use every day. Create an IAM role whose trust policy allows your own account to assume it, and give it read-only access to S3. Look closely at the two policies — the trust policy decides who may assume the role, the permission policy decides what the role can do. Then open CloudShell, run assume-role with the security token service, export the temporary credentials, and list your buckets. You're done when you've listed buckets using short-lived STS credentials that expire on their own, with no long-lived access keys anywhere."
+      }
+    ]
   }
 }
