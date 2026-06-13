@@ -1,0 +1,112 @@
+{
+  "id": "az-key-vault",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Secure compute, storage & databases",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Azure Key Vault",
+    "lines": ["Keys, secrets & certificates", "— access model + recovery protection —"]
+  },
+  "intro": "Azure Key Vault is the central, hardware-backed place to store your keys, secrets, and certificates, and to control exactly who can use them. Let's walk through a real vault, its access model, and the recovery settings that stop your secrets from being wiped out.",
+  "sections": [
+    {
+      "id": "overview", "section": "Key Vault overview",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.KeyVault/vaults/shasta-kv-secure/overview",
+      "kicker": "Your secrets, centralized", "cardTitle": "What Key Vault protects",
+      "bullets": [
+        "One managed store for keys, secrets, and certificates — backed by FIPS-validated hardware.",
+        "Apps fetch secrets at runtime instead of hard-coding them in config or code.",
+        "Every operation is access-controlled and logged — pair it with Defender for Key Vault."
+      ],
+      "narration": "This is the overview for a real Key Vault. A vault gives you one managed, hardware-backed place to store keys, secrets, and certificates, so your applications fetch them at runtime instead of hard-coding credentials. Look at the essentials here, including the pricing tier and whether purge protection is on. Every call to the vault is access-controlled and logged, which is exactly what you want for sensitive material."
+    },
+    {
+      "id": "keys", "section": "Keys",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.KeyVault/vaults/shasta-kv-secure/keys",
+      "kicker": "Cryptographic keys", "cardTitle": "Keys: encryption you control",
+      "bullets": [
+        "Store RSA and elliptic-curve keys; the private key never leaves the vault.",
+        "Turn on automatic rotation so keys refresh on a schedule.",
+        "Use them as customer-managed keys to encrypt storage, disks, and databases."
+      ],
+      "narration": "Under Keys, you manage cryptographic keys whose private material never leaves the vault. You can create RSA or elliptic-curve keys, enable automatic rotation so they refresh on a schedule, and use them as customer-managed keys to encrypt storage accounts, managed disks, and databases. The key stays in the vault, and services call it to wrap and unwrap data."
+    },
+    {
+      "id": "secrets", "section": "Secrets & certificates",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.KeyVault/vaults/shasta-kv-secure/secrets",
+      "kicker": "Secrets, versioned", "cardTitle": "Secrets & certificates, controlled",
+      "bullets": [
+        "Store connection strings, API keys, and passwords — each with versions and expiry.",
+        "Certificates are managed here too, with automatic renewal from an issuer.",
+        "Reference them from App Service, Functions, and Kubernetes instead of in the app."
+      ],
+      "narration": "Secrets holds things like connection strings, API keys, and passwords, each with its own versions and optional activation and expiry dates. Certificates are managed right alongside them, with automatic renewal from an issuer. The pattern to aim for is referencing these from App Service, Functions, or Kubernetes at runtime, so the secret never lives in your application's configuration."
+    },
+    {
+      "id": "access", "section": "Access configuration",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.KeyVault/vaults/shasta-kv-secure/access_policies",
+      "kicker": "Who can use the vault", "cardTitle": "Access model: prefer RBAC",
+      "bullets": [
+        "Two models: legacy access policies, or Azure RBAC — Microsoft recommends RBAC.",
+        "This vault still uses access policies; RBAC gives finer, auditable, role-based control.",
+        "Least privilege — separate who manages the vault from who can read secrets."
+      ],
+      "narration": "Access configuration decides who can do what. There are two models: the older access policy model you see on this vault, and Azure role-based access control, which Microsoft now recommends. RBAC gives you finer-grained, auditable, role-based permissions, and it lets you separate the people who manage the vault from the people who can read its secrets. Whichever you use, grant least privilege."
+    },
+    {
+      "id": "recovery", "section": "Soft-delete & purge protection",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.KeyVault/vaults/shasta-kv-insecure/overview",
+      "kicker": "Don't let secrets vanish", "cardTitle": "Soft-delete & purge protection",
+      "bullets": [
+        "Soft-delete keeps deleted vaults and objects recoverable for 7–90 days (on by default).",
+        "Purge protection blocks permanent deletion until retention elapses — no admin can override.",
+        "This 'insecure' vault has purge protection OFF — a malicious insider could wipe keys for good."
+      ],
+      "narration": "Finally, recovery. Soft-delete keeps a deleted vault or object recoverable for seven to ninety days, and it's on by default. Purge protection goes further: once it's on, nothing — not an administrator, not even Microsoft — can permanently delete the vault until the retention period elapses. Here is a second vault we deliberately left insecure. Purge protection is off and retention is just seven days, which means a malicious insider could permanently destroy your keys. Always enable purge protection on production vaults."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Key Vault in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Centralize keys, secrets, certs — never in code.",
+        "2 · Prefer Azure RBAC over access policies.",
+        "3 · Least privilege — split management from data access.",
+        "4 · Turn on soft-delete AND purge protection.",
+        "5 · Rotate keys; log every access with Defender for Key Vault."
+      ]
+    },
+    "narration": "In short: centralize your keys, secrets, and certificates instead of leaving them in code; prefer Azure RBAC over the legacy access policies; grant least privilege and split vault management from data access; turn on both soft-delete and purge protection; and rotate your keys while logging every access with Defender for Key Vault. That's Key Vault, done right.",
+    "examTip": "Exam tip: know access policies versus Azure RBAC, soft-delete versus purge protection — purge protection can't be disabled once on — and customer-managed keys for encrypting other Azure services."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-kv-1", "title": "Exercise 1 — Lock down a vault", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Make a vault production-safe",
+          "1 · Create a Key Vault; enable purge protection + 90-day soft-delete",
+          "2 · Switch the access model from access policies to Azure RBAC",
+          "3 · Assign 'Key Vault Secrets User' to an app identity; keep admin for yourself",
+          "✓ DONE WHEN · The app reads one secret via RBAC and purge protection can't be turned off"
+        ],
+        "narration": "In your lab, create a new Key Vault and turn on purge protection with a ninety-day soft-delete retention. Switch the access model from access policies to Azure RBAC. Then assign the Key Vault Secrets User role to an application's managed identity, and keep the administrator role for yourself. You're done when the app can read a single secret through RBAC, and you can confirm that purge protection can no longer be switched off."
+      },
+      {
+        "id": "lab-kv-2", "title": "Exercise 2 — Customer-managed key encryption", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Encrypt a storage account with your own key",
+          "1 · Create a key in the vault; enable automatic rotation",
+          "2 · Grant the storage account's managed identity wrap/unwrap on the key",
+          "3 · Set the storage account encryption to your customer-managed key",
+          "✓ DONE WHEN · Storage encrypts with your vault key and rotating the key just works"
+        ],
+        "narration": "Second exercise: use the vault to control encryption elsewhere. Create a key and enable automatic rotation. Grant the storage account's managed identity permission to wrap and unwrap with that key, then set the storage account's encryption to use your customer-managed key. You're done when the storage account is encrypting with your vault key, and rotating the key continues to work without breaking access."
+      }
+    ]
+  }
+}
