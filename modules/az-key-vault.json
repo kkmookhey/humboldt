@@ -26,6 +26,7 @@
     {
       "id": "keys", "section": "Keys",
       "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.KeyVault/vaults/shasta-kv-secure/keys",
+      "focus": { "text": "app-encryption-key" },
       "kicker": "Cryptographic keys", "cardTitle": "Keys: encryption you control",
       "bullets": [
         "Store RSA and elliptic-curve keys; the private key never leaves the vault.",
@@ -59,13 +60,14 @@
     {
       "id": "recovery", "section": "Soft-delete & purge protection",
       "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.KeyVault/vaults/shasta-kv-insecure/overview",
+      "focus": { "text": "Purge protection" },
       "kicker": "Don't let secrets vanish", "cardTitle": "Soft-delete & purge protection",
       "bullets": [
         "Soft-delete keeps deleted vaults and objects recoverable for 7–90 days (on by default).",
         "Purge protection blocks permanent deletion until retention elapses — no admin can override.",
         "This 'insecure' vault has purge protection OFF — a malicious insider could wipe keys for good."
       ],
-      "narration": "Finally, recovery. Soft-delete keeps a deleted vault or object recoverable for seven to ninety days, and it's on by default. Purge protection goes further: once it's on, nothing — not an administrator, not even Microsoft — can permanently delete the vault until the retention period elapses. Here is a second vault we deliberately left insecure. Purge protection is off and retention is just seven days, which means a malicious insider could permanently destroy your keys. Always enable purge protection on production vaults."
+      "narration": "Finally, recovery. Soft-delete keeps a deleted vault or object recoverable, and it's on by default — you can see it here in the essentials, set to Enabled. Purge protection goes further: once it's on, nothing, not an administrator, not even Microsoft, can permanently delete the vault until the retention period elapses. But look at this vault's essentials, highlighted here: purge protection is Disabled. That means a malicious insider could permanently destroy your keys. Always enable purge protection on production vaults."
     }
   ],
   "recap": {
