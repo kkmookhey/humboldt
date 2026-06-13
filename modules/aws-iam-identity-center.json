@@ -1,0 +1,122 @@
+{
+  "id": "aws-iam-identity-center",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 4 · Identity & Access Management",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "IAM Identity Center",
+    "lines": ["Centralized workforce access (successor to AWS SSO)", "— identity sources, permission sets, account assignments —"]
+  },
+  "intro": "IAM Identity Center — formerly AWS SSO — is how you give humans access across your whole AWS organization without standing IAM users. Let's walk through identity sources, permission sets, and how access is assigned account by account.",
+  "sections": [
+    {
+      "id": "dashboard", "section": "Identity Center Dashboard",
+      "url": "https://console.aws.amazon.com/singlesignon/home",
+      "kicker": "One front door for the workforce", "cardTitle": "Start at the Identity Center dashboard",
+      "bullets": [
+        "Identity Center is the successor to AWS SSO — one place to manage human access across every account in your organization.",
+        "Each user signs in once at the access portal and gets short-lived, role-based credentials — no standing IAM users.",
+        "Enable it from the management account; it works hand-in-hand with AWS Organizations."
+      ],
+      "narration": "This is the IAM Identity Center dashboard, the successor to AWS SSO. It gives your workforce a single front door into every account in your organization. Instead of creating IAM users in each account, people sign in once and receive short-lived, role-based credentials. You enable it from the management account, and it works directly on top of AWS Organizations."
+    },
+    {
+      "id": "identity-source", "section": "Settings · Identity source",
+      "url": "https://console.aws.amazon.com/singlesignon/home",
+      "kicker": "Where your users come from", "cardTitle": "Choose the right identity source",
+      "bullets": [
+        "Three options: the built-in Identity Center directory, Active Directory (via AD Connector or AWS Managed Microsoft AD), or an external IdP over SAML 2.0.",
+        "With an external IdP, use SCIM to automatically provision and deprovision users and groups.",
+        "Pick one source of truth — federating an existing IdP beats re-creating users by hand."
+      ],
+      "narration": "The identity source is where your users actually live. You have three choices: the built-in Identity Center directory, Active Directory, or an external identity provider connected over SAML 2.0. When you use an external provider, pair it with SCIM so users and groups are provisioned and deprovisioned automatically. The goal is one authoritative source of truth — federate the IdP you already have instead of re-creating people by hand."
+    },
+    {
+      "id": "permission-sets", "section": "Permission sets",
+      "url": "https://console.aws.amazon.com/singlesignon/home",
+      "kicker": "Reusable job-function roles", "cardTitle": "Permission sets define what people can do",
+      "bullets": [
+        "A permission set is a reusable collection of policies that becomes an IAM role provisioned into each assigned account.",
+        "Build them around job functions — Admin, ReadOnly, Billing — and set the session duration.",
+        "Update once and Identity Center re-provisions the role everywhere it's used."
+      ],
+      "narration": "Permission sets are how you define what people can do. A permission set is a reusable bundle of policies that Identity Center turns into an IAM role inside each account where it's assigned. Model them on job functions — admin, read-only, billing — and set a sensible session duration. The big win is consistency: change a permission set once, and it re-provisions everywhere it's used.",
+      "drill": {
+        "id": "permission-set-detail", "section": "Permission sets · Detail", "clickText": "Create permission set",
+        "kicker": "Least privilege, centrally", "cardTitle": "Scope the permission set tightly",
+        "bullets": [
+          "Attach AWS-managed or customer-managed policies, and optionally a permissions boundary to cap the maximum.",
+          "Keep the session short — long sessions mean credentials live longer if a laptop is lost.",
+          "Avoid broad admin sets for everyday work; name the exact access each job function needs."
+        ],
+        "narration": "Here's a permission set up close. You attach managed or customer-managed policies, and you can add a permissions boundary to cap the maximum it can ever grant. Keep the session duration short, because longer sessions mean credentials stay valid longer if a device is lost. And resist the urge to hand out broad admin sets for daily work — scope each one to exactly what that job function needs."
+      }
+    },
+    {
+      "id": "accounts", "section": "AWS accounts · Assignments",
+      "url": "https://console.aws.amazon.com/singlesignon/home",
+      "kicker": "Who gets what, where", "cardTitle": "Assign access across the org",
+      "bullets": [
+        "An account assignment ties a user or group to a permission set in a specific account.",
+        "Assign to groups, not individuals — it scales and offboarding becomes a single change at the IdP.",
+        "The same group plus permission set can be granted across many accounts at once."
+      ],
+      "narration": "This is where access actually gets granted. An account assignment connects a user or group to a permission set inside a specific account. Always assign to groups rather than individuals — it scales cleanly, and removing someone becomes a single change back at your identity provider. You can grant the same group and permission set across many accounts in one action, which is exactly how multi-account access should work."
+    },
+    {
+      "id": "users", "section": "Users · MFA",
+      "url": "https://console.aws.amazon.com/singlesignon/home",
+      "kicker": "Strong authentication for humans", "cardTitle": "Enforce MFA at the front door",
+      "bullets": [
+        "Set MFA to 'always-on' so every sign-in is challenged — prefer phishing-resistant FIDO2 security keys or passkeys.",
+        "If your external IdP enforces MFA, let it own that and keep one source of truth.",
+        "Identity Center replaces standing IAM users for people — humans federate, applications assume roles."
+      ],
+      "narration": "Finally, protect the front door with multi-factor authentication. Set MFA to always-on so every sign-in is challenged, and prefer phishing-resistant methods like FIDO2 security keys or passkeys. If your external identity provider already enforces MFA, let it own that so you keep a single source of truth. The whole point of Identity Center is to replace standing IAM users for people — humans federate in, and applications assume roles."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Identity Center in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · One front door — the access portal, short-lived creds.",
+        "2 · Pick one identity source; SCIM-provision from your IdP.",
+        "3 · Permission sets = reusable, job-function roles.",
+        "4 · Assign to groups across accounts, not individuals.",
+        "5 · MFA always-on — federate humans, no standing IAM users."
+      ]
+    },
+    "narration": "In short: give the workforce one front door with short-lived credentials; choose a single identity source and provision from your IdP with SCIM; define access as reusable permission sets built on job functions; assign those to groups across accounts, never to individuals; and enforce MFA everywhere. Federate your humans and stop creating standing IAM users. That's IAM Identity Center, done right.",
+    "examTip": "Exam tip: know the three identity sources (Identity Center directory, Active Directory, external IdP via SAML 2.0), that SCIM handles automated provisioning, and that a permission set becomes an IAM role provisioned into each assigned account."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-idc-1", "title": "Exercise 1 — Build and assign a permission set", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Grant scoped, federated access with no IAM user",
+          "1 · Identity Center → enable it, then create a group and a test user",
+          "2 · Permission sets → create a ReadOnly set with a short session duration",
+          "3 · AWS accounts → assign the group + permission set to one account",
+          "✓ DONE WHEN · The user signs in at the access portal and gets read-only, expiring creds"
+        ],
+        "narration": "Time to make this real. In your own lab organization, enable IAM Identity Center, then create a group and a test user inside the Identity Center directory. Next, build a read-only permission set and give it a short session duration. Now assign that group and permission set to a single account. You're done when your test user signs in at the access portal, sees that account, and lands in a read-only session with credentials that expire on their own — no IAM user anywhere."
+      },
+      {
+        "id": "lab-idc-2", "title": "Exercise 2 — Federate an external IdP", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Make your existing IdP the source of truth",
+          "1 · Settings → Identity source → change to external identity provider",
+          "2 · Exchange SAML 2.0 metadata between Identity Center and the IdP",
+          "3 · Enable SCIM provisioning, then turn MFA to always-on",
+          "✓ DONE WHEN · A user created in the IdP appears via SCIM and signs in with MFA"
+        ],
+        "narration": "Second exercise: practice the pattern most real organizations use. Change your identity source to an external identity provider, then exchange SAML 2.0 metadata between Identity Center and that provider so single sign-on works both ways. Turn on SCIM so users and groups sync automatically, and set MFA to always-on. You're done when a user you create in the external IdP shows up in Identity Center through SCIM and can sign in to the access portal with multi-factor authentication."
+      }
+    ]
+  }
+}

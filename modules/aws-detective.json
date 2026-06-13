@@ -1,0 +1,122 @@
+{
+  "id": "aws-detective",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 1 · Threat Detection & Incident Response",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Amazon Detective",
+    "lines": ["Security investigation made visual", "— behavior graphs + finding groups —"]
+  },
+  "intro": "Amazon Detective is where you investigate, not just detect. It builds a behavior graph from your activity logs so you can answer the real question after an alert: what actually happened, and how far did it spread? Let's walk through it.",
+  "sections": [
+    {
+      "id": "overview", "section": "Detective overview",
+      "url": "https://console.aws.amazon.com/detective/home",
+      "kicker": "Investigation, not detection", "cardTitle": "Detective answers 'what happened?'",
+      "bullets": [
+        "GuardDuty tells you something is wrong; Detective helps you understand the full story behind it.",
+        "It automatically pulls together logs, entities, and timelines so you skip the manual log-stitching.",
+        "Built for the analyst mid-investigation — start from a finding and pivot through related activity."
+      ],
+      "narration": "This is Amazon Detective, and it sits one step past detection. GuardDuty tells you something is wrong; Detective helps you understand the whole story behind it. Instead of manually stitching logs together, Detective assembles the relevant entities, activity, and timelines for you. It's designed for the analyst in the middle of an investigation — you start from a finding and pivot outward through everything connected to it."
+    },
+    {
+      "id": "graph", "section": "Behavior graph",
+      "url": "https://console.aws.amazon.com/detective/home",
+      "kicker": "Your data, modeled as relationships", "cardTitle": "The behavior graph links it all",
+      "bullets": [
+        "Detective ingests CloudTrail, VPC Flow Logs, and GuardDuty findings continuously — no extra agents.",
+        "It models accounts, roles, IPs, and instances as connected entities with baseline behavior over time.",
+        "Visualizations show spikes and anomalies against normal activity, so outliers stand out instantly."
+      ],
+      "narration": "Under the hood, Detective builds a behavior graph. It continuously ingests CloudTrail events, VPC Flow Logs, and GuardDuty findings — no extra agents to deploy. From that data it models your accounts, roles, IP addresses, and instances as connected entities, and it learns their normal behavior over time. The visualizations plot current activity against that baseline, so a spike or an anomaly jumps right out at you."
+    },
+    {
+      "id": "finding-groups", "section": "Finding groups",
+      "url": "https://console.aws.amazon.com/detective/home",
+      "kicker": "Related alerts, told as one story", "cardTitle": "Finding groups connect the dots",
+      "bullets": [
+        "Detective clusters related GuardDuty findings and the entities they touch into a single finding group.",
+        "A group shows the likely attack progression instead of a scattered pile of separate alerts.",
+        "This collapses alert fatigue — one incident, one narrative, one place to investigate."
+      ],
+      "narration": "One of Detective's best features is finding groups. Rather than leaving you with a scattered pile of separate alerts, Detective clusters related GuardDuty findings and the entities they involve into a single group. That group lays out the likely attack progression as one connected story. It's a direct answer to alert fatigue — one incident, one narrative, one place to dig in.",
+      "drill": {
+        "id": "entity-profile", "section": "Finding groups · Entity profile", "clickText": "an entity in the group",
+        "kicker": "Pivoting through the investigation", "cardTitle": "The entity profile is your pivot point",
+        "bullets": [
+          "An entity profile — a role, IP, or instance — shows all activity for that entity over a chosen time window.",
+          "Pivot from the entity to every finding, API call, and connection it's involved in.",
+          "Adjust the time scope to separate the attacker's actions from normal baseline activity."
+        ],
+        "narration": "Let's open an entity inside the group. An entity profile — say a role, an IP address, or an instance — shows everything that entity did over the time window you choose. From here you pivot to every finding, API call, and network connection it touched, following the thread wherever it leads. Slide the time scope to separate the attacker's actions from the entity's normal baseline behavior."
+      }
+    },
+    {
+      "id": "workflow", "section": "Investigation workflow",
+      "url": "https://console.aws.amazon.com/detective/home",
+      "kicker": "From alert to conclusion", "cardTitle": "Run a structured investigation",
+      "bullets": [
+        "Start at a GuardDuty finding, jump to Detective, and review the entities and timeline involved.",
+        "Pivot across linked roles, IPs, and instances to map the blast radius of the activity.",
+        "Use the findings overview to confirm scope, then hand a clear narrative to incident response."
+      ],
+      "narration": "Here's the investigation workflow in practice. You start at a GuardDuty finding, jump straight into Detective, and review the entities and timeline it surfaces. Then you pivot across the linked roles, IPs, and instances to map the blast radius — how far the activity actually spread. Once the findings overview confirms the scope, you hand a clear, evidence-backed narrative over to incident response."
+    },
+    {
+      "id": "enable", "section": "Enable via delegated admin",
+      "url": "https://console.aws.amazon.com/detective/home",
+      "kicker": "Roll it out across the org", "cardTitle": "Enable through a delegated administrator",
+      "bullets": [
+        "From AWS Organizations, set a delegated administrator — pair it with the same account that runs GuardDuty.",
+        "The admin enables Detective across member accounts and aggregates their graphs centrally.",
+        "Detective needs a couple of weeks of data to baseline, so enable it before you need it, not during an incident."
+      ],
+      "narration": "Finally, roll Detective out the right way. From AWS Organizations you designate a delegated administrator — and you'll want it to match the account that already runs GuardDuty. That admin enables Detective across your member accounts and aggregates their behavior graphs centrally. One key point for the exam and for real life: Detective needs a couple of weeks of data to build a useful baseline, so enable it before you need it, not in the middle of an incident."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Detective in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Detective investigates; GuardDuty detects.",
+        "2 · It ingests CloudTrail, VPC Flow, GuardDuty findings.",
+        "3 · The behavior graph baselines normal activity.",
+        "4 · Finding groups tell one story from many alerts.",
+        "5 · Enable via delegated admin, ahead of any incident."
+      ]
+    },
+    "narration": "In short: Detective is for investigation, while GuardDuty is for detection; it ingests CloudTrail, VPC Flow Logs, and GuardDuty findings into a behavior graph that baselines normal activity; finding groups turn many scattered alerts into one story; and you enable it through a delegated administrator, ahead of time, because it needs data to build a baseline. That's Detective, done right.",
+    "examTip": "Exam tip: know that Detective is an investigation tool fed by CloudTrail, VPC Flow Logs, and GuardDuty, that it builds a behavior graph with finding groups, and that it complements GuardDuty rather than replacing it."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-detective-1", "title": "Exercise 1 — Investigate a finding", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Trace a GuardDuty finding through Detective",
+          "1 · Enable Detective; generate a GuardDuty sample finding",
+          "2 · From the finding, click 'Investigate in Detective'",
+          "3 · Open the involved entity profile and review its timeline",
+          "✓ DONE WHEN · You can describe the entity's activity and scope"
+        ],
+        "narration": "Let's make this real. In your lab, enable Detective, then generate a sample finding in GuardDuty. Open that finding and click investigate in Detective to jump straight into the graph. Open the profile of the entity involved and review its activity timeline. You're done when you can describe what that entity did and roughly how far the activity reached."
+      },
+      {
+        "id": "lab-detective-2", "title": "Exercise 2 — Map a finding group", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Read an attack as one connected story",
+          "1 · Detective → open the finding groups view",
+          "2 · Pick a group and list every entity it ties together",
+          "3 · Pivot between two entities and note their shared activity",
+          "✓ DONE WHEN · You can narrate the group as a single incident"
+        ],
+        "narration": "Second exercise: practice connecting the dots. In Detective, open the finding groups view and pick a group. List every entity it ties together — the roles, IPs, and instances. Then pivot between two of those entities and note the activity they share. You're done when you can narrate the whole group as one connected incident, rather than a handful of unrelated alerts."
+      }
+    ]
+  }
+}

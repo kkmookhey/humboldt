@@ -1,0 +1,122 @@
+{
+  "id": "aws-kms",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 5 · Data Protection",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "AWS KMS",
+    "lines": ["Key Management Service", "— encryption keys, control + audit —"]
+  },
+  "intro": "AWS Key Management Service — KMS — is where you create and control the keys that encrypt your data across AWS. Let's walk through key types, who controls a key, rotation, and the audit trail that proves it all.",
+  "sections": [
+    {
+      "id": "keys", "section": "Customer managed keys",
+      "url": "https://console.aws.amazon.com/kms/home#/kms/keys",
+      "kicker": "Three flavors of keys", "cardTitle": "Know your key types",
+      "bullets": [
+        "AWS-owned keys live in AWS, you can't see or audit them. AWS-managed keys (aws/service) you can see but can't control rotation or policy.",
+        "Customer-managed keys (CMKs) are the ones you create here — you own the policy, rotation, and lifecycle.",
+        "For the exam: if a question needs key-policy control, rotation control, or grants, the answer is a customer-managed key."
+      ],
+      "narration": "This is the customer managed keys list in KMS. There are three kinds of keys. AWS-owned keys live inside AWS and you can't see or audit them. AWS-managed keys, the ones named aws slash a service, you can see but you can't control their policy or rotation. The keys you create here are customer-managed keys, or CMKs, and those are the ones you fully own — policy, rotation, and lifecycle. On the exam, whenever you need real control over a key, the answer is a customer-managed key."
+    },
+    {
+      "id": "spec", "section": "Key configuration",
+      "url": "https://console.aws.amazon.com/kms/home#/kms/keys",
+      "kicker": "Symmetric vs asymmetric", "cardTitle": "Pick the right key spec",
+      "bullets": [
+        "Symmetric keys (the default) never leave KMS — you call Encrypt and Decrypt and the key stays inside the service.",
+        "Asymmetric keys give you a public/private pair for encryption or digital signing when a partner outside AWS needs the public key.",
+        "Most workloads want symmetric; choose asymmetric only when you genuinely need a public key or sign/verify."
+      ],
+      "narration": "When you create a key you choose its spec. A symmetric key is the default and it never leaves KMS — you call encrypt and decrypt, and the key material stays inside the service. An asymmetric key gives you a public and private pair, useful when something outside AWS needs the public key, or when you need to sign and verify. Most workloads want symmetric; reach for asymmetric only when you truly need a public key."
+    },
+    {
+      "id": "policy", "section": "Key control",
+      "url": "https://console.aws.amazon.com/kms/home#/kms/keys",
+      "kicker": "Who can use a key", "cardTitle": "Key policy + IAM + grants",
+      "bullets": [
+        "The key policy is the primary gate — a key with no policy statement granting access is unusable, even to admins.",
+        "IAM policies can grant access too, but only when the key policy delegates to IAM with a Principal of the account root.",
+        "Grants are temporary, programmatic permissions — ideal for letting an AWS service use a key for a single operation."
+      ],
+      "narration": "Access to a KMS key is decided by three things working together. The key policy is the primary gate — it's attached directly to the key, and if no statement grants access, nobody can use it, not even an admin. IAM policies can also grant access, but only when the key policy delegates to IAM. And grants give temporary, fine-grained permissions, which is how AWS services get scoped access to use a key for a single operation.",
+      "drill": {
+        "id": "keypolicy", "section": "Key · Key policy", "clickText": "Key policy",
+        "kicker": "The gate lives on the key", "cardTitle": "Read the key policy",
+        "bullets": [
+          "Every statement names a Principal — the account, role, or service allowed to call KMS actions on this key.",
+          "Split duties: key administrators can manage the key but not necessarily use it; key users can encrypt and decrypt.",
+          "A Principal of '*' or a wide-open account root with broad IAM is how keys get over-shared — scope it tightly."
+        ],
+        "narration": "Here's the key policy itself. Every statement names a principal — the account, role, or service allowed to call KMS actions on this key. Notice how it separates key administrators, who manage the key, from key users, who actually encrypt and decrypt with it. A wide-open principal, or delegating to an account root that has broad IAM, is how keys quietly get over-shared, so keep this scoped tightly."
+      }
+    },
+    {
+      "id": "rotation", "section": "Key rotation",
+      "url": "https://console.aws.amazon.com/kms/home#/kms/keys",
+      "kicker": "Set it and forget it", "cardTitle": "Turn on automatic rotation",
+      "bullets": [
+        "Enable automatic rotation and KMS rotates the backing key material on a schedule — yearly by default, configurable.",
+        "The key ID and ARN never change, so applications and old ciphertext keep working seamlessly.",
+        "Rotation applies to symmetric customer-managed keys; multi-Region keys let you replicate one logical key across Regions."
+      ],
+      "narration": "For a customer-managed symmetric key you can switch on automatic rotation, and KMS will rotate the underlying key material on a schedule — once a year by default, and now configurable. The important part is that the key ID and ARN never change, so your applications and even ciphertext encrypted with older material keep working with no changes. And if you operate across Regions, multi-Region keys let you replicate one logical key so data encrypted in one Region can be decrypted in another."
+    },
+    {
+      "id": "audit", "section": "Envelope encryption + audit",
+      "url": "https://console.aws.amazon.com/kms/home",
+      "kicker": "Every use is logged", "cardTitle": "Envelope encryption, fully audited",
+      "bullets": [
+        "Envelope encryption: a data key encrypts your data, and the KMS key encrypts that data key — that's how S3, EBS, and RDS scale encryption.",
+        "Every Encrypt, Decrypt, and GenerateDataKey call is logged in CloudTrail with who, what, and when.",
+        "Scheduling key deletion enforces a 7-to-30 day waiting period — a guardrail so you can cancel before data becomes unrecoverable."
+      ],
+      "narration": "Two things tie KMS together. First, envelope encryption: instead of sending big data to KMS, a small data key encrypts your data, and the KMS key only encrypts that data key — that's how services like S3, EBS, and RDS encrypt at massive scale. Second, audit: every encrypt, decrypt, and generate-data-key call is recorded in CloudTrail, so you always know who used a key and when. And when you delete a key, KMS enforces a waiting period of seven to thirty days, a deliberate guardrail so you can cancel before the data it protects becomes unrecoverable."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "KMS in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Customer-managed keys = full control.",
+        "2 · The key policy is the primary gate.",
+        "3 · Turn on automatic rotation.",
+        "4 · Envelope encryption scales it all.",
+        "5 · CloudTrail logs every key use; deletion waits 7–30 days."
+      ]
+    },
+    "narration": "In short: use customer-managed keys when you need real control; remember the key policy is the primary gate, with IAM and grants alongside it; turn on automatic rotation; lean on envelope encryption to scale; and trust CloudTrail to log every key use, with a seven to thirty day waiting period protecting you from accidental deletion. That's KMS, done right.",
+    "examTip": "Exam tip: know AWS-owned vs AWS-managed vs customer-managed keys, key policy vs IAM vs grants for who controls a key, and the 7-to-30 day deletion window."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-kms-1", "title": "Exercise 1 — Create and scope a CMK", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Build a customer-managed key only one role can use",
+          "1 · KMS → Customer managed keys → Create key → symmetric",
+          "2 · Set key administrators and key users as DIFFERENT roles",
+          "3 · Enable automatic rotation; read the generated key policy",
+          "✓ DONE WHEN · A non-key-user role gets AccessDenied calling Decrypt"
+        ],
+        "narration": "Time to make this real. In your lab account, open KMS and create a symmetric customer-managed key. As you go, set the key administrators and the key users to different roles, so management and use are separated. Turn on automatic rotation, then read through the key policy KMS generated for you and find each principal. You're done when a role that isn't listed as a key user tries to call decrypt and gets access denied — proof the key policy is doing its job."
+      },
+      {
+        "id": "lab-kms-2", "title": "Exercise 2 — Envelope encryption + audit", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Encrypt with a data key and find it in CloudTrail",
+          "1 · CloudShell → aws kms generate-data-key on your CMK",
+          "2 · Use the plaintext data key locally, then store only the encrypted copy",
+          "3 · Open CloudTrail → Event history → filter for GenerateDataKey",
+          "✓ DONE WHEN · You see your CMK use logged with the calling identity"
+        ],
+        "narration": "Second exercise: see envelope encryption and the audit trail with your own eyes. In CloudShell, call generate-data-key against the key you just made — KMS hands back a plaintext data key and an encrypted copy of it. Use the plaintext key to encrypt something locally, then throw the plaintext away and keep only the encrypted data key. Now open CloudTrail, go to event history, and filter for generate-data-key. You're done when you can see that exact call logged, showing which identity used your key and when."
+      }
+    ]
+  }
+}

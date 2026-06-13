@@ -1,0 +1,122 @@
+{
+  "id": "aws-waf-shield",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 3 · Infrastructure Security",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "AWS WAF & Shield",
+    "lines": ["Web application firewall + DDoS protection", "— web ACLs, managed rules, Shield tiers —"]
+  },
+  "intro": "AWS WAF and Shield are how you protect public-facing applications from web exploits and denial-of-service attacks. Let's walk through web ACLs, managed and rate-based rules, and when you actually need Shield Advanced.",
+  "sections": [
+    {
+      "id": "web-acls", "section": "Web ACLs",
+      "url": "https://console.aws.amazon.com/wafv2/homev2/web-acls",
+      "kicker": "The firewall you attach", "cardTitle": "WAF v2 web ACLs",
+      "bullets": [
+        "A web ACL is a set of rules you associate with CloudFront, an ALB, API Gateway, or AppSync.",
+        "Each rule has an action — allow, block, or count — evaluated in priority order.",
+        "Start rules in Count mode to observe matches before you flip them to Block."
+      ],
+      "narration": "This is the WAF version two console, and the central object is the web ACL — said 'ackle.' A web ACL is a bundle of rules you associate with a public resource: a CloudFront distribution, an Application Load Balancer, API Gateway, or AppSync. Each rule does one of three things — allow, block, or count — and they're evaluated in priority order. A pro move the exam rewards: deploy new rules in count mode first so you can watch what they would match, then switch them to block once you trust them.",
+      "drill": {
+        "id": "acl-rules", "section": "Web ACL · Rules", "clickText": "Rules",
+        "kicker": "Order and action matter", "cardTitle": "Read the rules in this web ACL",
+        "bullets": [
+          "Rules fire in priority order — the first terminating match wins, so order them deliberately.",
+          "Mix managed rule groups with your own custom and rate-based rules.",
+          "Set the web ACL's default action — usually Allow, with rules to block the bad."
+        ],
+        "narration": "Here are the rules inside a web ACL. They execute in priority order, and the first terminating match decides the request, so the order you place them in genuinely matters. You'll typically stack AWS managed rule groups alongside your own custom rules and a rate-based rule or two. Don't forget the default action at the bottom: for most public sites it's allow, and your rules carve out the bad traffic to block. The exam likes to ask what happens when no rule matches — the answer is the default action."
+      }
+    },
+    {
+      "id": "managed-rules", "section": "Managed rule groups",
+      "url": "https://console.aws.amazon.com/wafv2/homev2",
+      "kicker": "Don't write it all yourself", "cardTitle": "AWS managed rule groups",
+      "bullets": [
+        "AWS maintains rule groups for common threats — SQL injection, XSS, bad inputs, known-bad IPs.",
+        "The Core rule set and the OWASP-aligned groups give you a strong baseline fast.",
+        "Add the Bot Control and IP reputation groups; tune false positives with rule overrides."
+      ],
+      "narration": "You don't have to hand-write protection for every known attack. AWS managed rule groups are curated, automatically updated rule sets that cover the common threats — SQL injection, cross-site scripting, malformed requests, and known-bad I-P addresses. The Core rule set and the OWASP-aligned groups give you a strong baseline in minutes. Layer on the Bot Control and Amazon I-P reputation lists for more coverage. If a managed rule causes a false positive, you don't disable the whole group — you override that single rule to count, which is the clean, exam-correct fix."
+    },
+    {
+      "id": "rate-based", "section": "Rate-based rules",
+      "url": "https://console.aws.amazon.com/wafv2/homev2/web-acls",
+      "kicker": "Throttle abusive clients", "cardTitle": "Rate-based rules",
+      "bullets": [
+        "Count requests per source IP over a window and block clients that exceed your threshold.",
+        "Great against brute-force logins, scraping, and layer-7 floods that slip past managed rules.",
+        "Combine with scope-down statements so the limit only applies to sensitive paths like /login."
+      ],
+      "narration": "Rate-based rules defend against volume from a single source. WAF counts the requests coming from each I-P address over a rolling window, and when a client crosses your threshold it gets blocked until it slows down. This is your tool against brute-force login attempts, aggressive scrapers, and application-layer floods that managed rules alone won't stop. A nice refinement is a scope-down statement, so the rate limit only applies to the paths that need it — like your login or search endpoint — rather than the whole site."
+    },
+    {
+      "id": "shield-standard", "section": "Shield Standard",
+      "url": "https://console.aws.amazon.com/wafv2/shieldv2#/",
+      "kicker": "Always-on, free", "cardTitle": "Shield Standard protects everyone",
+      "bullets": [
+        "Included free for all AWS customers — no sign-up, always on.",
+        "Defends against common layer-3 and layer-4 DDoS attacks like SYN floods and reflection.",
+        "Automatically applied at the edge for CloudFront, Route 53, and Global Accelerator."
+      ],
+      "narration": "Shield comes in two tiers, and the first one is free for everybody. Shield Standard is automatic and always on for every AWS customer — there's nothing to enable. It absorbs the common network and transport layer attacks, the layer-three and layer-four floods like S-Y-N floods and reflection attacks, right at the AWS edge. If you're fronting your app with CloudFront, Route fifty-three, or Global Accelerator, you're already getting this protection for free."
+    },
+    {
+      "id": "shield-advanced", "section": "Shield Advanced",
+      "url": "https://console.aws.amazon.com/wafv2/shieldv2#/",
+      "kicker": "When you need the big guns", "cardTitle": "Shield Advanced adds depth",
+      "bullets": [
+        "Paid tier ($3,000/mo) adding layer-7 DDoS protection, detailed attack diagnostics, and WAF at no extra cost.",
+        "24/7 access to the Shield Response Team — the SRT — during an active attack.",
+        "Cost protection: AWS refunds scaling charges caused by a covered DDoS attack."
+      ],
+      "narration": "When the stakes are higher, Shield Advanced is the paid tier, and you should know its three selling points cold for the exam. First, deeper protection — including application-layer, layer-seven D-DOS defenses and rich attack diagnostics, plus WAF included at no extra charge. Second, you get twenty-four-seven access to the Shield Response Team, the S-R-T, who help you mitigate during a live attack. And third, cost protection: if a covered D-DOS attack scales your bill up, AWS credits those charges back. That cost-protection guarantee is the detail people forget."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "WAF & Shield in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Web ACL = rules attached to CloudFront/ALB/API GW.",
+        "2 · Managed rule groups = fast, updated baseline.",
+        "3 · Rate-based rules throttle abusive IPs.",
+        "4 · Shield Standard = free, automatic, L3/L4.",
+        "5 · Shield Advanced = L7, SRT, cost protection."
+      ]
+    },
+    "narration": "In short: a web ACL is the set of rules you attach to CloudFront, an A-L-B, or API Gateway; managed rule groups give you a fast, auto-updated baseline; rate-based rules throttle abusive sources; Shield Standard is free and automatic against layer-three and four floods; and Shield Advanced adds layer-seven protection, the response team, and cost protection. That's your edge defense.",
+    "examTip": "Exam tip: Shield Standard is free and automatic; Shield Advanced is paid and adds the SRT, layer-7 defense, and DDoS cost protection. WAF handles the application-layer rules."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-waf-1", "title": "Exercise 1 — Build a web ACL", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Protect an endpoint with managed + custom rules",
+          "1 · WAF → Web ACLs → create one, associate it with an ALB or CloudFront",
+          "2 · Add the AWS Core rule set and the SQL injection managed group",
+          "3 · Add a custom rule in Count mode, watch CloudWatch metrics, then set Block",
+          "✓ DONE WHEN · Sampled requests show matches and the default action is Allow"
+        ],
+        "narration": "Let's build one. In WAF, create a web ACL and associate it with an Application Load Balancer or a CloudFront distribution you control. Add two AWS managed rule groups: the Core rule set and the S-Q-L injection group. Then add one custom rule of your own, but leave it in count mode at first. Open the CloudWatch metrics and the sampled requests to see what it matches, and only when you're confident, flip it to block. You're done when you can see real requests being sampled and your default action is set to allow."
+      },
+      {
+        "id": "lab-waf-2", "title": "Exercise 2 — Stop a flood with a rate rule", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Throttle a single noisy client",
+          "1 · WAF → your web ACL → add a rate-based rule, limit e.g. 100 / 5 min",
+          "2 · Scope it down to a path like /login with a string-match statement",
+          "3 · Hammer the endpoint from one IP until you trip the block",
+          "✓ DONE WHEN · The offending IP gets 403s and recovers after the window"
+        ],
+        "narration": "Second exercise: feel a rate-based rule work. In your web ACL, add a rate-based rule with a modest limit — say a hundred requests in five minutes — and use a scope-down statement so it only watches a sensitive path like slash-login. Now hammer that endpoint from a single address until you trip the threshold. You're done when the offending I-P starts getting four-oh-three responses, and then recovers on its own once the request rate drops back under the limit and the window clears."
+      }
+    ]
+  }
+}

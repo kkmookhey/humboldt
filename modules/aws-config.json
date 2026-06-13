@@ -1,0 +1,122 @@
+{
+  "id": "aws-config",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 2 · Security Logging & Monitoring",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "AWS Config",
+    "lines": ["Continuous configuration compliance", "— record, evaluate, and remediate —"]
+  },
+  "intro": "AWS Config records the configuration of your resources over time and continuously checks them against rules. Let's walk through the recorder, rules, conformance packs, automatic remediation, and how aggregators give you one compliance view across the whole organization.",
+  "sections": [
+    {
+      "id": "dashboard", "section": "Config Dashboard",
+      "url": "https://console.aws.amazon.com/config/home",
+      "kicker": "Know your resource state", "cardTitle": "The configuration recorder",
+      "bullets": [
+        "AWS Config continuously records the configuration of supported resources and tracks every change to them.",
+        "The configuration recorder must be turned on per region; without it, Config sees nothing.",
+        "It delivers configuration snapshots and history to an S3 bucket for durable storage and audit."
+      ],
+      "narration": "This is the AWS Config dashboard. Config answers a different question than CloudTrail: not who did what, but what does each resource look like right now, and how has it changed over time. The engine is the configuration recorder, which you enable per region. Once it's on, Config captures the state of your resources and streams the history to an S3 bucket for durable, auditable storage."
+    },
+    {
+      "id": "rules", "section": "Rules",
+      "url": "https://console.aws.amazon.com/config/home#/rules",
+      "kicker": "Compliance as code", "cardTitle": "Managed & custom rules",
+      "bullets": [
+        "Managed rules are AWS-authored checks — like 's3-bucket-public-read-prohibited' — that you enable in a click.",
+        "Custom rules run your own logic in a Lambda function, or as Guard policy-as-code, for organization-specific requirements.",
+        "Each rule evaluates resources and marks them COMPLIANT or NONCOMPLIANT as configurations change."
+      ],
+      "narration": "Rules are where Config becomes compliance as code. Managed rules are written by AWS — things like checking that no S3 bucket allows public read — and you enable them with a click. When you need something specific to your organization, custom rules run your own logic in a Lambda function or as Guard policies. Every rule continuously evaluates your resources and flags each one compliant or noncompliant.",
+      "drill": {
+        "id": "compliance", "section": "Rules · Compliance detail", "clickText": "a rule name",
+        "kicker": "Why is this resource flagged", "cardTitle": "Read the compliance detail",
+        "bullets": [
+          "The detail view lists every evaluated resource and shows exactly which ones are noncompliant.",
+          "Pair it with the resource's configuration timeline to see the precise change that broke compliance.",
+          "From here you can trigger remediation — manually, or automatically via an SSM Automation document."
+        ],
+        "narration": "Click into a rule to see its compliance detail. This view lists every resource the rule evaluated and shows you exactly which ones are noncompliant. To understand why, jump to that resource's configuration timeline and find the change that broke compliance. And right from here you can remediate the finding, either by hand or automatically using a Systems Manager Automation document."
+      }
+    },
+    {
+      "id": "conformance-packs", "section": "Conformance packs",
+      "url": "https://console.aws.amazon.com/config/home#/conformance-packs",
+      "kicker": "Ship rules in bundles", "cardTitle": "Conformance packs",
+      "bullets": [
+        "A conformance pack is a collection of Config rules and remediation actions packaged as a single deployable unit.",
+        "AWS provides sample packs mapped to frameworks like CIS, PCI DSS, and NIST so you don't start from scratch.",
+        "Deploy a pack across an entire organization to enforce one compliance baseline everywhere."
+      ],
+      "narration": "Conformance packs let you ship many rules at once. A pack bundles Config rules and their remediation actions into a single deployable unit, defined as a template. AWS ships sample packs aligned to frameworks like CIS, PCI, and NIST, so you can adopt a recognized baseline instead of authoring everything yourself. Deploy a pack across your whole organization and you've enforced one consistent compliance standard everywhere at once."
+    },
+    {
+      "id": "remediation", "section": "Automatic remediation",
+      "url": "https://console.aws.amazon.com/config/home#/rules",
+      "kicker": "Fix drift automatically", "cardTitle": "Remediate via SSM Automation",
+      "bullets": [
+        "Attach an SSM Automation document to a rule so noncompliant resources are fixed without a human in the loop.",
+        "Example: a public security group is detected and the automation revokes the open ingress rule.",
+        "Use cautiously — auto-remediation should run with a scoped role and be tested before you trust it in production."
+      ],
+      "narration": "Config can close the loop and fix problems for you. Attach a Systems Manager Automation document to a rule, and when a resource goes noncompliant the automation runs and corrects it. A classic example: Config spots a security group open to the world, and the automation revokes that ingress rule automatically. Treat this with respect — give the automation a tightly scoped role and test it thoroughly before you let it act on production."
+    },
+    {
+      "id": "aggregator", "section": "Aggregators",
+      "url": "https://console.aws.amazon.com/config/home",
+      "kicker": "One pane for the whole org", "cardTitle": "Multi-account aggregators",
+      "bullets": [
+        "An aggregator pulls Config data from many accounts and regions into a single view.",
+        "See organization-wide compliance and find every noncompliant resource without logging into each account.",
+        "Run it from a delegated administrator account so your security team has one place to look."
+      ],
+      "narration": "Finally, aggregators give you one pane of glass. An aggregator collects Config data from many accounts and many regions into a single view, so you can see organization-wide compliance and hunt down every noncompliant resource without signing into each account. Run it from a delegated administrator account, and your security team gets one trusted place to assess compliance across the entire estate."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Config in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Turn on the configuration recorder in every region.",
+        "2 · Use managed rules; write custom rules for your own needs.",
+        "3 · Deploy conformance packs for framework baselines.",
+        "4 · Auto-remediate drift with SSM Automation — carefully.",
+        "5 · Aggregate all accounts into one compliance view."
+      ]
+    },
+    "narration": "In short: turn on the configuration recorder in every region; lean on managed rules and add custom rules for your own requirements; deploy conformance packs to adopt framework baselines fast; auto-remediate drift with Systems Manager Automation, but do it carefully; and aggregate every account into one compliance view. That's AWS Config, done right.",
+    "examTip": "Exam tip: CloudTrail records API activity, while Config records resource configuration and compliance over time. Know that remediation uses SSM Automation documents and that aggregators span accounts and regions."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-config-1", "title": "Exercise 1 — Catch a public S3 bucket", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Detect a noncompliant resource with a managed rule",
+          "1 · Config → enable the configuration recorder",
+          "2 · Add the managed rule s3-bucket-public-read-prohibited",
+          "3 · Make a bucket public, then open the rule's compliance detail",
+          "✓ DONE WHEN · The bucket shows NONCOMPLIANT in the rule view"
+        ],
+        "narration": "Let's make this real. In your lab account, open AWS Config and enable the configuration recorder. Add the managed rule that prohibits public-read S3 buckets. Now deliberately make a test bucket public, wait for the evaluation, and open the rule's compliance detail. You're done when Config flags that bucket as noncompliant and you can trace it on the resource's configuration timeline."
+      },
+      {
+        "id": "lab-config-2", "title": "Exercise 2 — Auto-remediate the drift", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Fix a noncompliant resource automatically",
+          "1 · On that rule, configure remediation with an SSM Automation document",
+          "2 · Give the automation a scoped role and enable auto-remediation",
+          "3 · Re-trigger noncompliance and watch the automation run",
+          "✓ DONE WHEN · The bucket flips back to COMPLIANT on its own"
+        ],
+        "narration": "Second exercise: close the loop. On that same rule, configure remediation using a Systems Manager Automation document that removes the public access, and give it a scoped role. Enable automatic remediation. Now make the bucket public again and watch Config detect the drift and the automation correct it. You're done when the bucket flips back to compliant on its own, with no human action."
+      }
+    ]
+  }
+}

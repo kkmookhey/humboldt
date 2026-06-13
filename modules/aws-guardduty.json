@@ -1,0 +1,122 @@
+{
+  "id": "aws-guardduty",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 1 · Threat Detection & Incident Response",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Amazon GuardDuty",
+    "lines": ["Continuous threat detection", "— findings, protection plans + automated response —"]
+  },
+  "intro": "Amazon GuardDuty is your always-on threat detection service. It watches your logs around the clock, flags suspicious behavior as findings, and hands them off for automated response. Let's walk through how it works and how to wire it up.",
+  "sections": [
+    {
+      "id": "summary", "section": "Summary",
+      "url": "https://console.aws.amazon.com/guardduty/home",
+      "kicker": "Always-on threat detection", "cardTitle": "GuardDuty analyzes your data sources",
+      "bullets": [
+        "Continuously analyzes CloudTrail management and data events, VPC Flow Logs, and DNS query logs — no agents, no log shipping to set up.",
+        "Uses threat intelligence, anomaly detection, and machine learning to spot reconnaissance, instance compromise, and account takeover.",
+        "Turn it on per region; enable it in every region you use, because threats can appear anywhere."
+      ],
+      "narration": "This is the GuardDuty summary page, your starting point. GuardDuty continuously analyzes three core sources — CloudTrail events, VPC Flow Logs, and DNS query logs — with no agents to install and no logs to ship yourself. It applies threat intelligence, anomaly detection, and machine learning to spot reconnaissance, compromised instances, and account takeover. Remember that it's a regional service, so enable it in every region you operate in."
+    },
+    {
+      "id": "findings", "section": "Findings",
+      "url": "https://console.aws.amazon.com/guardduty/home#/findings",
+      "kicker": "What GuardDuty is telling you", "cardTitle": "Read and triage findings by severity",
+      "bullets": [
+        "Each finding has a type like Recon, UnauthorizedAccess, or CryptoCurrency, plus the affected resource and actor.",
+        "Severity runs from low through medium to high — triage high-severity findings first.",
+        "The finding detail shows the exact API calls, IP addresses, and timeline you need to investigate."
+      ],
+      "narration": "Findings are how GuardDuty talks to you. Every finding carries a type — like reconnaissance, unauthorized access, or cryptocurrency mining — along with the affected resource and the actor behind it. Severity ranges from low to medium to high, so triage the high-severity findings first. Open one and you'll see the exact API calls, source addresses, and timeline that tell the story.",
+      "drill": {
+        "id": "finding-detail", "section": "Findings · Finding detail", "clickText": "a finding row",
+        "kicker": "Inside a single finding", "cardTitle": "The finding detail is your evidence",
+        "bullets": [
+          "The finding ID, resource, and action panel show what happened, to which resource, and by whom.",
+          "Check the actor's IP, whether it's on a known threat list, and the count of times the behavior repeated.",
+          "Use this evidence to decide: suppress, archive, or escalate to incident response."
+        ],
+        "narration": "Here's a single finding opened up. The detail pane shows what happened, which resource was touched, and who the actor was. Look at the actor's IP address, whether it matches a known threat list, and how many times the behavior repeated. This is the evidence you use to decide whether to suppress it, archive it, or escalate it into your incident response process."
+      }
+    },
+    {
+      "id": "settings", "section": "Protection plans",
+      "url": "https://console.aws.amazon.com/guardduty/home#/settings",
+      "kicker": "Extend coverage beyond the basics", "cardTitle": "Turn on the protection plans you need",
+      "bullets": [
+        "S3 Protection watches data events; Malware Protection scans EBS volumes attached to suspicious instances.",
+        "EKS Protection covers Kubernetes audit logs; RDS Protection flags anomalous login activity to databases.",
+        "Lambda Protection monitors network activity from your functions — each plan adds cost, so enable what fits your estate."
+      ],
+      "narration": "Beyond the core sources, GuardDuty offers protection plans you switch on as needed. S3 Protection watches data events, and Malware Protection scans the EBS volumes attached to a suspicious instance. EKS Protection covers Kubernetes audit logs, RDS Protection flags anomalous database logins, and Lambda Protection monitors network activity from your functions. Each plan adds cost, so enable the ones that match what you actually run."
+    },
+    {
+      "id": "accounts", "section": "Accounts",
+      "url": "https://console.aws.amazon.com/guardduty/home#/accounts",
+      "kicker": "Manage the whole org from one place", "cardTitle": "Use a delegated administrator",
+      "bullets": [
+        "From AWS Organizations, designate a delegated administrator account — usually your central security account.",
+        "The delegated admin enables GuardDuty across all member accounts and can auto-enable it for new accounts.",
+        "All findings flow to the admin account, giving security one pane of glass for the entire organization."
+      ],
+      "narration": "GuardDuty is built for multi-account environments. From AWS Organizations you designate a delegated administrator — typically your central security account. That account enables GuardDuty across every member account, and can auto-enable it whenever a new account joins. All findings then roll up to the administrator, giving your security team a single pane of glass for the whole organization."
+    },
+    {
+      "id": "suppression", "section": "Suppression & response",
+      "url": "https://console.aws.amazon.com/guardduty/home#/findings",
+      "kicker": "From detection to action", "cardTitle": "Suppress noise, automate the rest",
+      "bullets": [
+        "Suppression rules auto-archive findings that match a filter — use them to silence known-good behavior, not to hide real risk.",
+        "GuardDuty publishes every finding to Security Hub and to EventBridge automatically.",
+        "An EventBridge rule can trigger a Lambda function or SSM document to isolate, alert, or remediate in seconds."
+      ],
+      "narration": "Detection only matters if it drives action. Suppression rules auto-archive findings that match a filter — use them to silence known-good noise, never to bury real risk. Every finding is published automatically to Security Hub for aggregation, and to EventBridge as an event. From EventBridge you trigger a Lambda function or a Systems Manager document to isolate, alert, or remediate within seconds. That's how detection becomes response."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "GuardDuty in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Always-on analysis of CloudTrail, VPC Flow, DNS — no agents.",
+        "2 · Triage findings high severity first.",
+        "3 · Enable protection plans that fit your estate.",
+        "4 · Delegated admin for org-wide coverage.",
+        "5 · Export to Security Hub + EventBridge to automate response."
+      ]
+    },
+    "narration": "In short: GuardDuty continuously analyzes CloudTrail, VPC Flow Logs, and DNS with no agents; triage findings by severity, high first; enable the protection plans that fit your estate; use a delegated administrator for organization-wide coverage; and export findings to Security Hub and EventBridge to automate your response. That's GuardDuty, done right.",
+    "examTip": "Exam tip: know which data sources GuardDuty uses by default, that findings flow to Security Hub and EventBridge for automated response, and how delegated admin enables multi-account detection."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-guardduty-1", "title": "Exercise 1 — Generate and triage a finding", "accent": "#f0883e",
+        "lines": [
+          "GOAL · See a real GuardDuty finding end to end",
+          "1 · GuardDuty → Settings → generate sample findings",
+          "2 · Open Findings, sort by severity, pick a high-severity one",
+          "3 · Read the resource, actor IP, and action in the detail pane",
+          "✓ DONE WHEN · You can explain what the finding means and its severity"
+        ],
+        "narration": "Let's make this real. In your lab account, open GuardDuty settings and generate the sample findings. Now go to the findings list, sort by severity, and pick a high-severity one. Open its detail pane and read the affected resource, the actor's IP address, and the action that triggered it. You're done when you can explain, in plain language, what that finding means and why it's rated the severity it is."
+      },
+      {
+        "id": "lab-guardduty-2", "title": "Exercise 2 — Automate a response", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Route a finding to automated action",
+          "1 · EventBridge → create a rule matching GuardDuty findings",
+          "2 · Target an SNS topic and subscribe your email",
+          "3 · Generate sample findings again and confirm the alert arrives",
+          "✓ DONE WHEN · A GuardDuty finding emails you automatically via EventBridge"
+        ],
+        "narration": "Second exercise: wire detection to action. Open EventBridge and create a rule that matches GuardDuty finding events. Point it at an SNS topic and subscribe your own email address. Then go back to GuardDuty and generate sample findings again. You're done when a GuardDuty finding automatically lands in your inbox through that EventBridge rule — the same pattern you'd use to trigger Lambda or Systems Manager for real remediation."
+      }
+    ]
+  }
+}

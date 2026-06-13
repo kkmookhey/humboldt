@@ -1,0 +1,122 @@
+{
+  "id": "aws-incident-response",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 1 · Threat Detection & Incident Response",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Incident Response on AWS",
+    "lines": ["Detect, contain, eradicate, recover", "— turning findings into action —"]
+  },
+  "intro": "When an alert fires, what do you actually do? Incident response on AWS is a lifecycle: prepare, detect, contain, eradicate, recover. Let's walk that lifecycle using the services you already have, and the containment moves that buy you time.",
+  "sections": [
+    {
+      "id": "detect", "section": "Detect",
+      "url": "https://console.aws.amazon.com/guardduty/home#/findings",
+      "kicker": "It starts with a signal", "cardTitle": "Detection feeds your response",
+      "bullets": [
+        "GuardDuty findings are the usual trigger — high-severity ones should page someone fast.",
+        "Detective gives you the investigation context; CloudTrail event history gives you the exact timeline.",
+        "Define severity thresholds in advance so the team knows what's an incident versus noise."
+      ],
+      "narration": "Every incident starts with a signal. Most often that's a GuardDuty finding, and a high-severity one should page someone quickly. From there, Detective gives you investigation context and CloudTrail event history gives you the exact timeline of what was done. The work to do before any of this happens is defining your severity thresholds, so the team knows instantly what counts as an incident versus everyday noise."
+    },
+    {
+      "id": "investigate", "section": "Investigate",
+      "url": "https://console.aws.amazon.com/cloudtrail/home#/events",
+      "kicker": "Reconstruct exactly what happened", "cardTitle": "CloudTrail event history is your record",
+      "bullets": [
+        "CloudTrail event history shows every API call: who, what, when, and from which IP.",
+        "Filter by the compromised identity or resource to reconstruct the attacker's actions step by step.",
+        "Pair this with Detective's behavior graph to map the full blast radius before you act."
+      ],
+      "narration": "Before you contain, you investigate. CloudTrail event history is your authoritative record — every API call, with who made it, what they did, when, and from which IP address. Filter by the compromised identity or resource and you can reconstruct the attacker's actions step by step. Pair that with Detective's behavior graph to map the full blast radius, so you contain the whole incident, not just the first thing you noticed.",
+      "drill": {
+        "id": "guardduty-trigger", "section": "Detect · GuardDuty finding", "clickText": "a high-severity finding",
+        "kicker": "The finding that starts it all", "cardTitle": "A finding feeds the response",
+        "bullets": [
+          "Open a high-severity GuardDuty finding and note the affected resource and the actor's identity.",
+          "That resource and identity are exactly what you'll contain in the next step.",
+          "This same finding can auto-trigger containment via EventBridge — detection wired straight to action."
+        ],
+        "narration": "Let's look at the finding that kicks everything off. Open a high-severity GuardDuty finding and note two things: the affected resource and the identity of the actor. Those are precisely what you'll contain in the next step. And remember — this same finding can automatically trigger your containment through EventBridge, wiring detection straight to action with no human in the critical seconds."
+      }
+    },
+    {
+      "id": "contain", "section": "Contain",
+      "url": "https://console.aws.amazon.com/ec2/home#SecurityGroups:",
+      "kicker": "Stop the bleeding first", "cardTitle": "Isolate before you eradicate",
+      "bullets": [
+        "Isolate a compromised EC2 instance by swapping it to a deny-all security group — it stays alive for forensics.",
+        "For a compromised role, revoke active sessions with an AWSRevokeOlderSessions policy on the role.",
+        "For leaked IAM user credentials, deactivate the access key immediately, then rotate."
+      ],
+      "narration": "Containment is about stopping the bleeding fast. To isolate a compromised EC2 instance, swap it onto a deny-all security group — that cuts its network access while keeping the instance alive for forensics. For a compromised role, revoke its active sessions by attaching a policy that invalidates older sessions. And for leaked IAM user credentials, deactivate the access key immediately, then rotate it. Contain first; you can always investigate the frozen evidence afterward."
+    },
+    {
+      "id": "automate", "section": "Eradicate & automate",
+      "url": "https://console.aws.amazon.com/systems-manager/incidents/home",
+      "kicker": "Make response repeatable", "cardTitle": "Automate containment and recovery",
+      "bullets": [
+        "Wire GuardDuty findings to EventBridge, which triggers a Lambda function or SSM Automation document to contain automatically.",
+        "Systems Manager Incident Manager coordinates responders, runbooks, and timelines during the event.",
+        "Eradicate the root cause — patch the flaw, remove the backdoor — then recover from a known-good state."
+      ],
+      "narration": "Manual response doesn't scale, so automate it. Route GuardDuty findings to EventBridge, and have it trigger a Lambda function or a Systems Manager automation document that performs your containment in seconds. Systems Manager Incident Manager coordinates your responders, runbooks, and timeline while the event is live. Then comes eradication — patch the flaw, remove any backdoor — before you recover services from a known-good state."
+    },
+    {
+      "id": "forensics", "section": "Recover & forensics account",
+      "url": "https://console.aws.amazon.com/ec2/home#Snapshots:",
+      "kicker": "Preserve evidence, restore safely", "cardTitle": "Use a dedicated forensics account",
+      "bullets": [
+        "Snapshot the compromised instance's EBS volume and copy it to an isolated forensics account for analysis.",
+        "Keeping forensics separate protects the evidence and stops the attacker from following you.",
+        "Recover only from clean backups or images, then capture lessons learned to harden against a repeat."
+      ],
+      "narration": "Finally, recover safely and preserve what you learned. Snapshot the compromised instance's EBS volume and copy that snapshot into a dedicated, isolated forensics account for analysis. Keeping forensics in a separate account protects the evidence and stops the attacker from following you into it. Recover services only from clean backups or images, and then capture your lessons learned so the same incident can't happen the same way twice."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Incident response in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Lifecycle: prepare, detect, contain, eradicate, recover.",
+        "2 · GuardDuty detects; Detective + CloudTrail explain.",
+        "3 · Contain: isolate EC2, revoke sessions, disable keys.",
+        "4 · Automate with EventBridge → Lambda or SSM.",
+        "5 · Snapshot to a dedicated forensics account."
+      ]
+    },
+    "narration": "In short: incident response follows a lifecycle — prepare, detect, contain, eradicate, recover; GuardDuty detects while Detective and CloudTrail explain what happened; contain by isolating EC2 with a deny-all security group, revoking role sessions, and disabling access keys; automate the response with EventBridge driving Lambda or Systems Manager; and preserve evidence by snapshotting into a dedicated forensics account. That's incident response on AWS, done right.",
+    "examTip": "Exam tip: know the IR lifecycle, the containment moves — isolate EC2 via security group, revoke sessions, disable keys — and the EventBridge-to-Lambda or SSM pattern plus a separate forensics account."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-ir-1", "title": "Exercise 1 — Contain a compromised instance", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Isolate an EC2 instance without destroying evidence",
+          "1 · Launch a test instance; create a deny-all security group",
+          "2 · Swap the instance onto that group and confirm it loses network",
+          "3 · Snapshot its EBS volume before any further change",
+          "✓ DONE WHEN · The instance is isolated and a forensic snapshot exists"
+        ],
+        "narration": "Let's practice containment. In your lab, launch a test EC2 instance and create a security group with no inbound or outbound rules — a deny-all group. Swap the instance onto that group and confirm it has lost network connectivity. Then snapshot its EBS volume before you change anything else. You're done when the instance is isolated but still running, and you've captured a forensic snapshot of its disk."
+      },
+      {
+        "id": "lab-ir-2", "title": "Exercise 2 — Automate containment", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Turn a finding into an automatic action",
+          "1 · EventBridge → rule matching GuardDuty findings",
+          "2 · Target a Lambda that tags the affected instance 'quarantine'",
+          "3 · Generate a sample finding and confirm the tag appears",
+          "✓ DONE WHEN · A finding auto-tags the instance with no human step"
+        ],
+        "narration": "Second exercise: wire detection straight to action. Create an EventBridge rule that matches GuardDuty findings, and target a Lambda function that tags the affected instance as quarantine. Then generate a sample finding in GuardDuty and watch for the tag to appear. You're done when a finding automatically tags the instance with no human in the loop — the foundation of the automated containment you'd run in production."
+      }
+    ]
+  }
+}

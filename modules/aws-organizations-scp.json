@@ -1,0 +1,122 @@
+{
+  "id": "aws-organizations-scp",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 4 · Identity & Access Management",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Organizations & SCPs",
+    "lines": ["AWS Organizations + Service Control Policies", "— org-wide guardrails that cap permissions —"]
+  },
+  "intro": "AWS Organizations lets you manage many accounts as one, and Service Control Policies — SCPs — are the guardrails that set the maximum permissions any account can use. Let's walk through the org structure and how to write SCPs that hold the line.",
+  "sections": [
+    {
+      "id": "accounts", "section": "AWS accounts · Org structure",
+      "url": "https://console.aws.amazon.com/organizations/v2/home/accounts",
+      "kicker": "Many accounts, one organization", "cardTitle": "Structure the organization first",
+      "bullets": [
+        "The management account sits at the root; member accounts are grouped into Organizational Units, or OUs.",
+        "OUs let you apply policy to whole groups of accounts — Prod, Dev, Sandbox, Security.",
+        "Keep the management account nearly empty; run workloads in member accounts only."
+      ],
+      "narration": "Start with the shape of the organization. At the top is the management account, sitting at the root. Below it, member accounts are grouped into organizational units, or OUs — think Prod, Dev, Sandbox, and Security. OUs are what let you apply policy to a whole group of accounts at once. One rule to remember: keep the management account almost empty and run your real workloads in member accounts, because it's a powerful blast radius you don't want exposed."
+    },
+    {
+      "id": "scp-concept", "section": "Policies · How SCPs work",
+      "url": "https://console.aws.amazon.com/organizations/v2/home/policies/service-control-policy",
+      "kicker": "Guardrails, not grants", "cardTitle": "SCPs set the MAXIMUM, not the grant",
+      "bullets": [
+        "An SCP defines the ceiling of available permissions — it never grants access by itself.",
+        "Effective permissions = the intersection of the SCP and the account's IAM policies.",
+        "SCPs do not apply to the management account, and never to the service-linked roles AWS manages."
+      ],
+      "narration": "Here's the single most important idea: a service control policy is a guardrail, not a grant. It sets the maximum permissions an account can ever use, but it never gives access on its own — you still need IAM policies inside the account. The effective permissions are the intersection of the two: something is allowed only if both the SCP and IAM allow it. And note two exceptions — SCPs don't restrict the management account, and they don't touch the service-linked roles AWS manages."
+    },
+    {
+      "id": "strategy", "section": "Policies · Allow vs deny",
+      "url": "https://console.aws.amazon.com/organizations/v2/home/policies/service-control-policy",
+      "kicker": "Two ways to draw the line", "cardTitle": "Deny-list vs allow-list strategy",
+      "bullets": [
+        "Deny-list (most common): start from FullAWSAccess and add explicit Deny statements to carve out the forbidden.",
+        "Allow-list: remove FullAWSAccess and explicitly allow only the services you sanction — tighter, but high-maintenance.",
+        "An explicit Deny always wins, so deny statements are the strongest control you have."
+      ],
+      "narration": "There are two strategies for writing SCPs. The deny-list approach is the common one: you keep the default FullAWSAccess policy and layer explicit deny statements on top to carve out what's forbidden. The allow-list approach removes FullAWSAccess and explicitly permits only the services you sanction — it's tighter, but much higher maintenance. Whichever you choose, remember that an explicit deny always wins over any allow, which makes deny statements your strongest guardrail."
+    },
+    {
+      "id": "common-denies", "section": "Policies · Common guardrails",
+      "url": "https://console.aws.amazon.com/organizations/v2/home/policies/service-control-policy",
+      "kicker": "The guardrails everyone needs", "cardTitle": "Common deny SCPs to ship day one",
+      "bullets": [
+        "Restrict regions: deny actions outside your approved regions to shrink the attack surface and meet residency rules.",
+        "Block root: deny actions taken by the account root user across member accounts.",
+        "Protect logging: deny anyone disabling or deleting CloudTrail, Config, or GuardDuty."
+      ],
+      "narration": "These are the guardrails almost every organization ships on day one. First, restrict regions — deny actions outside the regions you've approved, which shrinks your attack surface and helps with data residency. Second, block the root user — deny actions taken as account root across your member accounts. And third, protect your detective controls — deny anyone from stopping or deleting CloudTrail, Config, or GuardDuty. Lock those down and a compromised account can't quietly turn off the cameras.",
+      "drill": {
+        "id": "scp-json", "section": "Policies · SCP document", "clickText": "Edit policy",
+        "kicker": "Read the JSON", "cardTitle": "What a deny SCP looks like",
+        "bullets": [
+          "Effect 'Deny' on cloudtrail:StopLogging and cloudtrail:DeleteTrail stops anyone from blinding your audit trail.",
+          "A Condition like aws:RequestedRegion narrows a region-restriction SCP to exactly the regions you allow.",
+          "Test SCPs on a Sandbox OU before the root — a bad deny can lock out everyone, fast."
+        ],
+        "narration": "Here's the actual policy document. This deny statement targets CloudTrail's stop-logging and delete-trail actions, so no one in a member account can blind your audit trail. A region guardrail uses a condition on the requested-region key to allow only the regions you name. One word of caution: always test a new SCP on a sandbox OU before attaching it near the root, because a careless deny can lock everyone out in seconds."
+      }
+    },
+    {
+      "id": "delegated-admin", "section": "Settings · Delegated administration",
+      "url": "https://console.aws.amazon.com/organizations/v2/home/accounts",
+      "kicker": "Don't operate from the root", "cardTitle": "Delegate administration to a member account",
+      "bullets": [
+        "Delegated administration lets a trusted member account manage a service org-wide — without using the management account.",
+        "Common for Security: delegate GuardDuty, Security Hub, and IAM Access Analyzer to a dedicated security account.",
+        "This keeps day-to-day operations out of the high-privilege management account."
+      ],
+      "narration": "Finally, delegated administration. AWS lets you nominate a trusted member account to manage a service across the whole organization, so your team doesn't have to sign into the management account to do daily work. The classic pattern is a dedicated security account that's the delegated administrator for GuardDuty, Security Hub, and IAM Access Analyzer. This keeps routine operations out of the high-privilege management account, which is exactly where you want them."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Organizations & SCPs in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Management account at the root; group accounts into OUs.",
+        "2 · SCPs cap the MAXIMUM — they never grant.",
+        "3 · Effective = SCP ∩ IAM; explicit Deny always wins.",
+        "4 · Ship guardrails: restrict regions, block root, protect logging.",
+        "5 · Delegate admin to a security account; keep the management account empty."
+      ]
+    },
+    "narration": "In short: put the management account at the root and group your accounts into OUs; remember that SCPs set the maximum and never grant on their own; effective permissions are the intersection of the SCP and IAM, and an explicit deny always wins; ship the core guardrails — restrict regions, block root, and protect your logging services; and delegate administration to a dedicated security account so the management account stays empty. That's Organizations and SCPs, done right.",
+    "examTip": "Exam tip: SCPs limit the maximum available permissions and never grant access; they don't apply to the management account; and effective permissions are the intersection of SCPs and IAM policies, where an explicit Deny overrides any Allow."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-scp-1", "title": "Exercise 1 — Write a region-restriction SCP", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Prove an SCP caps permissions without granting them",
+          "1 · Organizations → create a Sandbox OU and move a test member account in",
+          "2 · Policies → create an SCP that denies all actions where aws:RequestedRegion isn't us-east-1",
+          "3 · Attach it to the Sandbox OU, then try to launch EC2 in eu-west-1",
+          "✓ DONE WHEN · The eu-west-1 action is denied even though IAM allows it"
+        ],
+        "narration": "Time to make this real. In your own lab organization, create a Sandbox OU and move a disposable test account into it. Now write a service control policy that denies every action whose requested region isn't us-east-1, and attach it to the Sandbox OU. Sign into the test account with an admin IAM role and try to launch an EC2 instance in eu-west-1. You're done when that action is denied — even though IAM would have allowed it — which proves the SCP is capping the maximum, not granting anything."
+      },
+      {
+        "id": "lab-scp-2", "title": "Exercise 2 — Protect your audit trail", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Make CloudTrail tamper-resistant across the OU",
+          "1 · Policies → create an SCP denying cloudtrail:StopLogging and cloudtrail:DeleteTrail",
+          "2 · Attach it to the Sandbox OU",
+          "3 · In the test account, try to stop or delete a trail as an admin",
+          "✓ DONE WHEN · Even an account admin cannot disable CloudTrail"
+        ],
+        "narration": "Second exercise: protect the cameras. Create a service control policy that denies the CloudTrail stop-logging and delete-trail actions, and attach it to your Sandbox OU. Now sign into the test account as an administrator and try to stop or delete a trail. You're done when even a full account admin is blocked — that's the guardrail proving that a compromised account still can't quietly turn off your audit trail."
+      }
+    ]
+  }
+}

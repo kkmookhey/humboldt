@@ -1,0 +1,122 @@
+{
+  "id": "aws-inspector",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 1 · Threat Detection & Incident Response",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Amazon Inspector",
+    "lines": ["Continuous vulnerability management", "— EC2, ECR images, Lambda + CVE findings —"]
+  },
+  "intro": "Amazon Inspector is your continuous vulnerability scanner. It automatically finds software flaws across your compute, scores them by real-world risk, and tells you exactly what to patch first. Let's walk through how it works.",
+  "sections": [
+    {
+      "id": "dashboard", "section": "Dashboard",
+      "url": "https://console.aws.amazon.com/inspector/v2/home",
+      "kicker": "Continuous, automated scanning", "cardTitle": "Inspector scans without scheduling",
+      "bullets": [
+        "Scans EC2 instances, ECR container images, and Lambda functions automatically and continuously — no manual scan jobs.",
+        "Discovers known CVEs in operating system and application packages, plus network reachability issues.",
+        "Re-scans automatically when a new CVE is published or a resource changes, so coverage stays current."
+      ],
+      "narration": "This is the Inspector dashboard. Unlike old scanners, Inspector runs continuously and automatically — there are no scan jobs to schedule. It covers EC2 instances, container images in ECR, and Lambda functions, finding known CVEs in your operating system and application packages, plus network reachability problems. And when a new CVE is published or a resource changes, Inspector re-scans on its own, so your picture stays current."
+    },
+    {
+      "id": "findings", "section": "Findings",
+      "url": "https://console.aws.amazon.com/inspector/v2/home#/findings",
+      "kicker": "Prioritized by real-world risk", "cardTitle": "The Inspector risk score guides patching",
+      "bullets": [
+        "Each finding maps to a specific CVE, the affected package, and the fixed version to upgrade to.",
+        "The Inspector risk score blends the base CVE score with exploitability and network exposure — patch high scores first.",
+        "Findings group by vulnerability, by instance, and by image, so you can fix one package across many resources."
+      ],
+      "narration": "Findings are the heart of Inspector. Each one maps to a specific CVE, names the vulnerable package, and tells you the fixed version to upgrade to. The Inspector risk score isn't just the raw CVE number — it factors in exploitability and whether the resource is actually reachable from the network, so you patch what truly matters first. You can group findings by vulnerability, by instance, or by image to fix one package across everything at once.",
+      "drill": {
+        "id": "cve-finding", "section": "Findings · CVE detail", "clickText": "a CVE finding row",
+        "kicker": "Inside a single CVE finding", "cardTitle": "Read the CVE and its remediation",
+        "bullets": [
+          "The detail shows the CVE ID, the vulnerable package and version, and the fixed version.",
+          "Inspector risk score and exploit availability tell you how urgent the fix really is.",
+          "The remediation field gives the exact upgrade command or image rebuild step."
+        ],
+        "narration": "Here's a single CVE finding opened up. The detail pane shows the CVE identifier, the exact vulnerable package and version, and the version that fixes it. Check the Inspector risk score and whether a public exploit exists — that tells you how urgent this really is. And the remediation field gives you the precise upgrade command or image rebuild step to close it out."
+      }
+    },
+    {
+      "id": "coverage", "section": "Coverage",
+      "url": "https://console.aws.amazon.com/inspector/v2/home#/coverage",
+      "kicker": "Know what's actually being scanned", "cardTitle": "Verify your coverage",
+      "bullets": [
+        "Coverage shows which EC2 instances, ECR repositories, and Lambda functions are actively scanned.",
+        "EC2 scanning relies on the SSM agent — instances without it show as not scanned.",
+        "Gaps in coverage are blind spots, so reconcile coverage against your real inventory."
+      ],
+      "narration": "Coverage answers a critical question: what is Inspector actually looking at? This page lists which EC2 instances, ECR repositories, and Lambda functions are being scanned. Remember that EC2 scanning depends on the Systems Manager agent, so any instance missing that agent will show as not scanned. Every gap here is a blind spot, so reconcile this view against your real inventory."
+    },
+    {
+      "id": "suppression", "section": "Suppression rules",
+      "url": "https://console.aws.amazon.com/inspector/v2/home#/findings",
+      "kicker": "Cut noise without losing signal", "cardTitle": "Suppress accepted-risk findings",
+      "bullets": [
+        "Suppression rules hide findings matching a filter — by CVE, resource tag, or severity.",
+        "Suppressed findings still exist and stay tracked; they're just removed from your active worklist.",
+        "Use suppression for documented, accepted risk — not to make uncomfortable findings disappear."
+      ],
+      "narration": "Inspector can get noisy, so suppression rules let you focus. A rule hides findings that match a filter — a specific CVE, a resource tag, or a severity level. Importantly, suppressed findings aren't deleted; they're still tracked, just removed from your active worklist. Use this for documented, accepted risk — never as a way to make uncomfortable findings simply vanish."
+    },
+    {
+      "id": "integrations", "section": "Security Hub & SBOM",
+      "url": "https://console.aws.amazon.com/inspector/v2/home",
+      "kicker": "Aggregate and export", "cardTitle": "Send findings out and export an SBOM",
+      "bullets": [
+        "Inspector findings flow automatically into Security Hub for a single, normalized view across services.",
+        "Findings also land in EventBridge, so you can route critical CVEs to ticketing or remediation.",
+        "Export a software bill of materials per resource to inventory every package for supply-chain audits."
+      ],
+      "narration": "Finally, Inspector doesn't work in isolation. Its findings flow automatically into Security Hub, giving you one normalized view alongside GuardDuty and other services, and they're emitted to EventBridge so you can route a critical CVE straight to a ticket or a remediation job. You can also export a software bill of materials for any resource, listing every package it contains — exactly what you need for supply-chain audits."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Inspector in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Continuous scans of EC2, ECR images, Lambda — no jobs.",
+        "2 · Patch by Inspector risk score, not raw CVE number.",
+        "3 · Watch coverage — no SSM agent means no EC2 scan.",
+        "4 · Suppress only documented, accepted risk.",
+        "5 · Findings to Security Hub; export an SBOM for supply chain."
+      ]
+    },
+    "narration": "In short: Inspector continuously scans EC2, ECR images, and Lambda with no scan jobs; prioritize by the Inspector risk score rather than the raw CVE number; watch coverage, because an instance without the Systems Manager agent won't be scanned; suppress only documented, accepted risk; and send findings to Security Hub while exporting a software bill of materials for supply-chain work. That's Inspector, done right.",
+    "examTip": "Exam tip: know that Inspector v2 scans EC2, ECR, and Lambda continuously, relies on the SSM agent for EC2, scores findings with the Inspector risk score, and integrates with Security Hub."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-inspector-1", "title": "Exercise 1 — Scan an image and read a CVE", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Find and understand a real CVE finding",
+          "1 · Enable Inspector, then push an old image to an ECR repo",
+          "2 · Open Findings, group by vulnerability, pick a high-risk CVE",
+          "3 · Read the package, fixed version, and Inspector risk score",
+          "✓ DONE WHEN · You can name the CVE and the exact fix to apply"
+        ],
+        "narration": "Let's make this concrete. In your lab, enable Inspector, then push a deliberately old container image into an ECR repository so it has known vulnerabilities. Open the findings, group them by vulnerability, and pick a high-risk CVE. Read the affected package, the fixed version, and the Inspector risk score. You're done when you can name the CVE and state the exact upgrade that fixes it."
+      },
+      {
+        "id": "lab-inspector-2", "title": "Exercise 2 — Export an SBOM", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Produce a software bill of materials",
+          "1 · Inspector → choose a scanned resource → export SBOM",
+          "2 · Send the SBOM to an S3 bucket in CycloneDX or SPDX format",
+          "3 · Open it and find the package tied to your CVE finding",
+          "✓ DONE WHEN · You locate the vulnerable package inside the SBOM"
+        ],
+        "narration": "Second exercise: practice supply-chain hygiene. In Inspector, pick a scanned resource and export its software bill of materials to an S3 bucket, choosing a standard format like CycloneDX or SPDX. Open the exported file and find the package that matched the CVE from the first exercise. You're done when you can point to that vulnerable package right inside the SBOM — proof you can inventory exactly what's running."
+      }
+    ]
+  }
+}

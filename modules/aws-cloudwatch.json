@@ -1,0 +1,122 @@
+{
+  "id": "aws-cloudwatch",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 2 · Security Logging & Monitoring",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Amazon CloudWatch",
+    "lines": ["Detection & response, the security angle", "— logs, metric filters, alarms, automation —"]
+  },
+  "intro": "Amazon CloudWatch is where your logs and metrics turn into alerts and action. We'll focus on the security angle: log groups, metric filters that catch root logins, alarms, Logs Insights queries, and using EventBridge to respond automatically.",
+  "sections": [
+    {
+      "id": "overview", "section": "CloudWatch Overview",
+      "url": "https://console.aws.amazon.com/cloudwatch/home",
+      "kicker": "From signal to action", "cardTitle": "CloudWatch is your detection hub",
+      "bullets": [
+        "CloudWatch collects logs and metrics, then lets you alarm on them and trigger automated responses.",
+        "For security it's the place CloudTrail logs become real-time alerts, not just files in a bucket.",
+        "Three pieces matter most: log groups, metric filters, and alarms."
+      ],
+      "narration": "This is the CloudWatch overview. Think of CloudWatch as the hub that turns raw signal into action. For security, it's where your CloudTrail logs stop being files in a bucket and start becoming real-time alerts. The three pieces to keep in mind as we go are log groups that hold your logs, metric filters that watch them, and alarms that fire when something looks wrong."
+    },
+    {
+      "id": "log-groups", "section": "Log groups",
+      "url": "https://console.aws.amazon.com/cloudwatch/home#logsV2:log-groups",
+      "kicker": "Where logs live", "cardTitle": "Log groups & metric filters",
+      "bullets": [
+        "Log groups collect logs from CloudTrail, VPC Flow Logs, Lambda, and your applications.",
+        "Set a retention period and encrypt the log group with a KMS key — logs are sensitive evidence.",
+        "Logs Insights lets you run ad-hoc queries across a group to investigate incidents fast."
+      ],
+      "narration": "Here are your log groups, the buckets where logs land — from CloudTrail, VPC Flow Logs, Lambda, and your own applications. Always set a sensible retention period and encrypt the group with a KMS key, because logs are evidence and they're sensitive. When you need to investigate, Logs Insights lets you run fast ad-hoc queries across a log group to find exactly what happened.",
+      "drill": {
+        "id": "metric-filter", "section": "Log groups · Metric filter", "clickText": "Metric filters",
+        "kicker": "Turn a log line into an alarm", "cardTitle": "Metric filter on root login",
+        "bullets": [
+          "A metric filter scans incoming log events for a pattern and increments a CloudWatch metric when it matches.",
+          "Classic security filters: root account sign-in, unauthorized API calls, and changes to IAM or network ACLs.",
+          "Wire the metric to an alarm so a match notifies an SNS topic within minutes."
+        ],
+        "narration": "Open the metric filters on a log group. A metric filter scans each incoming log event for a pattern, and bumps a CloudWatch metric every time it matches. The classic security filters watch for a root account sign-in, for unauthorized API calls, and for changes to IAM policies or network access control lists. You then attach an alarm to that metric, so the moment a root login appears in the logs, an alarm fires and notifies your team through an SNS topic."
+      }
+    },
+    {
+      "id": "alarms", "section": "Alarms",
+      "url": "https://console.aws.amazon.com/cloudwatch/home#alarmsV2:",
+      "kicker": "Decide when to act", "cardTitle": "Alarms & anomaly detection",
+      "bullets": [
+        "An alarm watches a metric against a threshold and changes state to ALARM when crossed.",
+        "Route alarm actions to SNS for notification, or to automation for an immediate response.",
+        "Anomaly detection learns a metric's normal band and alarms on deviation — useful when no fixed threshold fits."
+      ],
+      "narration": "Alarms decide when something is worth acting on. An alarm watches a metric against a threshold and trips into the alarm state when it's crossed. From there you route the action to an SNS topic to notify people, or straight into automation for an immediate response. And when there's no sensible fixed threshold, anomaly detection learns the metric's normal range and alarms when behavior drifts outside it."
+    },
+    {
+      "id": "dashboards", "section": "Dashboards",
+      "url": "https://console.aws.amazon.com/cloudwatch/home#dashboards:",
+      "kicker": "See it all at a glance", "cardTitle": "Dashboards & Logs Insights",
+      "bullets": [
+        "Dashboards put your key security metrics and alarm states on one screen for the whole team.",
+        "Add Logs Insights query widgets to surface things like top denied API calls in real time.",
+        "A good security dashboard answers 'is anything on fire right now' in one glance."
+      ],
+      "narration": "Dashboards bring everything together on one screen. Pull your key security metrics and alarm states into a single view the whole team can watch. You can embed Logs Insights query widgets too, so a panel might show the top denied API calls right now. A well-built security dashboard should answer one question instantly: is anything on fire right now?"
+    },
+    {
+      "id": "eventbridge", "section": "Automated response",
+      "url": "https://console.aws.amazon.com/cloudwatch/home",
+      "kicker": "Respond without humans", "cardTitle": "EventBridge for automated response",
+      "bullets": [
+        "EventBridge routes events — from GuardDuty, Config, or an alarm — to targets like Lambda or SSM Automation.",
+        "Build rules that react instantly: isolate an instance, revoke a key, or quarantine a finding.",
+        "This is how you shrink response time from hours of manual work to seconds of automation."
+      ],
+      "narration": "Finally, automated response. Amazon EventBridge routes events — a GuardDuty finding, a Config change, or a CloudWatch alarm — to targets like a Lambda function or a Systems Manager Automation document. You write rules that react instantly: isolate a compromised instance, revoke a leaked key, or quarantine a finding. This is how you shrink incident response from hours of manual clicking down to seconds of automation."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "CloudWatch in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Centralize logs in encrypted log groups with retention set.",
+        "2 · Metric filters catch root login & unauthorized calls.",
+        "3 · Alarms notify via SNS; anomaly detection finds the unknown.",
+        "4 · Dashboards show 'is anything on fire' at a glance.",
+        "5 · EventBridge drives automated, instant response."
+      ]
+    },
+    "narration": "In short: centralize your logs in encrypted log groups with retention set; use metric filters to catch root logins and unauthorized calls; let alarms notify you through SNS and use anomaly detection for the unknowns; build dashboards that answer 'is anything on fire' at a glance; and use EventBridge to drive automated, instant response. That's CloudWatch for security, done right.",
+    "examTip": "Exam tip: the canonical pattern is CloudTrail to a CloudWatch Logs group, a metric filter matching root login or unauthorized calls, an alarm, and an SNS notification. Know that EventBridge, not CloudWatch alarms, is what routes findings to automated remediation."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-cloudwatch-1", "title": "Exercise 1 — Alarm on root account login", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Detect a root sign-in in near real time",
+          "1 · Send CloudTrail to a CloudWatch Logs log group",
+          "2 · Add a metric filter matching userIdentity.type = Root",
+          "3 · Create an alarm on the metric → notify an SNS topic",
+          "✓ DONE WHEN · A root console login fires the alarm and emails you"
+        ],
+        "narration": "Let's make this real. In your lab account, send CloudTrail to a CloudWatch Logs log group. Add a metric filter that matches a root user identity in the events, and create an alarm on that metric wired to an SNS topic. Now sign in as the root user once to test it. You're done when that root login trips the alarm and lands a notification in your inbox within a few minutes."
+      },
+      {
+        "id": "lab-cloudwatch-2", "title": "Exercise 2 — Investigate with Logs Insights", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Hunt through logs with a query",
+          "1 · Open Logs Insights against your CloudTrail log group",
+          "2 · Query for errorCode like 'AccessDenied' or 'Unauthorized'",
+          "3 · Sort by count to find the noisiest principal or source IP",
+          "✓ DONE WHEN · You can name the top source of denied API calls"
+        ],
+        "narration": "Second exercise: practice the hunt. Open Logs Insights against your CloudTrail log group and write a query that finds events where the error code is access denied or unauthorized. Aggregate and sort by count to see which principal or source address is generating the most denials. You're done when you can confidently name the top source of denied API calls in your account — that's exactly the muscle you'll use in a real investigation."
+      }
+    ]
+  }
+}

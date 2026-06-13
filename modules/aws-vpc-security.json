@@ -1,0 +1,122 @@
+{
+  "id": "aws-vpc-security",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 3 · Infrastructure Security",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "VPC Network Security",
+    "lines": ["Virtual Private Cloud", "— subnets, security groups, ACLs + endpoints —"]
+  },
+  "intro": "Your VPC is the network foundation of everything you run in AWS. Let's walk through how to segment it, control traffic at every layer, and keep sensitive flows off the public internet.",
+  "sections": [
+    {
+      "id": "vpcs", "section": "Your VPCs",
+      "url": "https://console.aws.amazon.com/vpcconsole/home#vpcs:",
+      "kicker": "Design for isolation", "cardTitle": "Tier your subnets public and private",
+      "bullets": [
+        "Public subnets have a route to an internet gateway; private subnets do not — put databases and app servers in private.",
+        "Use a multi-tier layout: public for load balancers, private for compute, isolated for data.",
+        "Private subnets reach the internet only through a NAT gateway for outbound updates — never inbound."
+      ],
+      "narration": "This is your list of VPCs, the network foundation for everything you build. The first decision is subnet tiering. A public subnet has a route to an internet gateway; a private subnet does not. Put your load balancers in public subnets, your application servers in private ones, and your databases deeper still in isolated subnets. When private resources need outbound updates, they go through a NAT gateway — outbound only, never inbound."
+    },
+    {
+      "id": "security-groups", "section": "Security Groups",
+      "url": "https://console.aws.amazon.com/vpcconsole/home#SecurityGroups:",
+      "kicker": "Stateful, instance-level firewall", "cardTitle": "Security groups are stateful",
+      "bullets": [
+        "Attached to ENIs — they filter traffic at the instance level and only support allow rules.",
+        "Stateful: if you allow traffic in, the return traffic is automatically allowed out.",
+        "Never open SSH port 22 or RDP port 3389 to 0.0.0.0/0 — scope to a bastion, your IP, or Session Manager."
+      ],
+      "narration": "Security groups are your stateful, instance-level firewall. They attach to elastic network interfaces and only have allow rules — there's no explicit deny. Because they're stateful, if you allow traffic inbound, the return traffic is automatically permitted back out; you don't write a matching outbound rule. The cardinal sin here is exposing management ports: never open S-S-H on port twenty-two or R-D-P on port thirty-three eighty-nine to zero-dot-zero-dot-zero-dot-zero slash zero. Scope them to a bastion, your own address, or skip them entirely with Session Manager.",
+      "drill": {
+        "id": "sg-inbound", "section": "Security Group · Inbound rules", "clickText": "Inbound rules",
+        "kicker": "Audit what you let in", "cardTitle": "Read the inbound rules carefully",
+        "bullets": [
+          "Each rule names a protocol, a port range, and a source — an IP range or another security group.",
+          "Referencing another security group as the source is cleaner than hardcoding IP ranges.",
+          "Flag any rule with source 0.0.0.0/0 on ports 22 or 3389 — that's an open door to the internet."
+        ],
+        "narration": "Here are the inbound rules for a security group. Each line names a protocol, a port range, and a source. Notice you can set the source to another security group instead of an I-P range — that's a cleaner, self-documenting pattern that follows your instances as they scale. Scan for the danger sign: any rule with source zero-dot-zero-dot-zero-dot-zero slash zero on port twenty-two or thirty-three eighty-nine is an open door, and the exam loves to test exactly that."
+      }
+    },
+    {
+      "id": "nacls", "section": "Network ACLs",
+      "url": "https://console.aws.amazon.com/vpcconsole/home#NetworkAcls:",
+      "kicker": "Stateless, subnet-level filter", "cardTitle": "Network ACLs are stateless",
+      "bullets": [
+        "ACLs act at the subnet boundary and support both allow and deny rules, evaluated in number order.",
+        "Stateless: you must write rules for BOTH directions, including the ephemeral return ports.",
+        "Great for a coarse subnet-wide deny — like blocking a known-bad CIDR — above your security groups."
+      ],
+      "narration": "Network ACLs — said 'ackles' — are the other layer, and they behave very differently from security groups. They sit at the subnet boundary, they support both allow and deny rules, and they're evaluated in number order, lowest first. The key word is stateless: because the return traffic is not tracked, you have to write rules for both directions, including the high ephemeral ports the responses come back on. Use ACLs for coarse, subnet-wide controls — like denying a known-bad address range — layered on top of your finer-grained security groups."
+    },
+    {
+      "id": "flow-logs", "section": "VPC Flow Logs",
+      "url": "https://console.aws.amazon.com/vpcconsole/home#vpcs:",
+      "kicker": "See what's actually flowing", "cardTitle": "Turn on VPC Flow Logs",
+      "bullets": [
+        "Flow Logs capture metadata about accepted and rejected traffic — not the packet contents.",
+        "Publish them to CloudWatch Logs or S3 for analysis, alerting, and incident forensics.",
+        "Essential for detecting exfiltration, spotting blocked scans, and proving what talked to what."
+      ],
+      "narration": "You can't secure traffic you can't see, so turn on VPC Flow Logs. They capture metadata about every accepted and rejected connection — source, destination, ports, and action — though not the packet contents themselves. Publish them to CloudWatch Logs or to S3, then query them when you're hunting for data exfiltration, spotting rejected port scans, or reconstructing exactly what talked to what during an incident. For the exam, remember Flow Logs answer the question 'was this traffic allowed or denied, and by which layer.'"
+    },
+    {
+      "id": "endpoints", "section": "VPC Endpoints",
+      "url": "https://console.aws.amazon.com/vpcconsole/home#Endpoints:",
+      "kicker": "Keep traffic off the internet", "cardTitle": "Reach AWS services privately",
+      "bullets": [
+        "Gateway endpoints (S3 and DynamoDB) add a route — free, no internet path needed.",
+        "Interface endpoints (PrivateLink) put an ENI in your subnet for most other services.",
+        "Endpoints let you drop the NAT gateway for AWS traffic and tighten egress to the open internet."
+      ],
+      "narration": "VPC endpoints are how you keep traffic to AWS services entirely on the private network. There are two kinds. Gateway endpoints serve S3 and DynamoDB; they're free and simply add an entry to your route table. Interface endpoints, powered by PrivateLink, place an elastic network interface right in your subnet for most other services. The payoff is real: with endpoints in place, your private resources reach AWS without ever touching the internet gateway, which means you can tighten egress controls hard and shrink your exposure to the open internet."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "VPC security in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Tier subnets — public, private, isolated.",
+        "2 · Security groups = stateful, instance-level.",
+        "3 · Network ACLs = stateless, subnet-level.",
+        "4 · Never expose SSH/RDP to 0.0.0.0/0.",
+        "5 · Flow Logs on; endpoints keep traffic private."
+      ]
+    },
+    "narration": "In short: tier your subnets into public, private, and isolated; remember security groups are stateful and instance-level while network ACLs are stateless and subnet-level; never expose S-S-H or R-D-P to the whole internet; turn on Flow Logs so you can see what's flowing; and use VPC endpoints to keep traffic to AWS services off the public internet. That's a defensible VPC.",
+    "examTip": "Exam tip: the classic trap is stateful versus stateless — security groups auto-allow return traffic, network ACLs do not. And know gateway versus interface endpoints."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-vpc-1", "title": "Exercise 1 — Lock down a security group", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Remove internet-facing management access",
+          "1 · VPC → Security Groups → find one with SSH (22) open to 0.0.0.0/0",
+          "2 · Replace that rule: source = your IP /32, or reference a bastion SG",
+          "3 · Confirm the security group is stateful — no matching outbound rule needed",
+          "✓ DONE WHEN · No SG allows 22 or 3389 from 0.0.0.0/0"
+        ],
+        "narration": "Let's make this real. In your lab VPC, open Security Groups and find one that allows S-S-H on port twenty-two from zero-dot-zero-dot-zero-dot-zero slash zero. Edit that inbound rule and change the source to your own address with a slash thirty-two, or better, reference a dedicated bastion security group. Notice you don't add any outbound rule for the response — that's the stateful behavior doing its job. You're done when nothing in the account allows port twenty-two or thirty-three eighty-nine from the open internet."
+      },
+      {
+        "id": "lab-vpc-2", "title": "Exercise 2 — Go private with an endpoint", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Reach S3 without touching the internet",
+          "1 · VPC → Endpoints → create a Gateway endpoint for S3",
+          "2 · Associate it with your private subnet's route table",
+          "3 · Turn on VPC Flow Logs; confirm S3 traffic no longer hits the NAT gateway",
+          "✓ DONE WHEN · S3 calls flow privately and appear in Flow Logs"
+        ],
+        "narration": "Second exercise: take traffic private. Go to Endpoints and create a gateway endpoint for S3, then associate it with the route table for your private subnet. That single route change means calls to S3 now travel over the AWS network instead of out through your NAT gateway. While you're here, turn on VPC Flow Logs and watch the traffic. You're done when your S3 calls flow privately through the endpoint and you can see them recorded in the Flow Logs, with nothing going out to the internet."
+      }
+    ]
+  }
+}
