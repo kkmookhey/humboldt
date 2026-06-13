@@ -1,0 +1,126 @@
+{
+  "id": "az-sql-security",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Secure compute, storage & databases",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Azure SQL Database security",
+    "lines": ["Auditing, Entra auth, networking", "— TDE + Microsoft Defender for SQL —"]
+  },
+  "intro": "Azure SQL Database holds some of your most sensitive data, so let's secure the logical server that fronts it. We'll walk a real, hardened server — shasta-sql-secure — and contrast it with a sloppy one, covering auditing, Microsoft Entra authentication, the network firewall, encryption at rest, and threat protection.",
+  "sections": [
+    {
+      "id": "overview", "section": "SQL server overview",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.Sql/servers/shasta-sql-secure/overview",
+      "kicker": "The logical server", "cardTitle": "What you're securing",
+      "bullets": [
+        "An Azure SQL logical server is the security boundary — admin login, firewall, and Entra admin all live here.",
+        "This is shasta-sql-secure, hosting shasta-db-secure, with admin login 'shastaadmin'.",
+        "Lock the server down once and every database it hosts inherits the protection."
+      ],
+      "narration": "This is the overview for a real Azure SQL logical server. The server is the security boundary in front of your databases — its admin login, its firewall, and its Microsoft Entra admin all live at this level. We're looking at shasta-sql-secure, which hosts the database shasta-db-secure, with a SQL admin login called shastaadmin. The pattern to remember: harden the server once, and every database it hosts inherits that protection. Let's walk the settings that matter."
+    },
+    {
+      "id": "auditing", "section": "Auditing",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.Sql/servers/shasta-sql-secure/auditing",
+      "focus": { "text": "Log Analytics" },
+      "kicker": "Track every query", "cardTitle": "Auditing to Log Analytics",
+      "bullets": [
+        "Under Security, turn Auditing ON at the server so all databases are covered.",
+        "Send logs to Log Analytics for queries and alerts — or to a storage account, or Event Hubs.",
+        "Server auditing captures logins and queries; it's the backbone of compliance evidence."
+      ],
+      "narration": "Under the Security heading, Auditing tracks database events — logins, queries, stored procedures — and writes them to a durable destination. Set it at the server level, highlighted here, and every database on the server is covered. You can send audit logs to a Log Analytics workspace, which is what you want for querying and alerting, or to an Azure storage account, or to Event Hubs — and you can pick more than one. This is your compliance backbone: if an auditor asks who touched what, the answer lives here."
+    },
+    {
+      "id": "entra", "section": "Microsoft Entra authentication",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.Sql/servers/shasta-sql-secure/aadAuthentication",
+      "focus": { "text": "Support only Microsoft Entra authentication" },
+      "kicker": "Identities, not passwords", "cardTitle": "Set an Entra admin, drop SQL passwords",
+      "bullets": [
+        "Set a Microsoft Entra admin — a user or, better, a group — to enable Entra authentication.",
+        "Then check 'Support only Microsoft Entra authentication' to disable SQL password logins.",
+        "Entra-only kills shared SQL passwords and brings MFA and Conditional Access to the database."
+      ],
+      "narration": "Now Microsoft Entra ID, under Settings. First, set a Microsoft Entra admin — ideally a group, so membership manages access for you. That alone enables Entra authentication alongside the old SQL logins. But go further: check 'Support only Microsoft Entra authentication for this server', highlighted here, and SQL password logins are switched off entirely. That's the goal — no shared SQL passwords floating around, and every connection now flows through Entra, where you get multifactor authentication and Conditional Access. Note that you must set the Entra admin before you can turn on Entra-only."
+    },
+    {
+      "id": "networking", "section": "Networking",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.Sql/servers/shasta-sql-secure/networking",
+      "kicker": "Shrink the attack surface", "cardTitle": "Firewall rules + private endpoint",
+      "bullets": [
+        "Public network access: prefer 'Disabled' and reach the server over a private endpoint.",
+        "If public access is on, use tight IP firewall rules — never a 0.0.0.0 to 255.255.255.255 range.",
+        "'Allow Azure services and resources to access this server' adds a 0.0.0.0 rule — opens you to ALL Azure tenants."
+      ],
+      "narration": "Networking, under Security, controls who can even reach the server. The strongest posture is to set Public network access to Disabled and connect privately through a private endpoint, which gives the server a private IP inside your virtual network. If you must allow public access, keep your IP firewall rules narrow — never open a range like zero-dot-zero through all addresses. And watch one setting in particular.",
+      "drill": {
+        "id": "firewall", "section": "Networking · Firewall rule",
+        "kicker": "The 0.0.0.0 trap", "cardTitle": "'Allow Azure services' is a 0.0.0.0 rule",
+        "focus": { "text": "Allow Azure services and resources to access this server" },
+        "bullets": [
+          "This toggle adds a hidden firewall rule with start and end IP of 0.0.0.0 — named AllowAllWindowsAzureIps.",
+          "It lets EVERY Azure resource connect — including services in other customers' subscriptions.",
+          "Leave it OFF on the secure server; use private endpoints or named IP rules instead."
+        ],
+        "narration": "Here's the trap, highlighted. The toggle 'Allow Azure services and resources to access this server' sounds harmless, but it inserts a firewall rule whose start and end address are both zero-dot-zero-dot-zero-dot-zero. That rule lets any Azure resource connect — not just yours, but services running in other customers' subscriptions too. On shasta-sql-secure we leave it off and rely on a private endpoint. On the insecure server, this is exactly the kind of door left wide open."
+      }
+    },
+    {
+      "id": "encryption", "section": "TDE & Microsoft Defender for SQL",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.Sql/servers/shasta-sql-secure/databases/shasta-db-secure/transparentDataEncryption",
+      "focus": { "text": "Microsoft Defender for SQL: not enabled" },
+      "kicker": "Encrypt at rest, then detect", "cardTitle": "TDE on by default — Defender is the upgrade",
+      "bullets": [
+        "Transparent Data Encryption (TDE) encrypts data, logs, and backups at rest — ON by default per database.",
+        "Default is a service-managed key; switch to a customer-managed key in Key Vault for full control (BYOK).",
+        "Microsoft Defender for SQL is OFF here — enable it under the server's Defender for Cloud blade for threat detection + vulnerability assessment."
+      ],
+      "narration": "Finally, encryption and threat protection. Transparent Data Encryption — TDE — encrypts your data, transaction logs, and backups at rest. This is the Data encryption blade on the database shasta-db-secure, and TDE is on by default using a service-managed key. For stricter control you can switch to a customer-managed key stored in Key Vault — that's bring-your-own-key, which separates who manages the key from who manages the data. Now the upgrade: Microsoft Defender for SQL is not enabled on this server, highlighted here. You turn it on from the server's Defender for Cloud blade under Security — one click protects every database with advanced threat protection and vulnerability assessment, catching SQL injection and anomalous logins. TDE protects the data at rest; Defender watches for the attack."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "SQL security in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Turn Auditing ON at the server → Log Analytics.",
+        "2 · Set an Entra admin; go Entra-only, drop SQL passwords.",
+        "3 · Disable public access; use private endpoints, tight IP rules.",
+        "4 · Never leave 'Allow Azure services' (0.0.0.0) on.",
+        "5 · Keep TDE on; enable Microsoft Defender for SQL."
+      ]
+    },
+    "narration": "In short: turn on auditing at the server and send it to Log Analytics; set a Microsoft Entra admin and move to Entra-only authentication so SQL passwords go away; disable public network access in favor of private endpoints and tight IP firewall rules; never leave 'Allow Azure services' on, because that's a wide-open zero-dot-zero rule; and keep Transparent Data Encryption on while enabling Microsoft Defender for SQL for threat detection. That's Azure SQL security, done right.",
+    "examTip": "Exam tip: know that 'Allow Azure services' creates a 0.0.0.0 firewall rule, that Entra-only auth requires an Entra admin first, that TDE is on by default per database, and that Microsoft Defender for SQL is what adds threat detection and vulnerability assessment."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-sql-1", "title": "Exercise 1 — Lock down the server perimeter", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Identity + network hardening on a SQL server",
+          "1 · Networking → set Public network access to Disabled; add a private endpoint",
+          "2 · Confirm 'Allow Azure services' (0.0.0.0) is OFF; remove any wide IP rules",
+          "3 · Microsoft Entra ID → Set admin (a group), then check 'Support only Microsoft Entra authentication'",
+          "✓ DONE WHEN · No public access, no 0.0.0.0 rule, and SQL password logins are rejected"
+        ],
+        "narration": "In your lab, take a SQL server and lock its perimeter. Open Networking and set Public network access to Disabled, then add a private endpoint so the server gets a private IP in your virtual network. Confirm that 'Allow Azure services and resources to access this server' is off — that's the zero-dot-zero rule — and remove any overly broad IP firewall rules. Then open Microsoft Entra ID, set an Entra admin, ideally a group, and check 'Support only Microsoft Entra authentication for this server'. You're done when there's no public access, no zero-dot-zero rule, and a plain SQL password login is rejected."
+      },
+      {
+        "id": "lab-sql-2", "title": "Exercise 2 — Audit, encrypt, and detect", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Logging, encryption, and threat protection",
+          "1 · Auditing → ON at the server; send logs to a Log Analytics workspace",
+          "2 · Database → Data encryption: confirm TDE is on (try a customer-managed key from Key Vault)",
+          "3 · Defender for Cloud → Enable Microsoft Defender for SQL; review the vulnerability assessment scan",
+          "✓ DONE WHEN · Audit events land in Log Analytics and a Defender scan returns findings"
+        ],
+        "narration": "Second exercise: turn on the detective controls. Open Auditing, switch it on at the server level, and point it at a Log Analytics workspace. Go to your database's Data encryption blade and confirm Transparent Data Encryption is on; for extra credit, switch it to a customer-managed key from Key Vault. Then open the server's Defender for Cloud blade and enable Microsoft Defender for SQL. You're done when audit events are landing in Log Analytics, and Defender's first vulnerability assessment scan has returned findings you can act on."
+      }
+    ]
+  }
+}
