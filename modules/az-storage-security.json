@@ -1,0 +1,114 @@
+{
+  "id": "az-storage-security",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Secure compute, storage & databases",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Azure Storage security",
+    "lines": ["Encryption, secure transfer & network isolation", "— a secure account vs. an insecure one —"]
+  },
+  "intro": "An Azure Storage account holds blobs, files, queues, and tables — and it's one of the most common places data leaks from in the cloud. Let's walk a real, hardened account, then compare it to a deliberately insecure one, so you can spot exactly which settings matter for the AZ-500 exam and in production.",
+  "sections": [
+    {
+      "id": "overview", "section": "Storage account overview",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.Storage/storageAccounts/shastatestssecure/overview",
+      "kicker": "Start with the secure account", "cardTitle": "What a hardened account looks like",
+      "bullets": [
+        "This is 'shastatestssecure' — TLS 1.2 minimum, HTTPS-only on, blob public access off.",
+        "Four data services live here: blobs, files, queues, tables — all share these account-level controls.",
+        "The Essentials pane shows the resource group, region, and the security posture at a glance."
+      ],
+      "narration": "This is the overview for a real, hardened storage account called shastatestssecure. One account hosts blobs, files, queues, and tables, and they all inherit the account-level security controls we're about to walk through. The settings that matter most are a minimum TLS version of 1.2, secure transfer required so everything goes over HTTPS, and blob public access turned off. Keep this account in mind, because at the end we'll line it up against an insecure twin and you'll see every one of these settings flipped the wrong way."
+    },
+    {
+      "id": "encryption", "section": "Encryption at rest",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.Storage/storageAccounts/shastatestssecure/encryption",
+      "kicker": "Always on, optionally yours", "cardTitle": "SSE, infrastructure encryption & CMK",
+      "bullets": [
+        "Storage Service Encryption encrypts all data at rest with 256-bit AES by default — you can't turn it off.",
+        "Infrastructure encryption adds a second layer with a separate Microsoft-managed key, for double encryption.",
+        "Customer-managed keys move the encryption key into Key Vault so you control rotation, revocation, and audit."
+      ],
+      "narration": "Under Encryption, every storage account is already encrypted at rest with Storage Service Encryption — two-fifty-six-bit AES, on by default, and you can't switch it off. For higher assurance you can enable infrastructure encryption, which encrypts your data a second time with a separate key, so even if one layer is compromised the data stays protected. And if you need to own the key yourself, switch the encryption type to customer-managed keys: the key lives in Key Vault, and you control its rotation, revocation, and audit trail. Microsoft-managed keys are the simple default; customer-managed keys are what auditors and compliance frameworks often want."
+    },
+    {
+      "id": "configuration", "section": "Secure transfer & TLS",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.Storage/storageAccounts/shastatestssecure/configuration",
+      "focus": { "text": "Minimum TLS version: Version 1.2" },
+      "kicker": "Encrypt data in transit", "cardTitle": "Secure transfer required + minimum TLS",
+      "bullets": [
+        "'Secure transfer required' = Enabled means any plain-HTTP request is rejected — only HTTPS gets through.",
+        "'Minimum TLS version' set to 1.2 blocks legacy clients still negotiating TLS 1.0 or 1.1.",
+        "Both live on the Configuration blade; new portal-created accounts default to TLS 1.2."
+      ],
+      "narration": "This is the Configuration blade, where you control data in transit. Look at the spotlight: minimum TLS version is set to Version 1.2. That single setting rejects any client still trying to connect with the old, weak TLS 1.0 or 1.1 protocols. Just above it, Secure transfer required is Enabled, which means any request that arrives over plain HTTP is refused outright — only encrypted HTTPS connections are accepted. Accounts you create in the portal default to TLS 1.2, but always confirm it, because the API and templates can leave it unset, which silently allows TLS 1.0."
+    },
+    {
+      "id": "networking", "section": "Networking & firewall",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.Storage/storageAccounts/shastatestssecure/networking",
+      "kicker": "Shrink the public surface", "cardTitle": "Default-deny firewall + private endpoints",
+      "bullets": [
+        "Default is 'Enabled from all networks' — change it to 'selected networks' or 'Disabled' to deny by default.",
+        "Allow only specific VNets and IP ranges; the firewall has no effect until the default action is Deny.",
+        "Private endpoints give the account a private IP inside your VNet so traffic never touches the public internet."
+      ],
+      "narration": "On the Networking blade you control who can even reach the account over the network. By default a storage account accepts connections from all networks, which is too open for sensitive data. Switch it to enabled from selected networks, and add only the virtual networks and IP ranges that genuinely need access — remember, those firewall rules do nothing until the default action is set to Deny. For the strongest isolation, add a private endpoint: that gives the account a private IP inside your own virtual network, so traffic rides the Microsoft backbone and never crosses the public internet. The pattern to aim for is default-deny on the public endpoint, plus a private endpoint for your apps."
+    },
+    {
+      "id": "insecure", "section": "The insecure account — contrast",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.Storage/storageAccounts/shastatestinsecure/configuration",
+      "focus": { "text": "Allow Blob anonymous access: Enabled" },
+      "kicker": "Everything done wrong", "cardTitle": "shastatestinsecure: the anti-pattern",
+      "bullets": [
+        "Spotlight: 'Allow Blob anonymous access' is Enabled — anyone on the internet can read public containers, no auth.",
+        "Secure transfer required is Off and minimum TLS is 1.0 — credentials and data can travel in clear text.",
+        "This is how real breaches happen: a public container plus HTTP is a data leak waiting to be indexed."
+      ],
+      "narration": "Now the contrast. This is the Configuration blade for shastatestinsecure, and almost everything is flipped the wrong way. The spotlight shows the worst one: Allow Blob anonymous access is Enabled, which means a container set to public can be read by anyone on the internet with no authentication at all — this is exactly how storage accounts end up in breach headlines. On top of that, Secure transfer required is Off and the minimum TLS version is 1.0, so requests can arrive over unencrypted HTTP using a broken protocol, exposing both data and access keys in transit. Compare this to the secure account we started with: same service, opposite posture. Disallow anonymous access at the account level, require secure transfer, and set minimum TLS to 1.2 — those three changes alone close the most common storage exposures."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Storage security in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Encryption at rest is always on — add infra encryption or CMK for control.",
+        "2 · Require secure transfer; set minimum TLS to 1.2.",
+        "3 · Disallow blob anonymous (public) access at the account level.",
+        "4 · Default-deny the firewall; reach data via private endpoints.",
+        "5 · Treat account access keys as last resort — prefer Entra ID + RBAC."
+      ]
+    },
+    "narration": "In short: encryption at rest is always on, so layer on infrastructure encryption or customer-managed keys when you need more control; require secure transfer and set the minimum TLS version to 1.2; disallow blob anonymous access at the account level so a single misconfigured container can't leak your data; set the firewall to default-deny and reach the account through private endpoints; and treat the account access keys as a last resort, preferring Microsoft Entra ID with RBAC. That's storage security, done right.",
+    "examTip": "Exam tip: know that 'Secure transfer required' rejects HTTP, 'Minimum TLS version' and 'Allow blob anonymous access' live on the Configuration blade, infrastructure encryption gives double encryption with a separate key, and a storage firewall does nothing until its default action is Deny."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-storage-1", "title": "Exercise 1 — Harden in transit & at the edge", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Close the three most common storage exposures",
+          "1 · Storage account → Configuration → set Secure transfer required = Enabled, Minimum TLS = 1.2",
+          "2 · Set 'Allow Blob anonymous access' = Disabled",
+          "3 · Networking → switch default to Deny; allow only your VNet, then add a private endpoint",
+          "✓ DONE WHEN · An HTTP request fails, a TLS 1.0 client fails, and public-container reads are denied"
+        ],
+        "narration": "In your own lab, take a test storage account and harden it. Open the Configuration blade, set Secure transfer required to Enabled, and set the minimum TLS version to 1.2. Still on Configuration, set Allow Blob anonymous access to Disabled. Then go to Networking, switch the default action to Deny, allow only your own virtual network, and add a private endpoint for it. You're done when a plain HTTP request to the account fails, a client forced to TLS 1.0 is rejected, and an attempt to read a previously public container returns an authorization error."
+      },
+      {
+        "id": "lab-storage-2", "title": "Exercise 2 — Customer-managed key encryption", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Own the encryption key in Key Vault",
+          "1 · Create a key in Key Vault; enable purge protection + automatic rotation",
+          "2 · Give the storage account's managed identity wrap/unwrap on that key",
+          "3 · Storage account → Encryption → switch Encryption type to Customer-managed keys",
+          "✓ DONE WHEN · The account encrypts with your vault key and rotating the key just works"
+        ],
+        "narration": "Second exercise: take ownership of the encryption key. In Key Vault, create a key and turn on purge protection and automatic rotation. Grant the storage account's managed identity permission to wrap and unwrap with that key. Then open the storage account's Encryption blade and switch the encryption type from Microsoft-managed keys to customer-managed keys, pointing it at your vault key. You're done when the account is encrypting with your own key, and rotating that key in Key Vault continues to work without breaking access to the data."
+      }
+    ]
+  }
+}
