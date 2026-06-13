@@ -1,0 +1,122 @@
+{
+  "id": "aws-network-firewall",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 3 · Infrastructure Security",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "AWS Network Firewall",
+    "lines": ["Managed network firewall for your VPC", "— rule groups, domain filtering, central inspection —"]
+  },
+  "intro": "AWS Network Firewall is a managed, stateful firewall you drop into your VPC for deep traffic inspection — far beyond what security groups and ACLs can do. Let's walk through rule groups, domain filtering, and the centralized inspection pattern.",
+  "sections": [
+    {
+      "id": "firewalls", "section": "Firewalls",
+      "url": "https://console.aws.amazon.com/vpcconsole/home#NetworkFirewalls:",
+      "kicker": "Inspection beyond SGs and ACLs", "cardTitle": "A managed stateful firewall",
+      "bullets": [
+        "Deploys firewall endpoints into dedicated subnets; you route traffic through them for inspection.",
+        "Fully managed and auto-scaling — no appliances to patch or size.",
+        "Inspects traffic that security groups and network ACLs can't, like deep packet and protocol rules."
+      ],
+      "narration": "AWS Network Firewall is a managed, stateful network firewall that lives inside your VPC. You deploy firewall endpoints into dedicated firewall subnets, then steer your traffic through them by editing your route tables. Because it's fully managed and scales automatically, there are no appliances to patch or capacity to size. The point of all this is inspection that security groups and network ACLs simply can't do — deep packet inspection, protocol awareness, and content-based rules at the VPC level."
+    },
+    {
+      "id": "rule-groups", "section": "Rule groups",
+      "url": "https://console.aws.amazon.com/vpcconsole/home#NetworkFirewalls:",
+      "kicker": "Stateless and stateful", "cardTitle": "Two kinds of rule groups",
+      "bullets": [
+        "Stateless rule groups do fast, simple 5-tuple pass/drop/forward decisions first.",
+        "Stateful rule groups are Suricata-compatible — write IPS-style signatures and flow rules.",
+        "Reuse rule groups across many firewall policies for consistent, central control."
+      ],
+      "narration": "Inside the firewall, your logic lives in rule groups, and there are two flavors. Stateless rule groups make fast, simple decisions on the classic five-tuple — pass, drop, or forward — and they run first. Stateful rule groups are the powerful ones: they're Suricata-compatible, so you can write intrusion-prevention-style signatures and connection-aware flow rules, even import open-source rule sets. A nice operational win is that rule groups are reusable — you write one and attach it to many firewall policies for consistent, central control."
+    },
+    {
+      "id": "domain-filtering", "section": "Domain filtering",
+      "url": "https://console.aws.amazon.com/vpcconsole/home#NetworkFirewalls:",
+      "kicker": "Control egress by name", "cardTitle": "Allow-list domains and FQDNs",
+      "bullets": [
+        "Filter outbound traffic by domain or FQDN — allow only the destinations you trust.",
+        "Build a strict egress allow-list so workloads can't be used to exfiltrate data anywhere.",
+        "Inspects the SNI in TLS and the Host header in HTTP to match the real destination."
+      ],
+      "narration": "One of Network Firewall's best features is domain filtering. Instead of wrestling with ever-changing I-P ranges, you control egress by name — you allow-list the specific domains and F-Q-D-Ns your workloads are allowed to reach. This lets you build a tight outbound allow-list so a compromised instance can't quietly exfiltrate data to some random host. It works by inspecting the server name indication in T-L-S and the host header in plain H-T-T-P to identify the true destination, even before the full connection completes."
+    },
+    {
+      "id": "central-inspection", "section": "Central inspection VPC",
+      "url": "https://console.aws.amazon.com/vpcconsole/home#NetworkFirewalls:",
+      "kicker": "Inspect once, for everyone", "cardTitle": "Centralized inspection architecture",
+      "bullets": [
+        "Pair Network Firewall with a Transit Gateway and a dedicated inspection VPC.",
+        "Route all inter-VPC, egress, and ingress traffic through one inspection point.",
+        "One place to enforce policy and log — far cheaper than a firewall in every VPC."
+      ],
+      "narration": "At scale, you don't put a firewall in every VPC — you build a central inspection VPC. The pattern pairs Network Firewall with a Transit Gateway: all your spoke VPCs connect to the Transit Gateway, and you route east-west traffic between them, plus egress and ingress, through one dedicated inspection VPC where the firewall sits. The benefit is a single place to enforce policy and collect logs for your whole network. The exam loves this design, so picture the inspection VPC hanging off the Transit Gateway as the choke point everything flows through."
+    },
+    {
+      "id": "logging", "section": "Logging",
+      "url": "https://console.aws.amazon.com/vpcconsole/home#NetworkFirewallPolicies:",
+      "kicker": "Prove what you blocked", "cardTitle": "Log to S3 or CloudWatch",
+      "bullets": [
+        "Configure flow logs and alert logs for the firewall's stateful engine.",
+        "Send logs to S3, CloudWatch Logs, or Kinesis Data Firehose for analysis.",
+        "The firewall policy ties stateless rules, stateful rule groups, and default actions together."
+      ],
+      "narration": "Finally, turn on logging so you can prove what the firewall saw and stopped. Network Firewall produces two log types from its stateful engine: flow logs, which record connection metadata, and alert logs, which record rule matches. You can deliver them to S3, to CloudWatch Logs, or to Kinesis Data Firehose for downstream analysis. And the object that ties it all together is the firewall policy — it bundles your stateless rules, your stateful rule groups, and the default actions, and then you attach that policy to the firewall.",
+      "drill": {
+        "id": "fw-policy", "section": "Firewall policy", "clickText": "Firewall policies",
+        "kicker": "The reusable container", "cardTitle": "Inside a firewall policy",
+        "bullets": [
+          "A policy defines stateless default actions and the ordered list of stateful rule groups.",
+          "One policy can be attached to multiple firewalls for consistent enforcement.",
+          "Set the stateful default action — alert, drop, or pass — for traffic no rule matches."
+        ],
+        "narration": "Let's open a firewall policy, because this is the object you actually manage day to day. The policy defines your stateless default actions and the ordered list of stateful rule groups it should run. The strength here is reuse: one policy can be attached to several firewalls, so a change you make propagates everywhere for consistent enforcement. Pay attention to the stateful default action — alert, drop, or pass — because that decides what happens to any traffic that none of your rules explicitly match."
+      }
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Network Firewall in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Managed stateful firewall, in its own subnets.",
+        "2 · Stateless + stateful (Suricata) rule groups.",
+        "3 · Domain/FQDN filtering for egress control.",
+        "4 · Central inspection VPC via Transit Gateway.",
+        "5 · Log to S3/CloudWatch; policy ties it together."
+      ]
+    },
+    "narration": "In short: AWS Network Firewall is a managed, stateful firewall you deploy into dedicated subnets; its logic lives in stateless and Suricata-compatible stateful rule groups; domain and F-Q-D-N filtering gives you real egress control; the centralized inspection VPC behind a Transit Gateway inspects traffic for your whole network; and the firewall policy ties the rules and default actions together while you log everything to S3 or CloudWatch.",
+    "examTip": "Exam tip: Network Firewall does deep, stateful, Suricata-based inspection and domain filtering — things security groups and NACLs cannot. Picture the central inspection VPC behind a Transit Gateway."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-nfw-1", "title": "Exercise 1 — Filter egress by domain", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Allow only trusted outbound domains",
+          "1 · VPC → Network Firewall → create a firewall + a dedicated firewall subnet",
+          "2 · Add a stateful domain-list rule group allowing only e.g. *.amazonaws.com",
+          "3 · Route a test instance's outbound traffic through the firewall endpoint",
+          "✓ DONE WHEN · Calls to an unlisted domain are dropped, allowed ones succeed"
+        ],
+        "narration": "Let's make egress filtering real. In the VPC console, open Network Firewall and create a firewall, placing its endpoint in a dedicated firewall subnet. Build a stateful domain-list rule group that allows only the destinations you trust — say, anything under amazonaws.com — and drops the rest. Then edit your route tables so a test instance's outbound traffic flows through the firewall endpoint. You're done when a call to an unlisted domain gets dropped, while calls to your allowed domains still succeed."
+      },
+      {
+        "id": "lab-nfw-2", "title": "Exercise 2 — Read the firewall policy", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Understand the policy that drives the firewall",
+          "1 · Network Firewall → Firewall policies → open your policy",
+          "2 · Note the stateless default action and ordered stateful rule groups",
+          "3 · Enable alert + flow logging to CloudWatch Logs; trigger a blocked request",
+          "✓ DONE WHEN · You see your dropped request appear in the alert logs"
+        ],
+        "narration": "Second exercise: get comfortable with the firewall policy. Open Firewall policies and inspect the one driving your firewall. Trace how it's built — the stateless default action up top, then the ordered list of stateful rule groups, and the stateful default action at the end. Now enable alert and flow logging to CloudWatch Logs, and trigger a request that your rules should block. You're done when you can find that dropped request recorded in the alert logs, closing the loop from rule to enforcement to evidence."
+      }
+    ]
+  }
+}

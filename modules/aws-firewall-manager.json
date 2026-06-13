@@ -1,0 +1,111 @@
+{
+  "id": "aws-firewall-manager",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 6 · Management & Security Governance",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "AWS Firewall Manager",
+    "lines": ["Central protection across every account", "— policies for WAF, Shield, firewalls + more —"]
+  },
+  "intro": "AWS Firewall Manager lets you configure and enforce security protections across every account in your organization from one place. Let's walk through the prerequisites, the policy types it manages, and how it auto-remediates resources that fall out of line.",
+  "sections": [
+    {
+      "id": "dashboard", "section": "Firewall Manager Dashboard",
+      "url": "https://console.aws.amazon.com/wafv2/fmsv2/home",
+      "kicker": "One pane for org-wide defense", "cardTitle": "Start at the Firewall Manager home",
+      "bullets": [
+        "Firewall Manager centrally manages protections across all accounts in your AWS Organization from a single admin account.",
+        "It continuously monitors for new or non-compliant resources and brings them under your policies automatically.",
+        "The dashboard surfaces compliance status per policy, so you see gaps across the whole organization at a glance."
+      ],
+      "narration": "This is the Firewall Manager home. The big idea is central control: from one designated admin account, Firewall Manager configures and enforces security protections across every account in your AWS Organization. It doesn't just set things up once — it keeps watching, so when a new resource appears or an existing one drifts out of compliance, it pulls that resource under your policy automatically. The dashboard gives you compliance status per policy, so you can spot gaps across the entire organization in one view."
+    },
+    {
+      "id": "prerequisites", "section": "Prerequisites & Settings",
+      "url": "https://console.aws.amazon.com/wafv2/fmsv2/home",
+      "kicker": "Three things must be true first", "cardTitle": "Set up the prerequisites",
+      "bullets": [
+        "You need AWS Organizations with all features enabled — Firewall Manager governs across the org.",
+        "AWS Config must be turned on in every account and region you want protected; it's how compliance is evaluated.",
+        "Designate one account as the Firewall Manager administrator — ideally not the management account."
+      ],
+      "narration": "Before Firewall Manager can do anything, three prerequisites must be in place. First, AWS Organizations with all features enabled, because Firewall Manager works across the whole org. Second, AWS Config must be turned on in every account and region you want to protect — Config is the engine that evaluates whether resources comply. And third, you designate a single account as the Firewall Manager administrator, and best practice is to make that a dedicated account rather than the Organizations management account. Get those three right and you're ready to write policies."
+    },
+    {
+      "id": "policies", "section": "Security Policies",
+      "url": "https://console.aws.amazon.com/wafv2/fmsv2/home",
+      "kicker": "Many protections, one model", "cardTitle": "Choose your policy type",
+      "bullets": [
+        "Policy types cover WAF, Shield Advanced, security groups, AWS Network Firewall, and Route 53 DNS Firewall.",
+        "Each policy targets accounts and resources by tag, so scope is precise — include or exclude as needed.",
+        "One policy, defined once, applies consistently everywhere it matches across the organization."
+      ],
+      "narration": "Firewall Manager is policy-driven, and a single policy is scoped to one protection type. You can manage WAF rules, Shield Advanced protections, security group baselines, AWS Network Firewall, and Route 53 DNS Firewall — all from here. Each policy decides which accounts and resources it applies to using tags, so you can include or exclude precisely. The power is that you define a policy once, and it applies consistently to every matching resource across the organization, no matter which account it lives in.",
+      "drill": {
+        "id": "policy-detail", "section": "Policies · Policy detail", "clickText": "Open a policy",
+        "kicker": "Where remediation lives", "cardTitle": "Inside a security policy",
+        "bullets": [
+          "The policy detail shows its scope, the protection it applies, and current compliance per account.",
+          "Automatic remediation can fix or replace non-compliant resources without you touching each account.",
+          "Leave remediation off to run audit-only first, then turn it on once you trust the scope."
+        ],
+        "narration": "Here's the detail view of a single policy. It shows you the scope, the protection being applied, and the compliance status broken down by account. The key setting to understand is automatic remediation: when it's on, Firewall Manager will fix or replace non-compliant resources for you, across every account, without you logging into each one. A safe rollout pattern is to leave remediation off at first so the policy runs in audit-only mode, then enable automatic remediation once you trust the scope."
+      }
+    },
+    {
+      "id": "remediation", "section": "Compliance & Remediation",
+      "url": "https://console.aws.amazon.com/wafv2/fmsv2/home",
+      "kicker": "Drift gets corrected, not just flagged", "cardTitle": "Auto-remediate non-compliance",
+      "bullets": [
+        "Firewall Manager detects resources that don't match a policy and reports them as non-compliant.",
+        "With automatic remediation enabled, it applies the required protection or removes the offending configuration itself.",
+        "This closes the gap between detecting drift and fixing it — protection stays enforced as accounts and resources change."
+      ],
+      "narration": "Detection alone isn't enough at organizational scale, so Firewall Manager goes further. When it finds a resource that doesn't match one of your policies, it reports it as non-compliant — and if you've enabled automatic remediation, it actually fixes the problem itself, applying the required protection or removing the offending configuration across whatever accounts are affected. That's the whole point: instead of just flagging drift and waiting for someone to act, Firewall Manager keeps your protections enforced even as accounts and resources come and go."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Firewall Manager in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · One admin account governs the whole organization.",
+        "2 · Needs Organizations + Config + an FMS admin account.",
+        "3 · Manages WAF, Shield, SGs, Network Firewall, DNS Firewall.",
+        "4 · Policies scope by tag and apply org-wide.",
+        "5 · Auto-remediation fixes drift, not just reports it."
+      ]
+    },
+    "narration": "In short: one designated admin account governs security protections across your whole organization; the prerequisites are AWS Organizations, AWS Config, and a dedicated Firewall Manager admin account; it centrally manages WAF, Shield Advanced, security groups, Network Firewall, and DNS Firewall; policies scope by tag and apply everywhere they match; and automatic remediation fixes non-compliant resources rather than just flagging them. That's Firewall Manager, done right.",
+    "examTip": "Exam tip: remember the three prerequisites — Organizations with all features, Config enabled per account and region, and a separate FMS administrator account — and know which protections Firewall Manager can centrally manage."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-fms-1", "title": "Exercise 1 — Stand up the prerequisites", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Get Firewall Manager ready to manage your org",
+          "1 · Enable AWS Organizations with all features; turn on AWS Config across accounts",
+          "2 · Designate a dedicated account as the Firewall Manager administrator",
+          "3 · Open Firewall Manager and confirm it can see your member accounts",
+          "✓ DONE WHEN · FMS lists your accounts and reports no setup blockers"
+        ],
+        "narration": "Let's get hands-on. In your lab organization, make sure AWS Organizations is set to all features, then turn on AWS Config across the accounts and regions you care about — Firewall Manager needs Config to evaluate compliance. Next, designate a dedicated account as the Firewall Manager administrator rather than using the management account. Finally, open Firewall Manager and confirm it can see your member accounts. You're done when Firewall Manager lists your accounts and reports no remaining setup blockers."
+      },
+      {
+        "id": "lab-fms-2", "title": "Exercise 2 — Enforce a WAF policy org-wide", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Apply one WAF policy across accounts with auto-remediation",
+          "1 · Firewall Manager → Security policies → create a WAF policy",
+          "2 · Scope it by tag; run audit-only first to see non-compliant resources",
+          "3 · Enable automatic remediation and watch the protection get applied",
+          "✓ DONE WHEN · Tagged resources across accounts show compliant under the policy"
+        ],
+        "narration": "Second exercise: prove the central-enforcement model. In Firewall Manager, create a WAF policy and scope it by a resource tag so it targets exactly the resources you choose. Run it in audit-only mode first and review which resources come back non-compliant — that's your before picture. Now enable automatic remediation and watch Firewall Manager apply the WAF protection to those resources across your accounts. You're done when every tagged resource, in every account, shows as compliant under that single policy."
+      }
+    ]
+  }
+}

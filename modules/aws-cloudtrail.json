@@ -1,0 +1,122 @@
+{
+  "id": "aws-cloudtrail",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 2 · Security Logging & Monitoring",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "AWS CloudTrail",
+    "lines": ["The audit trail of your account", "— what happened, who did it, and when —"]
+  },
+  "intro": "AWS CloudTrail records the API calls made in your account — the who, what, and when of every action. Let's walk through trails, event types, integrity validation, and how CloudTrail Lake lets you query it all with SQL.",
+  "sections": [
+    {
+      "id": "dashboard", "section": "CloudTrail Dashboard",
+      "url": "https://console.aws.amazon.com/cloudtrail/home",
+      "kicker": "The system of record", "cardTitle": "CloudTrail logs every API call",
+      "bullets": [
+        "CloudTrail captures the identity, action, time, source IP, and parameters of API calls across the account.",
+        "Event history is on by default and free, but only keeps the last 90 days of management events — it is not your long-term audit log.",
+        "For durable, tamper-evident logging you must create a trail that delivers to S3."
+      ],
+      "narration": "This is the CloudTrail dashboard. CloudTrail is your account's system of record: it captures who made each API call, what they did, when, and from where. Event history is enabled by default, but it only holds the last ninety days of management events — that is not a long-term audit log. For durable logging you create a trail, which we'll set up next."
+    },
+    {
+      "id": "trails", "section": "Trails",
+      "url": "https://console.aws.amazon.com/cloudtrail/home#/trails",
+      "kicker": "One trail to rule them all", "cardTitle": "Build a multi-region org trail",
+      "bullets": [
+        "Create a multi-region trail so no region becomes a logging blind spot — attackers love the regions you forget.",
+        "If you use AWS Organizations, make it an organization trail to capture every member account in one place.",
+        "Deliver to a central, locked-down S3 bucket in a separate security or log-archive account."
+      ],
+      "narration": "Here are your trails. The best practice is a single multi-region organization trail. Multi-region means no region becomes a blind spot, because attackers will operate in the regions you forget about. An organization trail captures every member account automatically, and you should deliver it to a central, locked-down S3 bucket living in a separate log-archive account.",
+      "drill": {
+        "id": "settings", "section": "Trails · Settings", "clickText": "the trail name",
+        "kicker": "Inside a trail's settings", "cardTitle": "Management vs data events",
+        "bullets": [
+          "Management events record control-plane actions — creating roles, changing policies, launching instances. Data events record object-level activity like S3 GetObject and Lambda invokes.",
+          "Data events are high volume and cost extra, so scope them to sensitive buckets and functions, not everything.",
+          "Encrypt the trail with a KMS key and enable log file validation right here in the settings."
+        ],
+        "narration": "Open the trail settings. CloudTrail splits activity into two kinds. Management events cover the control plane — creating roles, changing policies, launching instances — and they're the backbone of your audit. Data events cover object-level activity, like reading an S3 object or invoking a Lambda function; these are high volume and cost extra, so scope them to your sensitive resources. While you're here, encrypt the trail with a KMS key and turn on log file validation."
+      }
+    },
+    {
+      "id": "integrity", "section": "Log file integrity",
+      "url": "https://console.aws.amazon.com/cloudtrail/home#/trails",
+      "kicker": "Prove the log wasn't touched", "cardTitle": "Integrity validation & digest files",
+      "bullets": [
+        "Enable log file validation and CloudTrail writes signed digest files describing each log file it delivered.",
+        "Each digest is hashed and the digests are chained, so deleting or altering a log file breaks the chain and is detectable.",
+        "Validate with the aws cloudtrail validate-logs command — this is how you prove tampering to an auditor."
+      ],
+      "narration": "Log file integrity validation is how you prove your logs weren't tampered with. When enabled, CloudTrail delivers signed digest files that list and hash every log file it wrote, and the digests are chained together. If an attacker deletes or edits a log file, the hash chain breaks and you can detect it. You verify this with the validate-logs command, and that proof is exactly what an auditor wants to see."
+    },
+    {
+      "id": "lake", "section": "CloudTrail Lake",
+      "url": "https://console.aws.amazon.com/cloudtrail/home#/lake",
+      "kicker": "Query your history with SQL", "cardTitle": "CloudTrail Lake runs SQL on events",
+      "bullets": [
+        "Lake is a managed event data store that lets you run SQL queries directly over your CloudTrail history.",
+        "Retain events for up to ten years — far beyond the 90-day event history window.",
+        "Great for incident investigations: find every action by a compromised role, or every call from a suspicious IP."
+      ],
+      "narration": "CloudTrail Lake turns your event history into something you can query with SQL. It's a managed event data store with retention up to ten years, well beyond the ninety-day event history. During an incident this is gold: you can write a query to pull every action taken by a compromised role, or every call from a suspicious source address, without standing up Athena or a separate pipeline."
+    },
+    {
+      "id": "events", "section": "Event history",
+      "url": "https://console.aws.amazon.com/cloudtrail/home#/events",
+      "kicker": "Deliver, encrypt, detect", "cardTitle": "Send to CloudWatch Logs for alerting",
+      "bullets": [
+        "Beyond S3, send the trail to CloudWatch Logs so metric filters can alarm on suspicious calls in near real time.",
+        "Encrypt logs with a customer-managed KMS key and protect the S3 bucket with a restrictive policy and MFA delete.",
+        "Watch for tampering signals: StopLogging, DeleteTrail, UpdateTrail, or PutKeyPolicy on the log key."
+      ],
+      "narration": "Event history lets you browse recent management events directly in the console. For real detection, deliver your trail to CloudWatch Logs as well as S3, so metric filters can raise alarms in near real time. Encrypt everything with a customer-managed KMS key, lock the destination bucket down hard, and alert specifically on the calls an attacker uses to go dark — StopLogging, DeleteTrail, UpdateTrail, and changes to the log encryption key."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "CloudTrail in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · One multi-region org trail to a locked-down S3 bucket.",
+        "2 · Management events always; data events on sensitive resources.",
+        "3 · Turn on log file validation — digest files prove integrity.",
+        "4 · Send to CloudWatch Logs and alarm on StopLogging.",
+        "5 · Use CloudTrail Lake to query history with SQL."
+      ]
+    },
+    "narration": "In short: run one multi-region organization trail delivering to a locked-down S3 bucket; always capture management events, and add data events on sensitive resources; turn on log file validation so digest files prove integrity; ship logs to CloudWatch Logs and alarm on anyone trying to stop logging; and reach for CloudTrail Lake when you need to query your history with SQL. That's CloudTrail, done right.",
+    "examTip": "Exam tip: know management events versus data events, that log file validation uses chained digest files, and that an organization trail captures all member accounts centrally."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-cloudtrail-1", "title": "Exercise 1 — A validated multi-region trail", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Stand up a tamper-evident audit trail",
+          "1 · CloudTrail → Trails → create a multi-region trail to a new S3 bucket",
+          "2 · Enable log file validation and encrypt with a KMS key",
+          "3 · Generate activity, then run: aws cloudtrail validate-logs",
+          "✓ DONE WHEN · validate-logs confirms the digest chain is intact"
+        ],
+        "narration": "Let's make this real. In your lab account, create a multi-region trail that delivers to a fresh S3 bucket. Turn on log file validation and encrypt the trail with a KMS key. Now go click around the console to generate some events, wait for delivery, and run the validate-logs command against your trail. You're done when validate-logs confirms the digest chain is intact and no files were tampered with."
+      },
+      {
+        "id": "lab-cloudtrail-2", "title": "Exercise 2 — Alarm when logging stops", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Detect an attacker disabling CloudTrail",
+          "1 · Send the trail to a CloudWatch Logs log group",
+          "2 · Add a metric filter matching eventName = StopLogging",
+          "3 · Create an alarm on that metric → notify an SNS topic",
+          "✓ DONE WHEN · Stopping then restarting the trail fires the alarm"
+        ],
+        "narration": "Second exercise: catch the move every attacker makes. Configure your trail to also deliver to a CloudWatch Logs log group. Add a metric filter that matches the StopLogging event name, create an alarm on that metric, and wire it to an SNS topic so you get notified. Then test it: stop the trail, and turn it back on. You're done when stopping CloudTrail fires the alarm and lands a notification in your inbox."
+      }
+    ]
+  }
+}

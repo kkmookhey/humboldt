@@ -1,0 +1,111 @@
+{
+  "id": "aws-control-tower",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 6 · Management & Security Governance",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "AWS Control Tower",
+    "lines": ["Multi-account governance at scale", "— landing zones, controls + Account Factory —"]
+  },
+  "intro": "AWS Control Tower sets up and governs a secure, multi-account environment with a few clicks. Let's walk through the landing zone, the controls that enforce your guardrails, and how Account Factory hands you compliant accounts on demand.",
+  "sections": [
+    {
+      "id": "dashboard", "section": "Control Tower Dashboard",
+      "url": "https://console.aws.amazon.com/controltower/home",
+      "kicker": "Governance at a glance", "cardTitle": "Start at the Control Tower dashboard",
+      "bullets": [
+        "Control Tower builds a landing zone — a pre-configured, multi-account baseline with a security and a log-archive account.",
+        "It orchestrates Organizations, Config, and CloudTrail for you, so the wiring is consistent across every account.",
+        "The dashboard shows enrolled accounts, organizational units, and any controls currently in violation."
+      ],
+      "narration": "This is the Control Tower dashboard. Think of Control Tower as the express setup for multi-account governance: in a few clicks it stands up a landing zone, a pre-configured baseline that includes a dedicated security account and a log-archive account. Under the hood it orchestrates Organizations, Config, and CloudTrail so the wiring is identical everywhere. The dashboard gives you a single view of every enrolled account, your organizational units, and any control that's currently in violation."
+    },
+    {
+      "id": "controls", "section": "Controls",
+      "url": "https://console.aws.amazon.com/controltower/home/controls",
+      "kicker": "Guardrails, three flavors", "cardTitle": "Controls enforce your guardrails",
+      "bullets": [
+        "Preventive controls use service control policies to block disallowed actions outright; detective controls use Config rules to flag drift.",
+        "Proactive controls use CloudFormation hooks to check resources before they're ever provisioned.",
+        "Guidance levels: mandatory (always on), strongly recommended, and elective — apply them per organizational unit."
+      ],
+      "narration": "Controls are how Control Tower turns policy into enforcement, and they come in three types. Preventive controls use service control policies to block a disallowed action before it happens. Detective controls use Config rules to spot resources that have drifted out of compliance. And proactive controls use CloudFormation hooks to catch a non-compliant resource before it's even provisioned. Each control also carries a guidance level — mandatory ones are always enforced, while strongly recommended and elective ones you choose to enable per organizational unit.",
+      "drill": {
+        "id": "control-detail", "section": "Controls · Control detail", "clickText": "Open a control",
+        "kicker": "Read before you enable", "cardTitle": "Inside a single control",
+        "bullets": [
+          "The detail page names the control's behavior — preventive, detective, or proactive — and its guidance level.",
+          "It lists which organizational units the control applies to and the resource or action it governs.",
+          "Mandatory controls can't be disabled; that's by design, so the baseline stays intact."
+        ],
+        "narration": "Here's the detail page for a single control. It tells you exactly what the control does, whether it's preventive, detective, or proactive, and its guidance level. You'll also see which organizational units it applies to and the resource or action it governs. Notice that mandatory controls can't be turned off — that's deliberate, because they form the baseline that keeps your whole environment safe."
+      }
+    },
+    {
+      "id": "organization", "section": "Organization",
+      "url": "https://console.aws.amazon.com/controltower/home/organization",
+      "kicker": "OUs are your blast radius", "cardTitle": "Organize accounts into OUs",
+      "bullets": [
+        "Control Tower groups accounts into organizational units, and controls are applied at the OU level — not account by account.",
+        "Registering an existing OU enrolls its accounts under Control Tower governance and the shared baseline.",
+        "Use OUs to separate workloads by sensitivity — for example, production, sandbox, and security."
+      ],
+      "narration": "The organization page shows your accounts grouped into organizational units, or OUs. This matters because controls are applied at the OU level, so your OU structure defines your blast radius. When you register an existing OU, Control Tower enrolls its accounts under the shared baseline and starts governing them. A good pattern is to separate accounts by sensitivity — keep production, sandbox, and security in their own OUs so the right guardrails land in the right place."
+    },
+    {
+      "id": "accountfactory", "section": "Account Factory",
+      "url": "https://console.aws.amazon.com/controltower/home/accountfactory",
+      "kicker": "Compliant accounts on demand", "cardTitle": "Provision accounts the safe way",
+      "bullets": [
+        "Account Factory is a Service Catalog product that provisions new accounts pre-configured to your baseline.",
+        "Every account it creates lands in the right OU, with the mandatory controls and standard networking already in place.",
+        "This replaces hand-built accounts that quietly skip the guardrails — the most common source of multi-account drift."
+      ],
+      "narration": "Account Factory is where Control Tower really pays off. It's a Service Catalog product that provisions brand-new accounts already configured to your baseline. Every account it creates lands in the correct OU, with the mandatory controls and your standard networking applied from the start. That's a huge deal, because the most common cause of drift in a multi-account setup is someone hand-building an account and quietly skipping the guardrails. Account Factory makes the compliant path the easy path."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Control Tower in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Landing zone = your governed multi-account baseline.",
+        "2 · Controls come in preventive, detective, proactive.",
+        "3 · Guidance: mandatory, strongly recommended, elective.",
+        "4 · Apply controls at the OU level, not per account.",
+        "5 · Account Factory provisions compliant accounts."
+      ]
+    },
+    "narration": "In short: the landing zone gives you a governed multi-account baseline; controls enforce it in three ways — preventive, detective, and proactive; each control is mandatory, strongly recommended, or elective; you apply them at the OU level rather than account by account; and Account Factory provisions new accounts that are compliant from day one. That's Control Tower, done right.",
+    "examTip": "Exam tip: map the control types to their engines — preventive uses service control policies, detective uses Config, proactive uses CloudFormation hooks — and know that mandatory controls cannot be disabled."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-ct-1", "title": "Exercise 1 — Apply a detective control", "accent": "#f0883e",
+        "lines": [
+          "GOAL · See a detective control flag a non-compliant resource",
+          "1 · Control Tower → Controls → pick a strongly-recommended detective control",
+          "2 · Enable it on a sandbox OU; confirm the backing Config rule appears",
+          "3 · Create a resource that violates it, then watch the dashboard mark the OU non-compliant",
+          "✓ DONE WHEN · The control shows a violation and you can trace it to the Config rule"
+        ],
+        "narration": "Let's make this real. In your lab, open Control Tower's controls library and pick a strongly-recommended detective control. Enable it on a sandbox organizational unit, then jump over to Config and confirm the backing Config rule has appeared. Now create a resource that breaks the rule, and watch the Control Tower dashboard mark that OU as non-compliant. You're done when you can see the violation in Control Tower and trace it all the way back to the Config rule that detected it."
+      },
+      {
+        "id": "lab-ct-2", "title": "Exercise 2 — Provision with Account Factory", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Create a compliant account the governed way",
+          "1 · Control Tower → Account Factory → enroll a new account into an OU",
+          "2 · Watch Organizations, Config, and CloudTrail get wired up automatically",
+          "3 · Confirm the mandatory controls landed and the account appears as enrolled",
+          "✓ DONE WHEN · The new account is enrolled, governed, and compliant — with zero manual setup"
+        ],
+        "narration": "Second exercise: feel the value of Account Factory. From Control Tower, use Account Factory to provision a brand-new account into one of your organizational units. As it builds, notice that Organizations, Config, and CloudTrail are wired up for you automatically — you don't touch them. When it finishes, confirm that the mandatory controls have landed and the account shows up as enrolled on the dashboard. You're done when that new account is fully governed and compliant, with zero manual setup on your part."
+      }
+    ]
+  }
+}

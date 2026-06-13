@@ -1,0 +1,122 @@
+{
+  "id": "aws-macie",
+  "cloud": "aws",
+  "voice": "alloy",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 5 · Data Protection",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Amazon Macie",
+    "lines": ["Sensitive-data discovery for S3", "— find PII before attackers do —"]
+  },
+  "intro": "Amazon Macie is a managed service that discovers sensitive data — like PII — sitting in your S3 buckets, and continuously watches those buckets for risky exposure. Let's walk through the bucket inventory, discovery jobs, data identifiers, findings, and how it feeds Security Hub.",
+  "sections": [
+    {
+      "id": "summary", "section": "Summary",
+      "url": "https://console.aws.amazon.com/macie/home#/summary",
+      "kicker": "Sensitive-data discovery, managed", "cardTitle": "What Macie does",
+      "bullets": [
+        "Macie uses machine learning and pattern matching to find sensitive data such as names, emails, and credit-card numbers in S3.",
+        "It's S3-focused — Macie's job is data protection for objects in buckets, not network or compute security.",
+        "The summary dashboard gives you account-wide posture: how much data is sensitive, and where the risk concentrates."
+      ],
+      "narration": "This is the Macie summary page. Macie is a managed sensitive-data discovery service — it uses machine learning and pattern matching to find things like names, email addresses, and credit-card numbers sitting in your S3 buckets. Keep its scope clear: Macie is about data protection for objects in S3, not network or compute security. This summary view gives you account-wide posture at a glance, showing how much of your data is sensitive and where the risk is concentrated."
+    },
+    {
+      "id": "buckets", "section": "S3 buckets",
+      "url": "https://console.aws.amazon.com/macie/home#/buckets",
+      "kicker": "Automated bucket inventory", "cardTitle": "See every bucket's exposure",
+      "bullets": [
+        "Macie automatically inventories all S3 buckets and flags which are public, unencrypted, or shared outside the account.",
+        "This runs continuously and cheaply — no discovery job needed — so you always know your bucket-level posture.",
+        "Use it to catch the classic mistake fast: a bucket holding sensitive data that's also publicly readable."
+      ],
+      "narration": "Before scanning a single object, Macie automatically inventories every S3 bucket in the account. This page flags which buckets are public, which are unencrypted, and which are shared outside your account — and it refreshes continuously at low cost, without you launching any job. It's the fastest way to catch the classic disaster: a bucket full of sensitive data that also happens to be publicly readable."
+    },
+    {
+      "id": "jobs", "section": "Discovery jobs",
+      "url": "https://console.aws.amazon.com/macie/home#/jobs",
+      "kicker": "Scan objects for sensitive data", "cardTitle": "Run discovery jobs",
+      "bullets": [
+        "A sensitive data discovery job actually inspects object contents in the buckets you select, on a one-time or scheduled basis.",
+        "Managed data identifiers detect common types out of the box — PII, financial, and credential data.",
+        "Custom data identifiers let you add your own regex for organization-specific patterns like employee or account IDs."
+      ],
+      "narration": "When you want to look inside the objects, you run a sensitive data discovery job. You pick the buckets, and Macie inspects the contents, either once or on a schedule. Out of the box it applies managed data identifiers that recognize common sensitive types — personal, financial, and credential data. And when you have organization-specific patterns, like an internal employee or account ID format, you add a custom data identifier with your own regular expression so Macie catches those too."
+    },
+    {
+      "id": "findings", "section": "Findings",
+      "url": "https://console.aws.amazon.com/macie/home#/findings",
+      "kicker": "What Macie discovered", "cardTitle": "Triage your findings",
+      "bullets": [
+        "Findings come in two families: sensitive-data findings (what was found) and policy findings (a bucket configured riskily).",
+        "Each finding shows the bucket, object, the type of sensitive data, and a severity to help you prioritize.",
+        "Triage by severity first — a high-severity finding on a public bucket is the one to act on immediately."
+      ],
+      "narration": "Everything Macie discovers shows up here as findings. There are two families: sensitive-data findings, which tell you what was found and where, and policy findings, which flag a bucket that's configured in a risky way. Each finding names the bucket, the object, the type of sensitive data, and a severity. Triage by severity first — a high-severity finding sitting on a publicly accessible bucket is the one you act on immediately.",
+      "drill": {
+        "id": "finding", "section": "Findings · A single finding", "clickText": "the finding",
+        "kicker": "Read one finding end to end", "cardTitle": "Anatomy of a finding",
+        "bullets": [
+          "The finding type tells you the category — for example SensitiveData:S3Object/Personal or a Policy finding.",
+          "It pinpoints the exact bucket and object key, plus the count and kind of sensitive data detected.",
+          "Macie samples and reports locations without exposing the raw values, so you can investigate without leaking the data again."
+        ],
+        "narration": "Let's open a single finding. The finding type tells you the category right away — for instance, sensitive personal data in an S3 object, or a policy finding about the bucket itself. It pinpoints the exact bucket and object key, and tells you how much and what kind of sensitive data was detected. Notice that Macie reports the locations and counts without dumping the raw values, so you can investigate the exposure without leaking the sensitive data all over again."
+      }
+    },
+    {
+      "id": "securityhub", "section": "Security Hub integration",
+      "url": "https://console.aws.amazon.com/macie/home#/summary",
+      "kicker": "Centralize and automate", "cardTitle": "Send findings to Security Hub",
+      "bullets": [
+        "Macie publishes findings to AWS Security Hub, giving you one console for findings from Macie, GuardDuty, and Inspector.",
+        "Findings also flow to EventBridge, so you can auto-remediate — for example, quarantine a bucket the moment PII is found public.",
+        "In an organization, delegate a Macie administrator account to manage discovery and findings across every member account."
+      ],
+      "narration": "Macie doesn't work in isolation. It publishes its findings into AWS Security Hub, so Macie, GuardDuty, and Inspector all land in one place for your team. Those findings also flow to EventBridge, which is how you automate a response — for example, automatically locking down a bucket the moment sensitive data is found exposed. And across an organization, you designate a delegated Macie administrator account to manage discovery and view findings for every member account from one spot."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Macie in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Macie finds sensitive data (PII) in S3.",
+        "2 · Bucket inventory flags public/unencrypted/shared automatically.",
+        "3 · Discovery jobs scan object contents.",
+        "4 · Managed + custom data identifiers tune detection.",
+        "5 · Findings feed Security Hub and EventBridge."
+      ]
+    },
+    "narration": "In short: Macie discovers sensitive data like PII inside your S3 buckets; its automatic inventory flags public, unencrypted, and shared buckets without any job; discovery jobs scan the actual object contents; managed and custom data identifiers tune what it detects; and findings feed Security Hub and EventBridge for central triage and automated response. That's Macie, done right.",
+    "examTip": "Exam tip: Macie is S3-only sensitive-data discovery (PII). For scope questions, remember Macie protects data in S3, GuardDuty watches for threats, and Inspector scans for vulnerabilities — and Macie findings centralize in Security Hub."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-macie-1", "title": "Exercise 1 — Discover PII in a bucket", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Run a discovery job and read a real finding",
+          "1 · Upload a file with fake PII (names, emails) to a test S3 bucket",
+          "2 · Macie → Jobs → Create job → select that bucket → run once",
+          "3 · Macie → Findings → open the sensitive-data finding",
+          "✓ DONE WHEN · The finding names your bucket, object, and PII type"
+        ],
+        "narration": "Time to make this real. In your lab account, create a test S3 bucket and upload a file containing fake PII — a few invented names and email addresses. Then open Macie, go to jobs, create a one-time sensitive data discovery job targeting that bucket, and run it. When it finishes, open the findings and read the sensitive-data finding it produced. You're done when that finding names your exact bucket and object and correctly identifies the type of PII you planted."
+      },
+      {
+        "id": "lab-macie-2", "title": "Exercise 2 — Custom identifier + Security Hub", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Catch an org-specific pattern and centralize it",
+          "1 · Macie → Custom data identifiers → add a regex (e.g. EMP-\\d{6})",
+          "2 · Upload a file with that pattern; re-run a discovery job",
+          "3 · Enable Security Hub; confirm the Macie finding appears there",
+          "✓ DONE WHEN · Your custom finding shows up in Security Hub"
+        ],
+        "narration": "Second exercise: tune detection and centralize the result. In Macie, create a custom data identifier with a regular expression for an organization-specific pattern — say, an employee ID like the letters E-M-P, a dash, and six digits. Upload a file containing that pattern and re-run a discovery job. Then enable Security Hub if it isn't already on, and confirm your Macie finding flows into it. You're done when the finding from your custom identifier appears in the Security Hub console alongside everything else."
+      }
+    ]
+  }
+}

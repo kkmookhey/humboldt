@@ -4,6 +4,7 @@
   "voice": "alloy",
   "model": "gpt-4o-mini-tts",
   "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 2 · Security Logging & Monitoring",
   "redactions": [
     { "section": "summary", "regions": [ { "x": 1300, "y": 410, "w": 585, "h": 500 } ] },
     { "section": "findings", "regions": [ { "x": 980, "y": 285, "w": 640, "h": 450 } ] },
@@ -133,6 +134,40 @@
         "5 · Automate response; aggregate every source."
       ]
     },
-    "narration": "To get real value from Security Hub: enable it in every account and region with one delegated administrator; turn on the Foundational Security Best Practices standard plus whatever your compliance demands; tune the controls and document every exception; triage findings consistently by severity and workflow status; and automate your response while aggregating every security source into this one hub. Do that, and Security Hub stops being a dashboard you ignore — and becomes the control center for your cloud security."
+    "narration": "To get real value from Security Hub: enable it in every account and region with one delegated administrator; turn on the Foundational Security Best Practices standard plus whatever your compliance demands; tune the controls and document every exception; triage findings consistently by severity and workflow status; and automate your response while aggregating every security source into this one hub. Do that, and Security Hub stops being a dashboard you ignore — and becomes the control center for your cloud security.",
+    "examTip": "Exam tip: know that Security Hub normalizes findings into the AWS Security Finding Format (ASFF), runs security standards like CIS, FSBP, and PCI DSS, centralizes multi-account posture through a delegated administrator, and drives automation by routing findings to EventBridge."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-securityhub-1",
+        "title": "Exercise 1 — Enable Security Hub with the FSBP standard and review failed controls",
+        "accent": "#f0883e",
+        "lines": [
+          "GOAL · Turn on Security Hub and act on its first findings",
+          "1 · Security Hub → enable it, then turn on the AWS Foundational Security Best Practices standard",
+          "2 · Wait for the first evaluation, then open Controls and sort by failed status",
+          "3 · Pick one failed control and open a finding to read its remediation steps",
+          "4 · Fix the underlying resource, then confirm the control flips to passed",
+          "✓ DONE WHEN · FSBP is enabled, you've remediated at least one failed control, and its status shows passed"
+        ],
+        "narration": "Let's get hands-on in your lab account. Open Security Hub and enable it, then turn on the AWS Foundational Security Best Practices standard, which is the broadest AWS-maintained baseline. Give it a few minutes to run its first evaluation, then open the Controls view and sort to surface everything that's failing. Pick one failed control, open a finding behind it, and read through the step-by-step remediation guidance. Go fix the underlying resource, and then come back and confirm the control flips from failed to passed. You're done when the standard is enabled, you've remediated at least one real control, and you can see its status turn green."
+      },
+      {
+        "id": "lab-securityhub-2",
+        "title": "Exercise 2 — Aggregate findings and route a critical one to SNS",
+        "accent": "#f0883e",
+        "lines": [
+          "GOAL · Centralize regions and automate alerting on critical findings",
+          "1 · Settings → Regions → set up a finding aggregation Region as your home base",
+          "2 · SNS → create a topic and subscribe your email, then confirm the subscription",
+          "3 · EventBridge → create a rule matching Security Hub findings where severity label is CRITICAL",
+          "4 · Set the rule target to your SNS topic, then generate or import a critical finding to test",
+          "✓ DONE WHEN · A critical finding lands in your aggregation Region and an email alert arrives via SNS"
+        ],
+        "narration": "Second exercise: wire Security Hub up for central visibility and automated alerting. Start in Settings and configure a finding aggregation region, so findings from your other regions roll up into one home base. Next, create an SNS topic and subscribe your own email address to it, and don't forget to click the confirmation link. Now go to EventBridge and create a rule that matches Security Hub findings where the severity label is critical, and point that rule's target at your SNS topic. Finally, generate or import a critical finding to test the whole path. You're done when a critical finding shows up in your aggregation region and an email alert lands in your inbox through SNS."
+      }
+    ]
   }
 }

@@ -4,6 +4,7 @@
   "voice": "alloy",
   "model": "gpt-4o-mini-tts",
   "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "SCS-C02 · Domain 5 · Data Protection",
   "redactions": [
     { "section": "overview", "regions": [ { "x": 240, "y": 300, "w": 720, "h": 380 } ] },
     { "section": "permissions", "regions": [ { "x": 240, "y": 300, "w": 720, "h": 380 } ] },
@@ -124,6 +125,40 @@
         "5 · Watch with Access Analyzer + Macie."
       ]
     },
-    "narration": "So, to lock down S3: turn Block Public Access on across the whole account; disable ACLs so access is governed only by IAM and bucket policies; write least-privilege policies and force every connection over TLS; encrypt with KMS, enable versioning, and lock the objects that must never change; and watch continuously with Access Analyzer and Macie. Get those five right, and your buckets stay private — by design, not by luck."
+    "narration": "So, to lock down S3: turn Block Public Access on across the whole account; disable ACLs so access is governed only by IAM and bucket policies; write least-privilege policies and force every connection over TLS; encrypt with KMS, enable versioning, and lock the objects that must never change; and watch continuously with Access Analyzer and Macie. Get those five right, and your buckets stay private — by design, not by luck.",
+    "examTip": "Exam tip: know that account-level Block Public Access overrides any bucket policy or ACL, that bucket policies and IAM control access while ACLs are legacy, and how to enforce SSE-KMS default encryption and restrict a bucket to a VPC endpoint or TLS using policy conditions."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-s3-1",
+        "title": "Exercise 1 — Lock down a bucket with BPA, SSE-KMS, and a least-privilege policy",
+        "accent": "#f0883e",
+        "lines": [
+          "GOAL · Take a fresh bucket from default to private-by-design",
+          "1 · S3 → create a test bucket, then turn ON all four Block Public Access settings",
+          "2 · Properties → set Default encryption to SSE-KMS with a customer-managed key, enable the S3 Bucket Key",
+          "3 · Permissions → set Object Ownership to Bucket owner enforced to disable ACLs",
+          "4 · Add a bucket policy granting one IAM role s3:GetObject on a single prefix only",
+          "✓ DONE WHEN · The bucket is fully private, objects encrypt with your KMS key, and only that role can read that one prefix"
+        ],
+        "narration": "Let's make this real in your own lab account. Create a fresh test bucket, then turn on all four Block Public Access settings so nothing can ever go public by accident. Open the Properties tab and set default encryption to SSE-KMS using a customer-managed key, and enable the bucket key to keep your KMS costs down. Over on the Permissions tab, set object ownership to bucket-owner-enforced, which disables ACLs so access is governed only by IAM and the bucket policy. Finally, write a least-privilege bucket policy that grants a single IAM role read access to just one prefix, and nothing more. You're done when the bucket is fully private, every object encrypts with your own key, and only that one role can read that one prefix."
+      },
+      {
+        "id": "lab-s3-2",
+        "title": "Exercise 2 — Enforce TLS-only and restrict access to a VPC endpoint",
+        "accent": "#f0883e",
+        "lines": [
+          "GOAL · Use policy conditions to require encryption in transit and a private network path",
+          "1 · VPC → create a Gateway VPC endpoint for S3 and note its endpoint ID",
+          "2 · Edit the bucket policy → add a Deny when aws:SecureTransport is false to force TLS",
+          "3 · Add a second Deny when aws:sourceVpce does not equal your endpoint ID",
+          "4 · Test from an instance in the VPC, then test from outside it",
+          "✓ DONE WHEN · Plain HTTP and off-VPC requests are denied, but TLS requests through the endpoint succeed"
+        ],
+        "narration": "Second exercise: practice using policy conditions to control how and where the bucket can be reached. Start in the VPC console and create a gateway endpoint for S3, then note its endpoint ID. Now edit the bucket policy and add a deny statement that fires whenever secure transport is false, which forces every request over TLS. Add a second deny statement that triggers when the source VPC endpoint does not match your endpoint ID, so the bucket only answers requests that come through your private network path. Test it from an instance inside the VPC, then try again from outside. You're done when plain HTTP and off-VPC requests are blocked, but encrypted requests through your endpoint go through cleanly."
+      }
+    ]
   }
 }
