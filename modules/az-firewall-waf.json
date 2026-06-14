@@ -1,0 +1,114 @@
+{
+  "id": "az-firewall-waf",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Secure networking",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Azure Firewall & WAF",
+    "lines": ["Perimeter filtering, L3 to L7", "— the right tool for each layer —"]
+  },
+  "intro": "Network security groups filter traffic at the subnet, but they don't inspect it. For a real perimeter you need more: a managed firewall that filters and logs traffic across your whole network, and a web application firewall that understands HTTP and blocks application-layer attacks. In this module we'll tour Azure Firewall and the Web Application Firewall, see where each one fits, and walk the policies that make them powerful. These are configuration walkthroughs — none of this is deployed in the demo tenant — so focus on the model, not the click count.",
+  "sections": [
+    {
+      "id": "overview", "section": "The perimeter toolkit",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_HybridNetworking/FirewallManagerMenuBlade/~/firewalls",
+      "focus": { "text": "Web Application Firewall" },
+      "kicker": "Right tool, right layer", "cardTitle": "Three perimeter services compared",
+      "bullets": [
+        "Azure Firewall: filters and routes traffic between subnets and to the internet — layers 3 to 4 (and FQDN).",
+        "Web Application Firewall: blocks web exploits — SQL injection, XSS, bots — at layer 7.",
+        "DDoS Protection: absorbs volumetric attacks. They're complementary, not alternatives."
+      ],
+      "narration": "Azure gives you three distinct perimeter services, and the exam loves to test whether you know which goes where. This network security hub lays them out side by side. Azure Firewall, on the left, filters and routes traffic between your subnets and out to the internet — it works at the network and transport layers, three and four, plus fully-qualified-domain-name filtering. The Web Application Firewall, highlighted here on the right, operates up at layer seven: it understands H.T.T.P. and blocks application attacks like S.Q.L. injection, cross-site scripting, and bad bots. And D.D.o.S. Protection in the middle absorbs volumetric attacks that try to drown your public endpoints. The key insight is that these are complementary. A hardened design often uses all three: D.D.o.S. at the edge, Azure Firewall for egress and east-west control, and a W.A.F. in front of your web apps."
+    },
+    {
+      "id": "firewall", "section": "Azure Firewall",
+      "url": "https://portal.azure.com/#create/Microsoft.AzureFirewall",
+      "focus": { "text": "Premium" },
+      "kicker": "A managed network firewall", "cardTitle": "Azure Firewall: SKUs & model",
+      "bullets": [
+        "Fully managed, stateful, highly available — with a static public IP and Azure Monitor logging.",
+        "Three SKUs: Basic (small environments), Standard, and Premium (adds TLS inspection + IDPS).",
+        "Centralize it in a hub VNet so spokes route egress through one inspected, logged choke point."
+      ],
+      "narration": "Azure Firewall is a fully managed, stateful network firewall — highly available out of the box, with a static public I.P. for predictable egress and built-in logging to Azure Monitor. When you create one, the first real decision is the S.K.U., highlighted here. Basic suits small environments; Standard is the workhorse; and Premium — selected here — adds the serious capabilities: T.L.S. inspection, so it can look inside encrypted traffic, and an intrusion detection and prevention system. The architectural pattern to remember is centralization: you place one Azure Firewall in a hub virtual network and route every spoke's outbound traffic through it. Now you have a single, inspected, logged choke point for the whole estate, instead of trying to control egress subnet by subnet."
+    },
+    {
+      "id": "policy", "section": "Firewall Policy & threat protection",
+      "url": "https://portal.azure.com/#create/Microsoft.FirewallPolicy",
+      "kicker": "Rules, IDPS, threat intel", "cardTitle": "Firewall Policy: the brain",
+      "bullets": [
+        "A Firewall Policy holds rule collections: DNAT, network rules, and application rules — reusable across firewalls.",
+        "Threat intelligence can alert or deny traffic to/from known-malicious IPs and domains automatically.",
+        "Premium adds IDPS and TLS inspection — signature-based detection of exploits inside the traffic."
+      ],
+      "narration": "The firewall itself is just an engine — the intelligence lives in the Firewall Policy, and you manage it separately so one policy can govern many firewalls. Look at the tabs across the top: this is the whole capability set. Rules hold your rule collections — D-NAT for inbound translation, network rules for I.P. and port filtering, and application rules for F.Q.D.N. and U.R.L. filtering, all evaluated in a clear priority order. Threat intelligence can automatically alert on, or outright deny, any traffic to or from I.P. addresses and domains that Microsoft knows are malicious — turning that on is a free, high-value win. And on the Premium tier you get T.L.S. inspection and I.D.P.S. Let's open the I.D.P.S. tab and see it.",
+      "drill": {
+        "id": "idps", "section": "Firewall Policy — IDPS",
+        "expandText": "IDPS",
+        "kicker": "Detect & block exploits in-line", "cardTitle": "IDPS: signature-based protection",
+        "bullets": [
+          "IDPS matches traffic against thousands of signatures for known exploits and malware.",
+          "Choose a mode: Alert (log only) or Alert and deny (block the matching traffic).",
+          "Combined with TLS inspection, IDPS can even examine encrypted flows — Premium only."
+        ],
+        "narration": "This is the intrusion detection and prevention system. I.D.P.S. continuously compares traffic against thousands of signatures for known exploits, malware, and command-and-control patterns. You choose how aggressive it is: Alert mode logs a match but lets it through, while Alert and deny mode blocks the offending traffic outright. And because this is the Premium tier, when you pair I.D.P.S. with T.L.S. inspection, the firewall can decrypt, inspect, and re-encrypt traffic — so it catches exploits hiding inside H.T.T.P.S., which a layer-four firewall would wave straight through. This is the capability that justifies the Premium S.K.U. for security-sensitive workloads."
+      }
+    },
+    {
+      "id": "waf", "section": "Web Application Firewall",
+      "url": "https://portal.azure.com/#view/HubsExtension/BrowseResource/resourceType/Microsoft.Network%2FApplicationGatewayWebApplicationFirewallPolicies",
+      "kicker": "Protect the app layer", "cardTitle": "WAF: stop web exploits at L7",
+      "bullets": [
+        "A WAF policy uses the OWASP Core Rule Set to block SQL injection, XSS, and other common attacks.",
+        "Attach it to Application Gateway (regional) or Front Door (global) — plus bot protection & custom rules.",
+        "Run it in Detection mode first to tune, then switch to Prevention mode to actively block."
+      ],
+      "narration": "Where Azure Firewall guards the network, the Web Application Firewall guards the application. A W.A.F. policy is built on the O.W.A.S.P. Core Rule Set — managed rules that recognize and block the classic web attacks: S.Q.L. injection, cross-site scripting, remote file inclusion, and more. You attach that policy to a front-end: Application Gateway when your app is regional, or Front Door when it's global, and both add bot protection and let you write custom rules — say, rate-limit a path or block a country. The operational tip that matters in production: always start in Detection mode, which logs what it would block so you can tune out false positives against real traffic, and only then flip to Prevention mode to actively enforce. Turn on Prevention before tuning and you'll block your own users on day one."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Firewall & WAF in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Azure Firewall = L3–4 + FQDN; WAF = L7 web exploits; DDoS = volumetric.",
+        "2 · Centralize Azure Firewall in a hub VNet; route spokes through it.",
+        "3 · Firewall Policy holds DNAT/network/app rules; reuse across firewalls.",
+        "4 · Premium adds TLS inspection + IDPS (signature-based, in-line).",
+        "5 · WAF: OWASP rules on App Gateway/Front Door; Detection → Prevention."
+      ]
+    },
+    "narration": "To recap the perimeter. Match the tool to the layer: Azure Firewall for network and transport plus F.Q.D.N. filtering, the Web Application Firewall for layer-seven web exploits, and D.D.o.S. Protection for volumetric floods. Centralize Azure Firewall in a hub virtual network and route your spokes through it for one logged choke point. Keep the intelligence in a reusable Firewall Policy with D-NAT, network, and application rule collections, and turn on threat intelligence for free wins. Step up to Premium when you need T.L.S. inspection and I.D.P.S. And for web apps, run the O.W.A.S.P. rule set on Application Gateway or Front Door — in Detection mode first, then Prevention. Right tool, right layer.",
+    "examTip": "Exam tip: Azure Firewall is stateful and centrally managed via Firewall Policy; Premium adds TLS inspection and IDPS. WAF runs on Application Gateway (regional) or Front Door (global) with the OWASP CRS, in Detection or Prevention mode. NSGs filter but don't inspect — Firewall and WAF inspect."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-fw-1", "title": "Exercise 1 — Hub firewall with FQDN egress control", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Force egress through an inspected choke point",
+          "1 · Deploy an Azure Firewall (Standard) into a hub VNet's AzureFirewallSubnet",
+          "2 · In a Firewall Policy, add an application rule allowing only *.ubuntu.com (block all else)",
+          "3 · Route a spoke subnet's 0.0.0.0/0 to the firewall's private IP",
+          "✓ DONE WHEN · A spoke VM can reach ubuntu.com but no other site"
+        ],
+        "narration": "In your lab, deploy an Azure Firewall on the Standard S.K.U. into a hub virtual network — it needs a subnet named AzureFirewallSubnet. Create a Firewall Policy and add an application rule that allows only the Ubuntu update domains, star-dot-ubuntu-dot-com, and nothing else. Then add a route table to a spoke subnet sending all traffic, zero-dot-zero-dot-zero-dot-zero slash zero, to the firewall's private I.P. address. You're done when a virtual machine in that spoke can reach ubuntu.com for updates but is blocked from every other site. You've just built egress control — the thing NSGs can't do because they don't understand domain names."
+      },
+      {
+        "id": "lab-fw-2", "title": "Exercise 2 — WAF in detection, then prevention", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Block a web attack without blocking real users",
+          "1 · Create a WAF policy (OWASP CRS) and attach it to an Application Gateway",
+          "2 · Start in Detection mode; send a test SQLi string and confirm it's logged, not blocked",
+          "3 · Switch to Prevention mode; resend and confirm it's now blocked (403)",
+          "✓ DONE WHEN · The SQLi is blocked in Prevention while normal requests still succeed"
+        ],
+        "narration": "Second exercise: tune a W.A.F. the safe way. Create a W.A.F. policy with the O.W.A.S.P. Core Rule Set and attach it to an Application Gateway in front of a test web app. Leave it in Detection mode and send a request containing an obvious S.Q.L. injection string — confirm the W.A.F. logs it as a match but lets it through. Now switch the policy to Prevention mode and send the same request: it should come back blocked, a four-oh-three. You're done when the injection is blocked in Prevention mode while your normal requests still succeed. That detection-then-prevention rhythm is exactly how you roll a W.A.F. into production without taking your own site down."
+      }
+    ]
+  }
+}
