@@ -1,0 +1,114 @@
+{
+  "id": "az-entra-foundations",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Manage identity and access",
+  "title": {
+    "kicker": "Identity is the new perimeter",
+    "title": "Microsoft Entra ID Foundations",
+    "lines": ["Tenant, users, groups & secure score", "— where every access decision begins —"]
+  },
+  "intro": "In the cloud, identity is the control plane. Before a single firewall rule or storage key matters, Entra ID decides who you are and what you're allowed to touch. Microsoft Entra ID — the service formerly called Azure Active Directory — is the identity provider behind every Azure subscription and every Microsoft 365 tenant. In this first module we lay the foundation: the tenant itself, the users and groups you'll secure, the administrative units that scope your admins, and the identity secure score that grades how well you're doing. Get this layer right and everything above it gets easier.",
+  "sections": [
+    {
+      "id": "overview", "section": "Entra ID overview",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/TenantOverview.ReactView",
+      "focus": { "text": "Tenant" },
+      "kicker": "Your identity boundary", "cardTitle": "The tenant is the security boundary",
+      "bullets": [
+        "A tenant is one dedicated, isolated instance of Entra ID — its own users, groups, and policies.",
+        "Tenant properties hold the security contact, and the 'Manage security defaults' toggle for baseline MFA.",
+        "Security defaults give free, tenant-wide MFA and legacy-auth blocking when you have no Conditional Access."
+      ],
+      "narration": "This is the Entra ID overview, and the first thing to understand is the tenant. A tenant is a single, dedicated, fully isolated instance of Entra ID — your organization's own directory of users, groups, applications, and policies, walled off from every other customer. Everything we do in this series happens inside this boundary. From the overview you reach tenant properties, where you set the security contact and find the manage security defaults toggle. Security defaults are Microsoft's free baseline: they enforce multifactor authentication for everyone and block the old legacy authentication protocols that bypass it. If you're a small shop with no Conditional Access, leave security defaults on. The moment you build Conditional Access policies — which we'll do later — you turn security defaults off, because the two are mutually exclusive."
+    },
+    {
+      "id": "users", "section": "Users",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/AllUsers",
+      "kicker": "Every account is an attack surface", "cardTitle": "Member, guest & the identities you secure",
+      "bullets": [
+        "Users are either members (your org) or guests (external B2B identities) — guests get a #EXT# tag.",
+        "Cloud-only users live in Entra; synced users flow in from on-prem Active Directory via Entra Connect.",
+        "Every account is a credential to protect — disable stale ones, and watch the guests closely."
+      ],
+      "narration": "Here's the user directory — the people, and increasingly the workload identities, you're responsible for protecting. Two big distinctions to know for the exam. First, user type: a member is an identity native to your organization, while a guest is an external user invited through business-to-business collaboration — you'll spot guests by the ext tag in their user principal name. Guests are convenient and they're also a classic over-sharing risk, so they deserve regular review. Second, the source: a cloud-only user is created and lives entirely in Entra, whereas a synchronized user originates in your on-premises Active Directory and is projected into the cloud by Entra Connect. Knowing where an account comes from tells you where you have to go to disable it when someone leaves."
+    },
+    {
+      "id": "groups", "section": "Groups",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/GroupsManagementMenuBlade/~/AllGroups",
+      "kicker": "Assign access to groups, not people", "cardTitle": "Security groups & dynamic membership",
+      "bullets": [
+        "Security groups grant access to resources; Microsoft 365 groups add a mailbox and collaboration tools.",
+        "Assigned membership is manual; dynamic membership auto-populates from user attributes via a rule.",
+        "Group-based access is the scalable pattern — manage the group, and access follows automatically."
+      ],
+      "narration": "Groups are how you keep access management sane. Rather than granting permissions to one person at a time, you assign access to a group and manage membership in one place. Know the two group types: a security group is used to grant access to resources, while a Microsoft 365 group also provisions a shared mailbox and collaboration tooling for a team. Then there's membership type. Assigned membership means you add and remove people by hand. Dynamic membership is the powerful one — you write a rule against user attributes, say department equals finance, and Entra continuously adds and removes members as those attributes change. Dynamic groups are how you make access self-maintaining: when someone moves teams, their access moves with them, no ticket required."
+    },
+    {
+      "id": "admin-units", "section": "Administrative units",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/AdminUnit",
+      "kicker": "Scope admin power to a slice", "cardTitle": "Administrative units for delegated admin",
+      "bullets": [
+        "An administrative unit is a container of users, groups, or devices you can scope a role to.",
+        "Grant 'Helpdesk Admin' over just the EU region's users — not the whole tenant.",
+        "This is least privilege for administration: contain the blast radius of every delegated role."
+      ],
+      "narration": "Administrative units are how you delegate admin power without handing over the whole tenant. An administrative unit is simply a container — a defined set of users, groups, or devices — that you can scope a role assignment to. Picture a global company: you want the European help desk to reset passwords for European employees only, not for everyone. You create an administrative unit for that region, drop those users in, and assign the help desk administrator role scoped to that unit. Now their power stops at the boundary you drew. This is least privilege applied to administration itself, and it's a favorite exam topic — administrative units shrink the blast radius of every delegated admin, so a compromised help-desk account can't touch the entire directory."
+    },
+    {
+      "id": "secure-score", "section": "Identity Secure Score",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/SecurityMenuBlade/~/IdentitySecureScore",
+      "focus": { "text": "Secure Score" },
+      "kicker": "Grade your identity posture", "cardTitle": "Identity Secure Score, your report card",
+      "bullets": [
+        "A single percentage measuring how many identity best practices you've actually adopted.",
+        "Each improvement action shows its point value, user impact, and step-by-step remediation.",
+        "Track the trend over time and compare against organizations of similar size."
+      ],
+      "narration": "Finally, how do you know if your identity foundation is any good? The identity secure score gives you a single, honest number. It's a percentage that compares your current configuration against a list of Microsoft-recommended identity best practices — things like requiring multifactor authentication, blocking legacy authentication, and enabling self-service password reset. Each improvement action is laid out with the points it's worth, the user impact you should expect, and exact steps to implement it, so you can prioritize the high-value, low-friction wins first. The score trends over time and benchmarks you against comparable organizations. Treat it the way we treated secure score in Defender for Cloud — as a prioritized to-do list for your identity posture, not a vanity metric."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Entra foundations in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · The tenant is your isolated identity boundary — everything lives inside it.",
+        "2 · Security defaults = free baseline MFA; off the moment you use Conditional Access.",
+        "3 · Know user type (member vs guest) and source (cloud vs synced).",
+        "4 · Assign access to groups; dynamic groups self-maintain from attributes.",
+        "5 · Administrative units scope admin roles — least privilege for admins."
+      ]
+    },
+    "narration": "Let's lock in the foundation. The tenant is your isolated identity boundary, and the cheapest security you'll ever get is security defaults — free baseline multifactor authentication that you keep on until Conditional Access takes over. Know your users by type and by source, because that tells you how to govern and disable them. Grant access to groups rather than individuals, and let dynamic membership keep those groups current automatically. Use administrative units to scope admin roles to a slice of the directory so no delegated admin holds the whole tenant. And let the identity secure score grade your progress. Identity is where every access decision begins — get this layer right.",
+    "examTip": "Exam tip: security defaults and Conditional Access are mutually exclusive — you cannot have both enabled. Administrative units scope a role to a subset of the directory. Dynamic group membership is driven by attribute rules, and guest (B2B) accounts carry the #EXT# tag in their UPN."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-found-1", "title": "Exercise 1 — Build a dynamic security group", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Make access self-maintaining from an attribute",
+          "1 · Entra ID → Groups → New group; type = Security, membership = Dynamic User",
+          "2 · Add a rule: (user.department -eq \"Finance\") and validate it with a test user",
+          "3 · Set a couple of test users' department to Finance and watch membership update",
+          "✓ DONE WHEN · Members populate automatically with no manual adds"
+        ],
+        "narration": "First exercise: make access maintain itself. Create a new security group and choose dynamic user as the membership type. Write a simple rule — user department equals finance — and use the built-in validator to test it against a few users. Then set the department attribute on a test account to finance and watch Entra add them to the group automatically within a few minutes. You're done when membership populates with zero manual additions. That's the pattern that scales: you manage attributes, and access follows."
+      },
+      {
+        "id": "lab-found-2", "title": "Exercise 2 — Scope a role with an administrative unit", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Delegate admin to a slice of the directory",
+          "1 · Entra ID → Administrative units → Add; name it by region or department",
+          "2 · Add a handful of users to the unit",
+          "3 · Roles and administrators → assign Helpdesk Administrator scoped to that unit",
+          "✓ DONE WHEN · The delegated admin can manage only the unit's users, not the tenant"
+        ],
+        "narration": "Second exercise: contain admin power. Create an administrative unit named for a region or department, and add a handful of users to it. Then assign the help desk administrator role to a test admin, but scope that assignment to the administrative unit instead of the whole directory. Verify it worked by confirming that admin can reset passwords for users inside the unit and nobody else. You're done when the delegated power stops cleanly at the unit boundary — that's least privilege for administration, exactly what the exam wants you to recognize."
+      }
+    ]
+  }
+}

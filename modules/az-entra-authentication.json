@@ -1,0 +1,113 @@
+{
+  "id": "az-entra-authentication",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Manage identity and access",
+  "title": {
+    "kicker": "Prove it's really you",
+    "title": "Entra Authentication & MFA",
+    "lines": ["Methods, passwordless, SSPR & protection", "— kill the password, stop the spray —"]
+  },
+  "intro": "Passwords are the weakest link in security — phished, reused, and sprayed at scale. Microsoft Entra ID's job is to make a stolen password worthless. In this module we tour the authentication controls: the authentication methods policy that decides what people can sign in with, multifactor and the passwordless methods that replace the password entirely, self-service password reset that takes the help desk out of the loop, and password protection that bans weak choices and locks out attackers. By the end you'll know exactly which lever to pull to move your tenant toward phishing-resistant, passwordless sign-in.",
+  "sections": [
+    {
+      "id": "methods", "section": "Authentication methods",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/AdminAuthMethods",
+      "focus": { "text": "Authentication methods" },
+      "kicker": "One policy controls them all", "cardTitle": "The authentication methods policy",
+      "bullets": [
+        "A single policy enables or disables each method and targets it to specific groups.",
+        "Methods range from weakest (SMS, voice) to strongest (FIDO2 keys, passkeys, certificate).",
+        "This is the modern, converged replacement for the legacy per-feature MFA settings."
+      ],
+      "narration": "Everything starts here, at the authentication methods policy. This single, modern policy is where you decide which credentials your users are even allowed to register and use — and you can scope each method to specific groups, so you might pilot a phishing-resistant method with the security team before rolling it wide. The methods form a strength ladder. At the bottom sit text-message and voice-call codes — better than a password alone, but phishable and S.I.M.-swappable. In the middle is the Microsoft Authenticator app with push and number matching. At the top are the phishing-resistant methods: FIDO2 security keys, passkeys, and certificate-based authentication. This converged policy is the modern home for all of it — it replaces the old, scattered legacy multifactor and self-service settings Microsoft is retiring."
+    },
+    {
+      "id": "mfa", "section": "Multifactor authentication",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/AdminAuthMethods",
+      "kicker": "Something you have, not just know", "cardTitle": "MFA: the single highest-impact control",
+      "bullets": [
+        "MFA blocks the vast majority of account-takeover attacks that rely on a stolen password alone.",
+        "Number matching defeats 'MFA fatigue' push-bombing — the user types a code, not just taps approve.",
+        "Enforce MFA through Conditional Access, not per-user toggles, for granular, scalable control."
+      ],
+      "narration": "Multifactor authentication is the single highest-impact control in all of identity security — it stops the overwhelming majority of attacks that rely on a password alone, because the attacker has the password but not your phone or your key. One detail the exam loves: number matching. Plain push notifications created a problem called M.F.A. fatigue, where an attacker bombs you with approval prompts hoping you tap yes to make them stop. Number matching fixes it — the sign-in screen shows a number that you must type into the Authenticator app, so a blind tap does nothing. And the strategic point: don't enforce M.F.A. with the old per-user enabled-disabled toggles. Enforce it through Conditional Access, where you can require it precisely — for risky sign-ins, for admins, for sensitive apps — which is exactly where we're heading in the next module."
+    },
+    {
+      "id": "passwordless", "section": "Passwordless & phishing-resistant",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/AdminAuthMethods",
+      "kicker": "Remove the secret entirely", "cardTitle": "Passwordless: FIDO2, passkeys & Hello",
+      "bullets": [
+        "Passwordless removes the shared secret — there's no password left to phish or spray.",
+        "FIDO2 keys, passkeys, and Windows Hello for Business are phishing-resistant by design.",
+        "The credential is bound to the device and unlocked by biometric or PIN — it never travels."
+      ],
+      "narration": "The endgame isn't a stronger password — it's no password. Passwordless authentication removes the shared secret entirely, and you can't phish, spray, or reuse a secret that doesn't exist. Three methods to know. FIDO2 security keys and passkeys use public-key cryptography: a private key locked on the device or key, a public key in Entra, and a cryptographic challenge that's bound to the real website, so a phishing site simply can't satisfy it. Windows Hello for Business does the same thing built into the laptop, unlocked by your face, fingerprint, or PIN. And the Microsoft Authenticator app offers passwordless phone sign-in as a softer on-ramp. The unifying idea: the credential lives on your device, never travels across the network, and is released only after a local biometric or PIN check. That's what phishing-resistant actually means."
+    },
+    {
+      "id": "sspr", "section": "Self-service password reset",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/PasswordResetMenuBlade/~/Properties",
+      "kicker": "Take the help desk out of it", "cardTitle": "Self-service password reset (SSPR)",
+      "bullets": [
+        "Users securely reset their own password after passing registered authentication methods.",
+        "Cuts help-desk tickets and removes the social-engineering risk of phone-based resets.",
+        "With password writeback, the reset flows back to on-premises Active Directory too."
+      ],
+      "narration": "Self-service password reset, or S.S.P.R., does two good things at once: it makes users happier and it makes you more secure. Instead of phoning the help desk — a process attackers love to social-engineer — a user proves their identity through the same strong authentication methods they've registered, and resets their own password. That removes a whole class of help-desk impersonation attacks and slashes ticket volume. For hybrid organizations there's a key feature called password writeback: when a cloud user resets their password, that change is written back down to on-premises Active Directory, so the two stay in sync. Notice that the strength of self-service password reset depends entirely on the methods you allowed back in the authentication methods policy — weak reset methods would undo everything, so this all connects."
+    },
+    {
+      "id": "protection", "section": "Password protection",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/PasswordProtection",
+      "kicker": "Ban weak, lock out attackers", "cardTitle": "Password protection & smart lockout",
+      "bullets": [
+        "The global banned-password list plus your custom list block weak and guessable passwords.",
+        "Smart lockout throttles brute-force and password-spray attempts without locking real users out.",
+        "Deploy the on-prem agent to extend banned-password enforcement to Active Directory."
+      ],
+      "narration": "For the accounts that still use passwords, password protection makes those passwords much harder to guess. Entra maintains a global banned-password list of the most common and compromised choices, and you can add a custom banned list with your own terms — your company name, local sports teams, the obvious stuff attackers try. When a user picks a new password, anything matching the list is rejected. Working alongside it is smart lockout, which detects brute-force and password-spray patterns and throttles them — crucially, it's smart enough to tell a real user fumbling their password from an attacker hammering thousands of accounts, so legitimate people aren't locked out by the defense. And for hybrid shops, you deploy a lightweight agent on your domain controllers to enforce these same banned-password rules in on-premises Active Directory. Defense in depth, all the way down."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Authentication in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · The authentication methods policy is the single control for what people sign in with.",
+        "2 · MFA stops password-only attacks; number matching defeats MFA fatigue.",
+        "3 · Passwordless (FIDO2, passkeys, Hello) is phishing-resistant — no secret to steal.",
+        "4 · SSPR removes help-desk resets; writeback syncs to on-prem AD.",
+        "5 · Password protection bans weak passwords; smart lockout stops spray."
+      ]
+    },
+    "narration": "To recap the road away from the password. The authentication methods policy is your one control plane for which credentials are allowed, scoped to the right groups. Multifactor authentication is the highest-impact thing you can turn on, and number matching closes the M.F.A. fatigue gap. The destination is passwordless — FIDO2 keys, passkeys, and Windows Hello — because a credential that never leaves your device can't be phished. Self-service password reset takes the help desk out of the loop, with writeback keeping hybrid environments in sync. And password protection plus smart lockout harden whatever passwords remain. Kill the password, stop the spray.",
+    "examTip": "Exam tip: number matching is the defense against MFA fatigue / push-bombing. Enforce MFA via Conditional Access, not per-user settings. FIDO2, passkeys, Windows Hello for Business, and certificate-based auth are the phishing-resistant methods. SSPR password writeback synchronizes resets to on-premises Active Directory."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-auth-1", "title": "Exercise 1 — Enable a phishing-resistant method", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Pilot passwordless for a test group",
+          "1 · Entra ID → Protection → Authentication methods → Policies",
+          "2 · Enable Passkey (FIDO2); set Target to a pilot security group",
+          "3 · As a pilot user, register a passkey at aka.ms/mysecurityinfo and sign in with it",
+          "✓ DONE WHEN · The pilot user signs in with no password at all"
+        ],
+        "narration": "First exercise: go passwordless for a pilot group. Open the authentication methods policies and enable the passkey, or FIDO2, method, but target it to a small pilot security group rather than everyone. Then, as a pilot user, register a passkey from the my-security-info page and sign out and back in using it. You're done when that user completes a sign-in with no password whatsoever. Start small, prove it works, then widen the target — that's how every safe authentication rollout goes."
+      },
+      {
+        "id": "lab-auth-2", "title": "Exercise 2 — Turn on SSPR and a banned-password list", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Self-service resets + block weak passwords",
+          "1 · Entra ID → Protection → Password reset → enable SSPR for a group; require 2 methods",
+          "2 · Authentication methods → Password protection → add custom banned words",
+          "3 · Test: reset your own password via aka.ms/sspr; try a banned word and confirm rejection",
+          "✓ DONE WHEN · You reset without the help desk and a banned password is refused"
+        ],
+        "narration": "Second exercise: empower users and ban bad passwords. Enable self-service password reset for a test group and require at least two authentication methods to use it. Then open password protection and add a few custom banned words — your company name is a good start. Test both: reset your own password through the self-service portal without calling anyone, and try to set a banned word as a new password and confirm it's refused. You're done when self-service works and the weak password is blocked. Two controls, both free, both high-value."
+      }
+    ]
+  }
+}
