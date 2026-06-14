@@ -1,0 +1,124 @@
+{
+  "id": "az-defender-compliance",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Manage security operations",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Defender for Cloud: Regulatory Compliance",
+    "lines": ["Map your posture to real standards", "— continuous, audit-ready compliance —"]
+  },
+  "intro": "Security posture and compliance are two sides of the same coin. Defender for Cloud takes everything it already knows about your environment and continuously maps it onto the formal standards your business is held to — so compliance stops being an annual spreadsheet scramble and becomes a live dashboard. In this module we'll walk the regulatory compliance experience: the default benchmark, the control families behind it, how controls connect to fixes, how you add the standards you actually need, and how you prove progress to an auditor.",
+  "sections": [
+    {
+      "id": "compliance", "section": "Regulatory compliance dashboard",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/22",
+      "focus": { "text": "Microsoft cloud security benchmark" },
+      "kicker": "Compliance, continuously measured", "cardTitle": "The compliance dashboard",
+      "bullets": [
+        "The Microsoft cloud security benchmark (MCSB) is applied by default to every subscription.",
+        "Here, 45 of 63 controls pass — a live percentage, not a point-in-time audit.",
+        "Controls are grouped into families: Network Security, Identity Management, Data Protection, and more."
+      ],
+      "narration": "This is the regulatory compliance dashboard, and the headline is that compliance here is continuous. Defender applies the Microsoft cloud security benchmark — the M.C.S.B. — to every subscription by default, and you can see this environment passing forty-five of sixty-three controls right now. That number is live: as your resources drift or get fixed, it moves. Below the summary, the benchmark is organized into control families that should look familiar to any security professional — Network Security, Identity Management, Privileged Access, Data Protection, Asset Management, Logging and Threat Detection, Incident Response. Each family is a theme, and each holds a set of individual controls. Let's open one and see what's inside.",
+      "drill": {
+        "id": "controls", "section": "Inside a control family",
+        "expandText": "NS. Network Security",
+        "kicker": "Controls map to automated checks", "cardTitle": "Inside the Network Security family",
+        "bullets": [
+          "Expanding a family reveals its controls — NS-1 segmentation, NS-3 edge firewall, NS-5 DDoS, and so on.",
+          "Each control is backed by automated assessments Defender runs against your resources.",
+          "'Control details' shows exactly which resources pass or fail, so the evidence is always there."
+        ],
+        "narration": "Opening the Network Security family expands it into its individual controls — establish network segmentation boundaries, secure cloud services with network controls, deploy a firewall at the edge, deploy intrusion detection, deploy D.D.o.S. protection. This is the real value: each of these controls is backed by automated assessments that Defender continuously runs against your actual resources. Click control details on any one and you see precisely which resources pass and which fail — that's your audit evidence, generated for you, all the time. No manual sampling, no screenshots in a binder."
+      }
+    },
+    {
+      "id": "posture", "section": "Compliance across the estate",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/23",
+      "kicker": "Per-subscription accountability", "cardTitle": "Compliance posture by subscription",
+      "bullets": [
+        "Secure score and compliance are scoped per subscription, so you see who's passing and who's lagging.",
+        "Multicloud tabs extend the same standards view to AWS and GCP accounts you've connected.",
+        "Assign an owner per subscription so a lagging score has a name attached to it."
+      ],
+      "narration": "Compliance isn't one number for the whole company — it's scoped per subscription, and the security posture view makes that accountability visible. Here you can see each subscription with its own secure score and its own unhealthy resources, so a team running a lagging subscription can't hide inside the corporate average. Notice the tabs across the top: the same standards-based view extends to A.W.S. accounts and G.C.P. projects once you connect them, which means one compliance story across your whole multicloud estate. The move here is ownership — assign each subscription an owner, so when a control fails there's a name attached and a person who can fix it."
+    },
+    {
+      "id": "recommendations", "section": "Controls are backed by recommendations",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/5",
+      "kicker": "Compliance work = remediation work", "cardTitle": "Fix a recommendation, pass a control",
+      "bullets": [
+        "Every failing compliance control traces back to one or more concrete recommendations.",
+        "Remediate the recommendation and the linked control flips to passing automatically.",
+        "So your secure-score work and your audit evidence are the same effort, not two separate jobs."
+      ],
+      "narration": "Here's the connection that makes compliance tractable. A failing control isn't an abstract gap — it traces directly back to specific recommendations on the recommendations blade. Remediate the recommendation, and the control it backs flips to passing on its own, with no separate compliance task to track. That's the whole trick: your secure-score work and your audit evidence are the same body of work. When someone asks how to improve compliance, the honest answer is always the same — go to recommendations, sort by risk, and start fixing. The compliance dashboard simply reframes that effort in the language your auditors speak."
+    },
+    {
+      "id": "envsettings", "section": "Add the standards you need",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/EnvironmentSettings",
+      "kicker": "Tailor to your obligations", "cardTitle": "Add & scope compliance standards",
+      "bullets": [
+        "Beyond MCSB, add the standards you're actually held to — CIS, PCI DSS, NIST, ISO 27001, SOC 2.",
+        "Assign standards per subscription, or org-wide via management groups under security policy.",
+        "Apply at the management-group root so every new subscription inherits the standard automatically."
+      ],
+      "narration": "The default benchmark is a strong baseline, but most organizations answer to specific frameworks. You add those under environment settings, in each subscription's security policy. Defender ships built-in standards for the big ones — C.I.S., P.C.I. D.S.S., NIST, I.S.O. twenty-seven thousand one, S.O.C. two — and the moment you assign one, it starts mapping your live resources to that standard's controls, exactly like it does for the benchmark. The scaling pattern matters here: assign the standard at the management-group root rather than one subscription at a time, so every subscription you create tomorrow inherits your compliance requirements automatically. Compliance becomes a property of the org, not a checklist someone re-runs."
+    },
+    {
+      "id": "workbooks", "section": "Prove it: reports & trends",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/28",
+      "kicker": "Audit-ready evidence", "cardTitle": "Compliance over time & audit reports",
+      "bullets": [
+        "The 'Compliance Over Time' workbook turns today's score into a trend you can show leadership.",
+        "Download a PDF or CSV compliance report straight from the dashboard for auditors.",
+        "Grab certification reports (ISO, SOC, PCI) for Azure itself from the audit reports menu."
+      ],
+      "narration": "Finally, you have to prove it — to leadership and to auditors. The workbooks gallery includes a Compliance Over Time workbook that turns a single percentage into a trend line, so you can show that compliance is improving month over month rather than just asserting it. For auditors, the dashboard's download report button produces a P.D.F. or C.S.V. of your exact compliance state on demand. And the audit reports menu gives you Microsoft's own certification reports — I.S.O., S.O.C., P.C.I. — for the Azure platform underneath you, which auditors will also ask for. Between the live dashboard, the trend workbook, and these reports, an audit becomes something you export, not something you survive."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Regulatory compliance in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · MCSB is applied by default to every subscription.",
+        "2 · Controls live in families, backed by automated assessments.",
+        "3 · A failing control = specific recommendations to remediate.",
+        "4 · Add CIS / PCI / NIST / ISO; scope org-wide via management groups.",
+        "5 · Prove it with Compliance-Over-Time + downloadable audit reports."
+      ]
+    },
+    "narration": "To recap the compliance story. The Microsoft cloud security benchmark is applied to every subscription by default, and its controls are organized into families, each backed by automated assessments running continuously against your resources. A failing control always points to specific recommendations — fix those, and the control passes itself, so compliance and posture are one effort. Add the frameworks you're actually held to, and scope them at the management-group root so coverage is automatic. Then prove your progress with the Compliance Over Time workbook and downloadable audit reports. Continuous, audit-ready compliance — not an annual scramble.",
+    "examTip": "Exam tip: the MCSB is the default standard, compliance is scored per subscription, and added standards (CIS, PCI DSS, NIST, ISO) are assigned through Defender's security policy at a subscription or management-group scope. Failing controls map to the same recommendations that drive secure score."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-cmp-1", "title": "Exercise 1 — Trace a control to its fix", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Connect compliance to remediation end to end",
+          "1 · Regulatory compliance → expand a failing MCSB control family",
+          "2 · Open 'Control details' on a failing control; note the unhealthy resources",
+          "3 · Follow it to the backing recommendation and remediate on a test resource",
+          "✓ DONE WHEN · The control re-evaluates to passing and the % ticks up"
+        ],
+        "narration": "In your own environment, open regulatory compliance and expand a control family that has failures. Pick a failing control and open its control details to see exactly which resources are unhealthy. Now follow that control to its backing recommendation and remediate it on a test resource. You're done when the control re-evaluates and flips to passing, and the benchmark percentage ticks upward. You'll have proven to yourself that compliance and remediation are the same loop — which is the single most useful thing to understand about this whole experience."
+      },
+      {
+        "id": "lab-cmp-2", "title": "Exercise 2 — Add and scope a standard", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Map your estate to a real framework, org-wide",
+          "1 · Environment settings → a management group → Security policy → Standards",
+          "2 · Assign a built-in standard (e.g. CIS Azure or PCI DSS) at the group scope",
+          "3 · Let it evaluate, then open the new standard in Regulatory compliance",
+          "✓ DONE WHEN · A child subscription shows the standard without you assigning it directly"
+        ],
+        "narration": "Second exercise: make compliance scale. Go to environment settings, pick a management group, open its security policy, and assign a built-in standard — say C.I.S. Azure Foundations or P.C.I. D.S.S. — at the group scope rather than on a single subscription. Give Defender a few minutes to evaluate, then open that standard back in the regulatory compliance dashboard. You're done when a child subscription shows the new standard even though you never assigned it there directly — proof that scoping at the management group makes compliance automatic for everything underneath it."
+      }
+    ]
+  }
+}
