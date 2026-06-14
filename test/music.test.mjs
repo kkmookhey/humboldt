@@ -1,6 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildMusicFilter } from "../lib/music.mjs";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { buildMusicFilter, resolveTrack } from "../lib/music.mjs";
 
 test("buildMusicFilter throughout ducks the bed under voice and normalizes", () => {
   const f = buildMusicFilter({ scope: "throughout", total: 60, gain: -6 });
@@ -25,4 +28,11 @@ test("buildMusicFilter bookends gates two segments and does not duck", () => {
 test("buildMusicFilter applies per-scope default gain", () => {
   assert.match(buildMusicFilter({ scope: "throughout", total: 10 }), /volume=-6dB/);
   assert.match(buildMusicFilter({ scope: "bookends", total: 10, introDur: 4, outroDur: 4 }), /volume=-3dB/);
+});
+
+test("resolveTrack finds a file by extension and throws when missing", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "music-"));
+  fs.writeFileSync(path.join(dir, "calm.mp3"), "x");
+  assert.equal(resolveTrack("calm", dir), path.join(dir, "calm.mp3"));
+  assert.throws(() => resolveTrack("missing", dir), /music track not found/);
 });
