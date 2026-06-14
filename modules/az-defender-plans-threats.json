@@ -1,0 +1,102 @@
+{
+  "id": "az-defender-plans-threats",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Manage security operations",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Defender Plans & Threat Protection",
+    "lines": ["Turn on workload protection", "— then watch it catch real attacks —"]
+  },
+  "intro": "In the last module we toured Defender for Cloud's free posture management — the secure score and recommendations every subscription gets. Now we turn on the paid half: the Defender plans. These are per-workload protections that add real-time threat detection, vulnerability scanning, and hardening to your servers, storage, databases, containers, and more. We'll see which plans cover this environment, where you switch them on, and then the payoff — live security alerts catching actual attacks.",
+  "sections": [
+    {
+      "id": "envsettings", "section": "Enable Defender plans",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/EnvironmentSettings",
+      "kicker": "Switch protection on, per workload", "cardTitle": "Defender plans: turn them on",
+      "bullets": [
+        "Each resource type — servers, storage, SQL, containers — is its own plan you enable separately.",
+        "Enable per subscription, or org-wide via management groups so new subscriptions inherit protection.",
+        "Foundational CSPM stays free; each plan is priced per resource — use the cost calculator first."
+      ],
+      "narration": "Environment settings is where you actually switch protection on. The key idea is granularity: each Defender plan covers one resource type — Defender for Servers, for Storage, for S.Q.L., for Containers, for Key Vault — and you enable only the ones that match the workloads you run, paying for just what you protect. Watch the coverage carefully, because a resource with no plan still gets posture recommendations but no real-time threat detection at all — that's a blind spot. You enable plans per subscription, or, much better at scale, across a management group, so every subscription inherits the same protection the day it's created. And remember the split: foundational cloud security posture management stays free, while each plan is billed per resource — per server, per ten-thousand storage transactions, per database. That's why this page gives you a cost calculator and a coverage view, so you can budget before you flip the switch."
+    },
+    {
+      "id": "alerts", "section": "Security alerts",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/7",
+      "focus": { "text": "High" },
+      "kicker": "The payoff: real detections", "cardTitle": "Security alerts in action",
+      "bullets": [
+        "Once plans are on, Defender raises alerts on real attacker behaviour — not just misconfiguration.",
+        "Each alert carries a severity and maps to MITRE ATT&CK tactics so you know where in the kill chain you are.",
+        "Triage with the status workflow — Active, In progress, Resolved — and pivot to the affected resource."
+      ],
+      "narration": "And here's why you pay for the plans. The security alerts blade is live threat detection — these are real detections on attacker behaviour, not configuration nitpicks. Look at what's firing in this environment: high-severity alerts including an Encryptor ransomware detection and possible reverse shells on real machines. Every alert carries a severity and maps to MITRE attack tactics, so you immediately know where in the kill chain you are — execution, persistence, exfiltration. From here you work the alert: read the evidence, pivot straight to the affected resource, and drive it through the status workflow from active, to in progress, to resolved. This is the difference between knowing you have a weakness and knowing someone is using it right now."
+    },
+    {
+      "id": "explorer", "section": "Cloud Security Explorer",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/SecurityGraph",
+      "kicker": "Hunt before they strike", "cardTitle": "Proactive hunting on the graph",
+      "bullets": [
+        "Cloud Security Explorer queries the security graph — assets, exposures and relationships together.",
+        "Built-in templates find things like 'internet-exposed VMs with a critical vulnerability' in one click.",
+        "Use it proactively when a new CVE drops: find every affected, reachable asset before an attacker does."
+      ],
+      "narration": "Alerts are reactive — something already happened. Cloud Security Explorer lets you get ahead. It runs queries across the security graph, which understands your assets, their exposures, and how they connect to each other. Instead of staring at a list, you ask a question: show me every internet-exposed virtual machine that also has a critical vulnerability. The built-in templates here do exactly that, and you can see them tuned to live threats — internet-exposed machines vulnerable to the latest C.V.E., containers running compromised images, supply-chain risks. This is how you respond the morning a new vulnerability is announced: you query the graph, get the exact list of reachable, affected assets, and fix those first — before anyone exploits them."
+    },
+    {
+      "id": "workbooks", "section": "Workbooks",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/28",
+      "kicker": "Report and prove progress", "cardTitle": "Workbooks for reporting & governance",
+      "bullets": [
+        "Ready-made workbooks visualize Secure Score over time, compliance over time, active alerts and coverage.",
+        "Use 'Secure Score Over Time' to show leadership the trend, not just today's number.",
+        "Build governance rules so recommendations get an owner and a due date — accountability, not just visibility."
+      ],
+      "narration": "Finally, you have to prove it's working. The workbooks gallery gives you ready-made, interactive reports built on your Defender data. The one to know for the exam and for your boss is Secure Score Over Time — it turns a single percentage into a trend line, so you can show that posture is improving month over month, not just assert it. There are workbooks for compliance over time, active alerts, vulnerability assessment, and coverage, plus a whole community set. Pair these with governance rules — which assign every recommendation an owner and a due date — and Defender for Cloud stops being a dashboard you glance at and becomes a program with accountability built in."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Defender plans & threats in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Defender plans are paid, per-resource-type — enable per workload.",
+        "2 · Turn them on org-wide via management groups, not one sub at a time.",
+        "3 · Plans add threat detection; posture (CSPM) stays free.",
+        "4 · Alerts map to MITRE ATT&CK — triage by severity + status.",
+        "5 · Hunt with Cloud Security Explorer; report with workbooks."
+      ]
+    },
+    "narration": "To recap the protection story. Defender plans are the paid layer, priced per resource type, and you enable the ones that match your workloads — servers, storage, databases, containers. Turn them on org-wide through management groups so coverage is automatic. The plans add real-time threat detection on top of the free posture management, and the alerts they raise map to MITRE attack tactics, so you triage by severity and work them through a status flow. Get ahead of threats with Cloud Security Explorer, and prove your progress with workbooks like Secure Score Over Time. Turn protection on — then watch it catch real attacks.",
+    "examTip": "Exam tip: know that Defender plans are billed per resource type and enabled per subscription or management group, that alerts integrate MITRE ATT&CK, and that Cloud Security Explorer and attack path analysis both run on the Defender CSPM security graph."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-dpt-1", "title": "Exercise 1 — Enable a Defender plan and trigger an alert", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Prove threat detection works end to end",
+          "1 · Environment settings → enable Defender for Servers Plan 2 on a test subscription",
+          "2 · Deploy a test VM; generate a sample alert (Defender ships a 'sample alerts' button)",
+          "3 · Open Security alerts → read the MITRE tactics and affected resource",
+          "✓ DONE WHEN · A high-severity alert appears and you can pivot to the affected VM"
+        ],
+        "narration": "In your lab, open environment settings and enable Defender for Servers Plan two on a test subscription. Deploy a small test virtual machine, then use the sample alerts button on the security alerts blade to generate realistic detections without doing anything harmful. Open the alert, read the MITRE attack tactics it's mapped to, and pivot to the affected resource. You're done when a high-severity alert shows up and you can click straight through to the virtual machine it concerns. Now you've seen the full loop: enable a plan, detect a threat, reach the resource."
+      },
+      {
+        "id": "lab-dpt-2", "title": "Exercise 2 — Hunt with Cloud Security Explorer", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Find exposed, vulnerable assets proactively",
+          "1 · Open Cloud Security Explorer → pick the 'internet-exposed VMs with vulnerabilities' template",
+          "2 · Run it; review which assets are both reachable AND vulnerable",
+          "3 · Open one result → jump to its recommendations and remediate",
+          "✓ DONE WHEN · You've shrunk the result set by fixing at least one exposed asset"
+        ],
+        "narration": "Second exercise: go on the offensive against your own environment. Open Cloud Security Explorer and pick a template that finds internet-exposed virtual machines that also carry vulnerabilities. Run it and look at the results — these are the assets that are both reachable from the internet and exploitable, which is exactly what an attacker hunts for. Open one, jump to its recommendations, and remediate. You're done when you re-run the query and the result set has shrunk because you fixed an exposed asset. That's proactive security: finding and closing the attacker's path before they walk it."
+      }
+    ]
+  }
+}
