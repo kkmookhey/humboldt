@@ -49,3 +49,20 @@ test("validateModule still accepts a module with no action block", () => {
   const noAction = structuredClone(good); delete noAction.action;
   assert.equal(validateModule(noAction), true);
 });
+
+test("validateModule accepts a valid music block", () => {
+  assert.ok(validateModule({ ...good, music: { track: "calm", scope: "bookends" } }));
+});
+
+test("validateModule rejects an unknown music scope", () => {
+  assert.throws(() => validateModule({ ...good, music: { track: "calm", scope: "loud" } }), /music\.scope/);
+});
+
+test("validateModule requires a track unless scope is none", () => {
+  assert.throws(() => validateModule({ ...good, music: { scope: "throughout" } }), /music\.track required/);
+  assert.ok(validateModule({ ...good, music: { scope: "none" } }));
+});
+
+test("validateModule rejects a non-numeric music gain", () => {
+  assert.throws(() => validateModule({ ...good, music: { track: "calm", scope: "bookends", gain: "loud" } }), /music\.gain/);
+});

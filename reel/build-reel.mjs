@@ -7,9 +7,11 @@ import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { chromium } from "playwright";
 import { ROOT, openaiKey } from "../lib/config.mjs";
+import { mixMusic, resolveTrack } from "../lib/music.mjs";
 
 const W = 1080, H = 1920, FPS = 30;
 const SPEED = 1.2;   // reels need a fast pace — final pass speeds video + (pitch-preserved) audio
+const MUSIC = "reel-energetic"; // assets/music/reel-energetic.{mp3,wav,m4a} — optional
 const dir = path.join(ROOT, "out", "reel-aws-iam");
 const bgDir = path.join(dir, "bg");
 const work = path.join(dir, "work");
@@ -237,3 +239,15 @@ execFileSync("ffmpeg", ["-y", "-i", raw, "-filter:a", `atempo=${SPEED}`, "-vn", 
 const final = path.join(dir, "aws-iam-reel.mp4");
 execFileSync("ffmpeg", ["-y", "-i", fv, "-i", fa, "-c", "copy", "-movflags", "+faststart", final], { stdio: "inherit" });
 console.log(`\n✅ Reel → ${final}  (~${(total / SPEED).toFixed(1)}s @ ${SPEED}x)`);
+
+// Optional music bed under the whole reel (ducked under VO). Skipped cleanly if
+// the track file is absent, so reel builds never break on a missing asset.
+try {
+  const track = resolveTrack(MUSIC);
+  const tmp = path.join(dir, "reel.music.mp4");
+  mixMusic({ videoIn: final, out: tmp, scope: "throughout", track });
+  fs.renameSync(tmp, final);
+  console.log(`✅ Music (throughout) → ${final}`);
+} catch (e) {
+  console.log(`(no music: ${e.message})`);
+}

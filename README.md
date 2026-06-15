@@ -77,6 +77,7 @@ node bin/gen-audio.mjs <id>   # TTS    → out/<id>/audio/
 node bin/record.mjs   <id>    # record → out/<id>/silent.mp4 + timing.json
 node bin/mux.mjs      <id>    # overlay audio → out/<id>/<id>-narrated.mp4
 node bin/redact.mjs   <id>    # blur regions  → out/<id>/<id>-narrated-redacted.mp4
+node bin/music.mjs   <id>    # lay music bed → rewrites out/<id>/<id>-final.mp4 in place
 node bin/make-sting.mjs [bg]  # build intro/outro stings (one-time; optional bg clip)
 node bin/brand.mjs    <id>    # intro + module + outro → out/<id>/<id>-final.mp4
 ```
@@ -92,6 +93,11 @@ See `modules/aws-iam.json` for a complete, working reference.
 - `recap.examTip` — a one-line highlighted note on the recap card.
 - `action{kicker, exercises[]{id, title, lines[], narration, accent?}}` — hands-on lab; one full-screen card per exercise, played after the recap.
 - `redactions[]{section, regions[]{x,y,w,h}}` — regions blurred while that section is on screen, in 1920×1080 space.
+- `music{track, scope, gain?}` — optional background music. `track` names a file in
+  `assets/music/<track>.{mp3,wav,m4a}`. `scope` is `"throughout"` (bed under the whole
+  video, auto-ducked beneath narration — use for reels), `"bookends"` (intro/outro only —
+  use for explainers), or `"none"`. `gain` (dB) trims the bed; defaults to −10 (throughout)
+  / −3 (bookends). Run `node bin/music.mjs <id>` after `brand`; re-runnable instantly.
 
 ## Tests
 
@@ -102,6 +108,14 @@ npm test
 ## Before publishing
 
 Real consoles expose account IDs, ARNs, usernames, and access keys on screen. **Always publish the redacted, branded `<id>-final.mp4`**, never the raw `<id>-narrated.mp4`. Workflow: build → extract a few frames from each live-console section → add the covering `regions` to the module's `redactions` → `node bin/redact.mjs <id>` → verify the blurs on the redacted frames → `node bin/brand.mjs <id>`. Generated videos, stings, and captured sessions live under `out/`, `assets/`, and `.auth/`, which are git-ignored.
+
+## Sourcing music
+
+Tracks are plain files in `assets/music/` (git-ignored, like all of `assets/`). Drop in a
+licensed/royalty-free track named to match the module's `music.track`. AI-generated music
+is an **authoring-time** step — generate a clip (e.g. via the Higgsfield `generate_audio`
+MCP in a Claude Code session), save it as `assets/music/<name>.mp3`, and reference it by
+name. The build tooling itself never calls out to a network/MCP, so builds stay reproducible.
 
 ---
 
