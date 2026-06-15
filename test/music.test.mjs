@@ -26,7 +26,7 @@ test("buildMusicFilter bookends gates two segments and does not duck", () => {
 });
 
 test("buildMusicFilter applies per-scope default gain", () => {
-  assert.match(buildMusicFilter({ scope: "throughout", total: 10 }), /volume=-6dB/);
+  assert.match(buildMusicFilter({ scope: "throughout", total: 10 }), /volume=-10dB/);
   assert.match(buildMusicFilter({ scope: "bookends", total: 10, introDur: 4, outroDur: 4 }), /volume=-3dB/);
 });
 

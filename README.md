@@ -96,7 +96,7 @@ See `modules/aws-iam.json` for a complete, working reference.
 - `music{track, scope, gain?}` — optional background music. `track` names a file in
   `assets/music/<track>.{mp3,wav,m4a}`. `scope` is `"throughout"` (bed under the whole
   video, auto-ducked beneath narration — use for reels), `"bookends"` (intro/outro only —
-  use for explainers), or `"none"`. `gain` (dB) trims the bed; defaults to −6 (throughout)
+  use for explainers), or `"none"`. `gain` (dB) trims the bed; defaults to −10 (throughout)
   / −3 (bookends). Run `node bin/music.mjs <id>` after `brand`; re-runnable instantly.
 
 ## Tests
