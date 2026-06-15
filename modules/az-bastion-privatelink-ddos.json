@@ -1,0 +1,101 @@
+{
+  "id": "az-bastion-privatelink-ddos",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Secure networking",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Bastion, Private Link & DDoS",
+    "lines": ["Private access, private connectivity", "— and surviving the flood —"]
+  },
+  "intro": "The strongest network move you can make is to stop exposing things to the public internet at all. In this module we'll cover three services that do exactly that, from three angles: Azure Bastion gives you admin access to VMs with no public IP, Private Link pulls your PaaS services off the internet and onto Microsoft's backbone, and DDoS Protection keeps whatever must stay public from being knocked offline. These are configuration walkthroughs — nothing here is deployed in the demo tenant — so focus on the patterns.",
+  "sections": [
+    {
+      "id": "bastion", "section": "Azure Bastion",
+      "url": "https://portal.azure.com/#create/Microsoft.BastionHost",
+      "kicker": "Admin access, no public IP", "cardTitle": "Bastion: kill the jump box",
+      "bullets": [
+        "Bastion gives browser-based RDP and SSH to your VMs — over TLS, straight from the portal.",
+        "Your VMs need no public IP and no open 3389/22 to the internet — the attack surface disappears.",
+        "It lives in a dedicated AzureBastionSubnet; Standard tier adds native client & IP-based connection."
+      ],
+      "narration": "Azure Bastion solves a problem every team has: how do administrators reach virtual machines without leaving R.D.P. or S.S.H. exposed to the internet? Bastion is a managed jump host that gives you browser-based R.D.P. and S.S.H., over T.L.S., right from the portal. The win is what it lets you remove: your virtual machines no longer need a public I.P. address, and you can close ports three-three-eight-nine and twenty-two to the internet entirely. The brute-force attack surface simply disappears. Bastion deploys into a dedicated subnet that must be named AzureBastionSubnet, and the tier you pick here matters — Standard unlocks the native desktop client, I.P.-based connection, and scaling. The rule to take away: production VMs should have no public management ports, and Bastion is how you honor that without losing access."
+    },
+    {
+      "id": "privatelink", "section": "Private Link Center",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Network/PrivateLinkCenterBlade/~/overview",
+      "kicker": "Take PaaS off the internet", "cardTitle": "Private Link: backbone-only access",
+      "bullets": [
+        "Private Link gives a PaaS service (Storage, SQL, Key Vault…) a private IP inside your VNet.",
+        "Traffic to it never touches the public internet — it stays on the Microsoft backbone.",
+        "Consumers create a private endpoint; providers can publish their own private link service."
+      ],
+      "narration": "Private Link is how you stop your platform services from living on the public internet. By default, services like Storage, S.Q.L. Database, and Key Vault have public endpoints — even if you lock them with firewalls, they're reachable. Private Link changes the model: it projects the service into your virtual network as a private I.P. address, and traffic to it travels only over Microsoft's backbone, never the public internet. This center is where you manage it all. The vocabulary the exam expects: as a consumer, you create a private endpoint to privately reach a service; as a provider, you publish a private link service so others can reach yours the same way. Pair a private endpoint with a private D.N.S. zone so the service's name resolves to that private address automatically, and you've genuinely removed a public attack surface — not just guarded it."
+    },
+    {
+      "id": "privateendpoint", "section": "Creating a private endpoint",
+      "url": "https://portal.azure.com/#create/Microsoft.PrivateEndpoint",
+      "kicker": "Wire a service into your VNet", "cardTitle": "Private endpoint: the four steps",
+      "bullets": [
+        "Pick the target resource and sub-resource (e.g. a storage account's 'blob').",
+        "Choose the VNet and subnet where the private IP will live.",
+        "Integrate a private DNS zone so the public hostname resolves to the private IP."
+      ],
+      "narration": "Creating a private endpoint is a short, well-defined workflow, and the tabs across the top spell it out. On Resource, you pick the service you're privatizing and its sub-resource — for a storage account, that might be blob, or file, or table, because each gets its own endpoint. On Virtual Network, you choose where the private I.P. lives: the V.N.E.T. and subnet. Then the step people forget — D.N.S. You integrate a private D.N.S. zone so that the service's normal public hostname quietly resolves to the new private I.P. for everything inside your network. Skip that D.N.S. step and your apps will still resolve the public name to a public address and bypass the private endpoint entirely. Get those three right — resource, network, D.N.S. — and the service is now reachable only from inside your virtual network."
+    },
+    {
+      "id": "ddos", "section": "DDoS Protection",
+      "url": "https://portal.azure.com/#create/Microsoft.DDoSProtectionPlan",
+      "kicker": "Keep public endpoints alive", "cardTitle": "DDoS: Basic vs Standard",
+      "bullets": [
+        "Basic DDoS protection is on by default, free, for all Azure public IPs — platform-level.",
+        "A DDoS Protection Plan (Network Protection) adds tuned, per-resource mitigation + telemetry + alerts.",
+        "IP Protection is a cheaper per-public-IP option; one plan can cover all your subscriptions."
+      ],
+      "narration": "Some things have to stay public — a customer-facing web front end, an A.P.I. gateway. D.D.o.S. Protection keeps those alive under attack. The good news first: Basic protection is already on, for free, for every public I.P. in Azure — it's built into the platform and absorbs common network-layer floods. What a D.D.o.S. Protection Plan adds is the serious tier: Network Protection gives you adaptive, per-resource tuning that learns your normal traffic, plus detailed attack telemetry, alerting, and access to Microsoft's rapid-response team and cost-protection guarantees. There's also a cheaper I.P. Protection option priced per public I.P. for smaller estates. As this page notes, you create a single plan and apply it across all your subscriptions. The exam point is simply this: Basic is automatic and free; Standard — Network or I.P. Protection — is what you deliberately enable for the public endpoints you can't afford to lose."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Private access & DDoS in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Bastion = browser RDP/SSH; VMs need no public IP, no open 3389/22.",
+        "2 · Bastion lives in a dedicated AzureBastionSubnet.",
+        "3 · Private Link gives PaaS a private IP; traffic stays on the backbone.",
+        "4 · Always pair a private endpoint with a private DNS zone.",
+        "5 · DDoS Basic is free/automatic; Standard (Network/IP) you enable on purpose."
+      ]
+    },
+    "narration": "To recap. Azure Bastion gives you browser-based R.D.P. and S.S.H. so your VMs can drop their public I.P.s and closed management ports — deploy it in the AzureBastionSubnet. Private Link projects a PaaS service into your virtual network as a private I.P. so its traffic never touches the public internet, and you always pair the private endpoint with a private D.N.S. zone so existing hostnames just work. And D.D.o.S. Protection keeps your unavoidable public endpoints online: Basic is free and automatic, while a Standard plan — Network or I.P. Protection — adds tuned mitigation, telemetry, and support for the endpoints you truly can't lose. The theme across all three: don't guard public exposure when you can remove it.",
+    "examTip": "Exam tip: Bastion needs a subnet literally named AzureBastionSubnet (/26 or larger). Private endpoints require private DNS integration to be transparent. DDoS Basic is free/always-on; DDoS Network Protection is the paid plan with adaptive tuning, telemetry, and cost protection."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-b-1", "title": "Exercise 1 — Reach a VM with zero public exposure", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Admin a VM with no public IP",
+          "1 · Deploy a VM with NO public IP; remove any inbound 3389/22 NSG rules",
+          "2 · Add an AzureBastionSubnet and deploy Azure Bastion into the VNet",
+          "3 · Connect to the VM via Bastion from the portal",
+          "✓ DONE WHEN · You get an RDP/SSH session with the VM fully private"
+        ],
+        "narration": "In your lab, deploy a virtual machine with no public I.P. address at all, and make sure there are no inbound N.S.G. rules opening three-three-eight-nine or twenty-two. Add a subnet named AzureBastionSubnet to the virtual network and deploy Azure Bastion into it. Then open the VM in the portal and click Connect via Bastion. You're done when you get a working R.D.P. or S.S.H. session in your browser even though the VM has no public I.P. and no open management ports. That's the gold standard for VM administration — full access, zero internet-facing exposure."
+      },
+      {
+        "id": "lab-b-2", "title": "Exercise 2 — Privatize a storage account", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Make a PaaS service reachable only from your VNet",
+          "1 · Create a private endpoint to a storage account's 'blob' sub-resource",
+          "2 · Integrate the privatelink.blob.core.windows.net private DNS zone",
+          "3 · Set the storage account's public network access to Disabled",
+          "✓ DONE WHEN · A VNet VM reaches the blob endpoint; the public internet gets denied"
+        ],
+        "narration": "Second exercise: take a storage account off the internet. Create a private endpoint targeting the storage account's blob sub-resource, placed in your virtual network's subnet. Integrate the matching private D.N.S. zone, privatelink-dot-blob-dot-core-dot-windows-dot-net, so the hostname resolves privately. Then go to the storage account's networking and set public network access to Disabled. You're done when a virtual machine inside your V.N.E.T. can reach the blob endpoint using its normal name, while any attempt from the public internet is refused. You've converted a public service into a private one without changing a single connection string."
+      }
+    ]
+  }
+}

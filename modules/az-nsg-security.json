@@ -1,0 +1,116 @@
+{
+  "id": "az-nsg-security",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Secure networking",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Network Security Groups",
+    "lines": ["Stateful filtering at subnet & NIC", "— least privilege, the right way —"]
+  },
+  "intro": "Network security groups are Azure's most fundamental network control — a stateful firewall you attach to a subnet or a network interface to decide exactly which traffic is allowed in and out. They're simple, free, and everywhere, which is precisely why they're so often misconfigured. In this module we'll read real NSGs — a wide-open one, a properly locked-down one, and a live VM's rules — so you can see the difference between an NSG that protects you and one that's just decoration.",
+  "sections": [
+    {
+      "id": "anatomy", "section": "NSG rule anatomy",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/AIAgentDemoRG/providers/Microsoft.Network/networkSecurityGroups/juice-shop-nsg/overview",
+      "focus": { "text": "SSH" },
+      "kicker": "How a rule is built", "cardTitle": "Anatomy of an NSG rule",
+      "bullets": [
+        "Each rule is a 5-tuple: priority, source, destination, port, protocol — plus Allow or Deny.",
+        "Lowest priority number wins; Azure evaluates top-down and stops at the first match.",
+        "Default rules allow VNet-internal and load-balancer traffic and deny everything else inbound."
+      ],
+      "narration": "Let's start with a real network security group attached to a live virtual machine. Every NSG is just an ordered list of rules, and each rule is a five-tuple: a priority number, a source, a destination, a port, and a protocol — ending in Allow or Deny. The priority is everything: the lowest number wins, Azure evaluates the rules top to bottom, and it stops at the very first match. Below your custom rules sit the default rules, which allow traffic within the virtual network and from the Azure load balancer, then deny everything else inbound. Look at this VM's custom rules — and right away you can see the problem, highlighted here: port twenty-two, S.S.H., is allowed from any source. Ports eighty-eighty and six-thousand-one are open too. Let's see how that compares to the extremes of bad and good."
+    },
+    {
+      "id": "allowall", "section": "The 'allow all' anti-pattern",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.Network/networkSecurityGroups/shasta-bad-all-nsg/overview",
+      "focus": { "text": "AllowAllFromAnywhere" },
+      "kicker": "How NSGs get defeated", "cardTitle": "The cardinal sin: source Any",
+      "bullets": [
+        "This NSG has one custom rule at priority 100: Allow, source Any, port Any, protocol Any.",
+        "A single 'allow any from any' rule sits above the default deny and negates the whole NSG.",
+        "Effectively the resource has no network protection at all — every port is reachable from the internet."
+      ],
+      "narration": "This is the worst thing you can do with an NSG, and it's depressingly common. There's a single custom rule at priority one hundred — named, helpfully, Allow All From Anywhere — and it allows any protocol, on any port, from any source, to any destination. Because it sits at priority one hundred, above the default deny-all-inbound at sixty-five-thousand-five-hundred, it matches first and wins for everything. The result: this NSG provides zero protection. Every port on every resource behind it is reachable from the entire internet. An NSG with an allow-any-from-any rule isn't a weak firewall — it's no firewall. If you ever see source set to Any on an allow rule, treat it as an incident."
+    },
+    {
+      "id": "leastpriv", "section": "Least privilege done right",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.Network/networkSecurityGroups/shasta-good-web-nsg/overview",
+      "focus": { "text": "AllowHTTPSFromOffice" },
+      "kicker": "Specific source, specific port", "cardTitle": "The secure pattern",
+      "bullets": [
+        "One allow rule: HTTPS (443/TCP) only, and only from a specific office IP range — not Any.",
+        "An explicit Deny-All-Inbound rule at priority 4096 backs up the default deny — defense in depth.",
+        "Open exactly the ports you need, from exactly the sources you trust, and deny the rest on purpose."
+      ],
+      "narration": "Now the same idea done correctly. This web-tier NSG has one custom allow rule, highlighted here: it permits H.T.T.P.S. — port four-forty-three over T.C.P. — and only from a specific office IP range, two-oh-three-dot-zero-dot-one-thirteen-dot-zero slash twenty-four. Not from Any. That's the whole discipline: open exactly the port you need, from exactly the source you trust. Then look just below it — there's an explicit Deny All Inbound rule at priority four-thousand-ninety-six. Azure already denies by default, so why add it? Defense in depth and clarity: an explicit deny documents your intent and protects you if a higher-priority allow rule is ever added carelessly. Specific port, specific source, explicit deny — that's a network security group doing its job."
+    },
+    {
+      "id": "association", "section": "Subnet vs NIC association",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/shasta-test-rg/providers/Microsoft.Network/virtualNetworks/shasta-test-vnet/subnets",
+      "focus": { "text": "shasta-public-subnet" },
+      "kicker": "Where you attach it matters", "cardTitle": "Attach at the subnet, scale by design",
+      "bullets": [
+        "An NSG can attach to a subnet (covers every resource in it) or to a single NIC — or both.",
+        "Here the public subnet has an NSG; the private subnet has none — attach at the subnet for consistent coverage.",
+        "When both apply, inbound traffic must pass the subnet NSG AND the NIC NSG — the effective rules are the intersection."
+      ],
+      "narration": "Where you attach an NSG is as important as what's in it. You can associate an NSG with a subnet, which covers every resource in that subnet automatically, or with an individual network interface, or with both at once. On this virtual network you can see the public subnet has a security group attached — highlighted here — while the private subnet has none. Attaching at the subnet level is usually the right call, because every VM you drop into that subnet inherits the protection without anyone remembering to wire it up. And when both a subnet NSG and a NIC NSG apply, traffic has to satisfy both — inbound must be allowed by the subnet rules and the NIC rules. The effective security rules view shows you that combined result, which is what you check when something is unexpectedly blocked or, worse, unexpectedly open."
+    },
+    {
+      "id": "asg", "section": "Application Security Groups",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/create/Microsoft.ApplicationSecurityGroup",
+      "kicker": "Group by role, not by IP", "cardTitle": "ASGs: rules that read like your architecture",
+      "bullets": [
+        "An application security group is a named label you attach to a set of VMs — e.g. 'web' or 'db'.",
+        "NSG rules then reference the ASG as source or destination instead of brittle IP ranges.",
+        "Add or remove VMs from the ASG and every rule updates automatically — no IP maintenance."
+      ],
+      "narration": "The last piece is application security groups, and they fix the thing that makes NSG rules age badly: hard-coded IP addresses. An application security group — an A.S.G. — is just a named label you attach to a set of virtual machines, like web, or database, or management. You create one right here, give it a name, and then assign your VMs to it. The magic is in the NSG rule: instead of writing source equals a list of IP addresses that drifts the moment you scale, you write source equals the web A.S.G. and destination equals the database A.S.G. Now your rules read like your architecture — allow the web tier to reach the database tier on port fourteen-thirty-three — and when you add or remove a VM from the group, every rule that references it updates automatically. No IP spreadsheet, no rule rewrites. That's how you keep network rules maintainable as the environment grows."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "NSGs in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Rules = priority + 5-tuple; lowest number wins, first match stops.",
+        "2 · Never Allow with source Any — that negates the NSG.",
+        "3 · Open specific ports from specific sources; add an explicit deny-all.",
+        "4 · Attach at the subnet for coverage; subnet + NIC rules both apply.",
+        "5 · Use ASGs to reference roles, not brittle IP ranges."
+      ]
+    },
+    "narration": "To recap network security groups. A rule is a priority plus a five-tuple, and the lowest priority number wins on the first match. The cardinal sin is an allow rule with source Any — it negates the entire NSG, so never do it. Instead, open the specific ports you need from the specific sources you trust, and add an explicit deny-all for defense in depth. Attach NSGs at the subnet level so coverage is automatic, and remember that subnet and NIC rules both have to pass. Finally, use application security groups to write rules in terms of roles like web and database, not IP ranges that go stale. Simple, free, everywhere — and only as good as the rules you put in them.",
+    "examTip": "Exam tip: NSGs are stateful (a return packet for an allowed flow is automatically permitted), evaluated by lowest priority first, and can attach to subnets and NICs simultaneously where the effective rules are the combination. ASGs are referenced as source/destination in NSG rules; service tags (like Internet or AzureLoadBalancer) cover Azure service IP ranges."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-nsg-1", "title": "Exercise 1 — Turn an open NSG into a least-privilege one", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Replace 'allow any' with scoped rules",
+          "1 · Create an NSG with one bad rule: Allow, source Any, port Any (the anti-pattern)",
+          "2 · Replace it: allow only 443/TCP from your own IP; add explicit Deny-All-Inbound at 4096",
+          "3 · Associate the NSG with a test subnet",
+          "✓ DONE WHEN · Effective security rules show only 443 open, from your IP, everything else denied"
+        ],
+        "narration": "In your lab, create a network security group and deliberately add the anti-pattern first: one allow rule with source Any and port Any, so you can see what 'wide open' looks like. Then fix it — delete that rule and add a tight one allowing only port four-forty-three over T.C.P. from your own public I.P. address, and add an explicit deny-all-inbound at priority four-thousand-ninety-six. Associate the NSG with a test subnet. You're done when the effective security rules view shows only four-forty-three reachable, only from your address, with everything else denied. You'll have walked the exact path from decoration to protection."
+      },
+      {
+        "id": "lab-nsg-2", "title": "Exercise 2 — Segment tiers with ASGs", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Write rules by role instead of by IP",
+          "1 · Create two ASGs: 'web' and 'db'; assign a VM to each",
+          "2 · In the NSG, allow web→db on the app port (e.g. 1433) using ASGs as source/destination",
+          "3 · Deny all other inbound to the db ASG",
+          "✓ DONE WHEN · The web VM reaches the db port, a third VM cannot, and no rule contains a raw IP"
+        ],
+        "narration": "Second exercise: think in tiers. Create two application security groups, web and database, and assign one virtual machine to each. Then write a network security group rule that allows the web group to reach the database group on your application port — say fourteen-thirty-three for S.Q.L. — using the A.S.G.s as source and destination, with no IP addresses anywhere. Add a rule denying all other inbound traffic to the database group. You're done when the web VM can reach the database port, a third VM that isn't in the web group cannot, and not a single rule contains a raw I.P. address. That's segmentation that survives growth."
+      }
+    ]
+  }
+}

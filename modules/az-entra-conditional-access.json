@@ -1,0 +1,136 @@
+{
+  "id": "az-entra-conditional-access",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Manage identity and access",
+  "title": {
+    "kicker": "The Zero Trust policy engine",
+    "title": "Entra Conditional Access",
+    "lines": ["Signals in, access decisions out", "— if-this-then-that for every sign-in —"]
+  },
+  "intro": "If identity is the new perimeter, Conditional Access is the gate. Every time someone signs in, Entra gathers signals — who they are, what device they're on, where they are, how risky the sign-in looks — and Conditional Access evaluates your policies to make a real-time decision: allow, block, or allow with conditions like multifactor authentication. It is the heart of Zero Trust on Azure, and it's a heavily weighted exam topic. In this module we'll dissect a policy into its two halves — the assignments that decide who and what it applies to, and the controls that decide what happens — then tour named locations, authentication strengths, and the tools that let you test a policy before it bites.",
+  "sections": [
+    {
+      "id": "overview", "section": "Conditional Access overview",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Overview",
+      "focus": { "text": "Conditional Access" },
+      "kicker": "Signal, decision, enforcement", "cardTitle": "How Conditional Access thinks",
+      "bullets": [
+        "Policies follow an if-then shape: IF these signals, THEN grant, block, or require controls.",
+        "Common signals: user/group, target app, device state, location, and sign-in risk.",
+        "Requires Entra ID P1; risk-based conditions require P2. Replaces security defaults."
+      ],
+      "narration": "Welcome to Conditional Access — the policy engine that turns Zero Trust from a slogan into enforcement. The mental model is simple if-this-then-that. The if-side is a set of signals about the sign-in: which user or group, which application they're reaching for, the state of their device, their network location, and how risky the sign-in looks. The then-side is the decision: grant access, block it outright, or grant it only if certain controls are met — most commonly multifactor authentication. A licensing note the exam expects you to know: Conditional Access needs Entra ID Premium P1, and the risk-based conditions we'll discuss need Premium P2. And remember from module one — the moment you create a Conditional Access policy, you've moved beyond security defaults, which must be turned off."
+    },
+    {
+      "id": "policies", "section": "Policies",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "kicker": "Your active rule set", "cardTitle": "The policy list & report-only mode",
+      "bullets": [
+        "Every policy is On, Off, or Report-only — report-only logs the impact without enforcing.",
+        "Always pilot a new policy in report-only first to avoid locking users — or yourself — out.",
+        "Keep policies focused and named clearly; the set is evaluated together on every sign-in."
+      ],
+      "narration": "This is the policy list — your live rule set, evaluated together on every single sign-in across the tenant. Each policy has three states, and the middle one is the most important habit you'll build. On means it's enforcing. Off means it's disabled. And report-only means the policy is evaluated and the result is logged — you can see exactly who it would have affected — but nothing is actually enforced. The cardinal rule of Conditional Access is: never switch a new policy straight to on. Run it in report-only first, watch the sign-in logs to confirm it does what you intended and doesn't catch the wrong people, and only then enforce it. Conditional Access is powerful enough to lock every user, including you, out of the tenant — report-only is your safety net."
+    },
+    {
+      "id": "anatomy", "section": "Anatomy of a policy",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "kicker": "Assignments meet controls", "cardTitle": "Assignments + access controls",
+      "bullets": [
+        "Assignments = the IF: users/groups, target resources (apps), and conditions (risk, device, location).",
+        "Access controls = the THEN: grant (block, or require MFA / compliant device) and session controls.",
+        "Always exclude a break-glass admin account from every policy so you can't be fully locked out."
+      ],
+      "narration": "Let's open the anatomy of a single policy, because if you understand this structure you understand the whole feature. A policy has two halves. The first is assignments — the if. Here you choose the users and groups in scope, the target resources, usually cloud applications, and the conditions: sign-in risk, user risk, device platform, client app, and location. The second half is access controls — the then. Grant controls let you block access, or allow it only if requirements are met: require multifactor authentication, require a compliant or hybrid-joined device, require an approved client app. Session controls go further, limiting what happens inside the session — like forcing a shorter sign-in frequency or a restricted browser session for unmanaged devices. One rule you must never forget: exclude a break-glass emergency admin account from every policy. It's the single most common way real organizations lock themselves completely out of their own tenant.",
+      "drill": {
+        "id": "anatomy-drill",
+        "section": "Inside a Conditional Access policy",
+        "kicker": "Open one and look",
+        "cardTitle": "Assignments on the left, controls on the right",
+        "bullets": [
+          "Left column scopes it: users/groups, target resources, and conditions (risk, device, location).",
+          "Right column is the decision: grant controls (block / require MFA) and session controls.",
+          "'Require all' vs 'require one' of the grant controls sets the policy's strictness."
+        ],
+        "narration": "Let's open a single policy and see the two halves laid out side by side. On the left you scope it — the users and groups in and out of the policy, the target applications, and the conditions like sign-in risk, device platform, and location. On the right is the decision — grant controls, where you block access or require multifactor authentication or a compliant device, and session controls that constrain what happens inside the session. And watch that toggle on the grant side: require all of the selected controls, or require just one of them. That little choice between all and one changes the entire strictness of your policy, and it's exactly the kind of detail the exam puts in front of you."
+      }
+    },
+    {
+      "id": "named-locations", "section": "Named locations",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/NamedLocations",
+      "kicker": "Teach Entra your geography", "cardTitle": "Named locations as a condition",
+      "bullets": [
+        "Define trusted IP ranges (the office, the VPN) and country-based locations.",
+        "Use them as a condition: require MFA from anywhere except a marked-trusted location.",
+        "Mark corporate egress IPs as trusted to reduce friction without weakening security."
+      ],
+      "narration": "Named locations let you teach Conditional Access your organization's geography so location can become a signal. You define locations two ways: by I.P. range — the public addresses your office or V.P.N. exits from — or by country. Once defined, a location becomes a condition you can build policies around. The classic pattern: require multifactor authentication from everywhere, but treat sign-ins from a trusted office I.P. with a little less friction, or conversely, block sign-ins entirely from countries where you have no business operating. You can also mark a location as trusted, which feeds into risk scoring. Be careful, though — I.P.-based location is a convenience signal, not a strong security boundary, because addresses can be spoofed or proxied. Use it to reduce friction and add context, not as your only line of defense."
+    },
+    {
+      "id": "auth-strengths", "section": "Authentication strengths",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/AuthStrengths",
+      "kicker": "Require a specific MFA grade", "cardTitle": "Authentication strengths",
+      "bullets": [
+        "Go beyond 'require MFA' to 'require a phishing-resistant method' for sensitive access.",
+        "Built-in strengths: MFA, passwordless MFA, and phishing-resistant MFA (FIDO2, certificate).",
+        "Apply the highest strength to admins and crown-jewel apps via a grant control."
+      ],
+      "narration": "Here's where authentication and Conditional Access meet. Plain require-multifactor-authentication treats a text-message code and a FIDO2 key as equally acceptable — but they are not equally secure. Authentication strengths fix that. A strength is a named bundle of allowed methods, and Entra ships three built-in ones: multifactor authentication, passwordless multifactor authentication, and phishing-resistant multifactor authentication, which permits only the strongest methods like FIDO2 keys and certificate-based authentication. You reference a strength as a grant control in a Conditional Access policy. So the high-value move is: require phishing-resistant multifactor authentication specifically for your administrators and your crown-jewel applications, while everyday apps accept ordinary multifactor authentication. You're matching the strength of the credential to the sensitivity of what it unlocks."
+    },
+    {
+      "id": "whatif", "section": "What If & Insights",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Overview",
+      "kicker": "Test before you enforce", "cardTitle": "What If, Insights & reporting",
+      "bullets": [
+        "The What If tool simulates a sign-in and shows exactly which policies would apply and why.",
+        "Insights and reporting workbook shows the real impact of policies over time.",
+        "Together with report-only mode, these let you validate a policy before it bites."
+      ],
+      "narration": "Conditional Access gives you two ways to look before you leap. The What If tool lets you describe a hypothetical sign-in — this user, this app, from this location, on this device — and it tells you precisely which policies would apply, which grant controls would fire, and why. It's the fastest way to answer questions like, will this new policy accidentally block the finance team? Then the insights and reporting workbook shows the aggregate, real-world impact of your policies over time: how many sign-ins each policy touched, how many it blocked, how many it required multifactor authentication for. Pair these two tools with report-only mode and you have a complete, safe deployment loop — simulate with What If, deploy in report-only, confirm in insights, then enforce. That discipline is the difference between Conditional Access protecting your tenant and Conditional Access taking it down."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Conditional Access in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · A policy = assignments (IF: who/what/conditions) + controls (THEN: grant/block/session).",
+        "2 · Always pilot in Report-only; always exclude a break-glass admin.",
+        "3 · P1 for Conditional Access; P2 for risk-based conditions.",
+        "4 · Authentication strengths require a specific MFA grade (phishing-resistant for admins).",
+        "5 · Validate with What If + Insights before you enforce."
+      ]
+    },
+    "narration": "Let's bank the core of Zero Trust on Azure. A Conditional Access policy is two halves: assignments — the users, apps, and conditions that decide if it applies — and access controls — the grant, block, and session rules that decide what happens. Always pilot in report-only, and always exclude a break-glass admin so you can't lock yourself out. Conditional Access itself needs Premium P1, and the risk-based conditions need P2. Use authentication strengths to demand phishing-resistant multifactor authentication for your admins and crown jewels. And validate every policy with What If and insights before you flip it on. Signals in, decisions out — that's the gate.",
+    "examTip": "Exam tip: report-only mode evaluates and logs a policy without enforcing it — use it to pilot. Conditional Access requires Entra ID P1; sign-in/user risk conditions require P2. 'Require all' vs 'require one' of the selected grant controls changes enforcement. Always exclude an emergency-access (break-glass) account from every policy."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-ca-1", "title": "Exercise 1 — Require MFA for admins (report-only first)", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Build a safe admin-MFA policy the right way",
+          "1 · Conditional Access → New policy; Assignments → Users = Directory roles (Global/Privileged admins)",
+          "2 · Exclude your break-glass account; Target = All cloud apps; Grant = Require MFA",
+          "3 · Set state = Report-only; sign in as a test admin and check the sign-in log result",
+          "✓ DONE WHEN · The log shows the policy would apply, then switch it On"
+        ],
+        "narration": "First exercise: protect your admins the correct way. Create a new policy targeting directory roles — global administrator and the other privileged roles — and, critically, exclude your break-glass emergency account in the same breath. Target all cloud apps, set the grant control to require multifactor authentication, and start the policy in report-only. Sign in as a test admin, then open the sign-in logs and confirm the policy shows up as would-apply with the right result. You're done when the log confirms the intended behavior — and only then do you switch the policy to on. Report-only first, every single time."
+      },
+      {
+        "id": "lab-ca-2", "title": "Exercise 2 — Simulate with What If + a named location", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Add location context and test before enforcing",
+          "1 · Named locations → New → add your office public IP range; mark as trusted",
+          "2 · Build a policy: require MFA when location is NOT the trusted location (report-only)",
+          "3 · Conditional Access → What If → run a sign-in from a foreign IP and read the verdict",
+          "✓ DONE WHEN · What If shows MFA required off-network and not required on-network"
+        ],
+        "narration": "Second exercise: make location a signal and prove it with What If. First create a named location for your office's public I.P. range and mark it trusted. Then build a report-only policy that requires multifactor authentication whenever the sign-in is not coming from that trusted location. Now don't wait for a real sign-in — open the What If tool, simulate a sign-in from a foreign I.P. address, and read the verdict. You're done when What If shows multifactor required off-network and not required on-network. That's the simulate-then-deploy loop that keeps Conditional Access safe."
+      }
+    ]
+  }
+}

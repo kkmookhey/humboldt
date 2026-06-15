@@ -1,0 +1,125 @@
+{
+  "id": "az-defender-for-cloud",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Manage security operations",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Microsoft Defender for Cloud",
+    "lines": ["Cloud security posture & secure score", "— see your risk, then shrink it —"]
+  },
+  "intro": "Microsoft Defender for Cloud is the single pane of glass for the security of everything you run in Azure — and beyond it. It does two big jobs: it measures your security posture and tells you exactly what to fix, and it detects active threats against your workloads. In this module we'll focus on the posture side — the free, always-on cloud security posture management that gives every subscription a secure score, a prioritized list of fixes, and a compliance view. Let's walk a real environment.",
+  "sections": [
+    {
+      "id": "overview", "section": "Defender for Cloud overview",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/0",
+      "focus": { "text": "Total secure score" },
+      "kicker": "One dashboard for cloud risk", "cardTitle": "The unified security dashboard",
+      "bullets": [
+        "Aggregates every connected subscription into one posture view — here, six subscriptions and 150-plus assessed resources.",
+        "Secure score is the headline number: how much of your recommended security is actually in place.",
+        "Attack paths and active alerts surface the risk that matters most, right at the top."
+      ],
+      "narration": "This is the Defender for Cloud overview, and it's the first place to look every morning. Across the top you can see the scope: this environment has six Azure subscriptions and over a hundred and fifty assessed resources, all rolled into one view. The number to anchor on is the total secure score, highlighted here in the low forties. Secure score is simply the percentage of Microsoft's recommended security controls that you've actually implemented, weighted by impact. Underneath it, Defender is already telling you where the real danger is — attack paths and active security alerts — so you start your day with risk, not noise. Cloud security posture management, the part that produces this score, is free and on by default for every Azure subscription."
+    },
+    {
+      "id": "recommendations", "section": "Recommendations",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/5",
+      "kicker": "Your prioritized to-do list", "cardTitle": "Recommendations, ranked by risk",
+      "bullets": [
+        "Every misconfiguration becomes a recommendation, grouped by risk level — high, medium, low.",
+        "Each one shows the affected resources, the risk factors, and whether it sits on an attack path.",
+        "Fixing high-risk recommendations is what moves your secure score the most."
+      ],
+      "narration": "When the score isn't where you want it, this is where you go. The recommendations blade turns every misconfiguration Defender finds into a concrete, actionable item, and crucially it ranks them by risk — high, medium, and low — rather than dumping a flat list on you. This environment has well over a thousand recommendations, but only a few hundred are high risk, and those are the ones to chase first. For each recommendation you can see the affected resources, the risk factors that make it dangerous, and whether it lies on an attack path toward something sensitive. Remediating the high-risk items is exactly what lifts your secure score, so let the risk ranking drive your work."
+    },
+    {
+      "id": "compliance", "section": "Regulatory compliance",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/22",
+      "focus": { "text": "Microsoft cloud security benchmark" },
+      "kicker": "Map controls to standards", "cardTitle": "Regulatory compliance built in",
+      "bullets": [
+        "The Microsoft cloud security benchmark is applied by default — here, 45 of 63 controls passing.",
+        "Add standards like CIS, PCI DSS, NIST, or ISO and Defender maps your posture to each control.",
+        "Export an audit-ready compliance report straight from this blade."
+      ],
+      "narration": "Posture isn't only about a score — it's about the frameworks your auditors care about. The regulatory compliance blade takes everything Defender already knows about your environment and maps it onto formal standards. By default it applies the Microsoft cloud security benchmark, highlighted here, and you can see this environment passing forty-five of sixty-three controls. From here you can add standards your business is held to — C.I.S., P.C.I. D.S.S., NIST, ISO twenty-seven thousand one — and Defender will continuously map each control to live evidence from your resources. When the auditor asks, you download a report from this very page instead of starting a spreadsheet."
+    },
+    {
+      "id": "inventory", "section": "Asset inventory",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/25",
+      "kicker": "Know what you're defending", "cardTitle": "A live inventory of every asset",
+      "bullets": [
+        "One searchable list of every resource Defender sees, with its health and open recommendations.",
+        "Filter by recommendation, by risk, or by resource type to find your weakest assets fast.",
+        "You can't secure what you can't see — inventory is your single source of truth."
+      ],
+      "narration": "You can't defend what you don't know you have, and in a six-subscription estate that's a real problem. The asset inventory gives you one searchable, filterable list of every resource Defender is watching, each tagged with its security health and the recommendations open against it. Want to find every machine missing endpoint protection, or every storage account exposed to the public internet? You filter here and act on the result. Think of inventory as your single source of truth for scope — it's where posture management starts, because it answers the most basic security question: what exactly am I protecting?"
+    },
+    {
+      "id": "attackpaths", "section": "Attack path analysis",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/AttackPaths",
+      "kicker": "Think like an attacker", "cardTitle": "Attack paths connect the dots",
+      "bullets": [
+        "Attack path analysis chains individual weaknesses into the route an attacker would actually take.",
+        "An internet-exposed VM plus an over-privileged identity plus a sensitive data store equals one path.",
+        "Fixing a single choke point can break an entire path — far higher leverage than fixing items in isolation."
+      ],
+      "narration": "A long list of recommendations tells you what's wrong, but not what's dangerous together. Attack path analysis is the cloud security graph thinking like an attacker: it chains individual weaknesses into the actual route someone would walk from the internet to your crown jewels. A publicly exposed virtual machine, plus an over-privileged identity attached to it, plus a reachable database full of sensitive data — individually three medium findings, but together one clear attack path. The power here is leverage. Break a single choke point on that path — close the exposure, or strip the excess permission — and you collapse the whole chain. That's a much smarter use of your time than grinding through findings in isolation."
+    },
+    {
+      "id": "envsettings", "section": "Environment settings",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/EnvironmentSettings",
+      "kicker": "Where it's all configured", "cardTitle": "Plans, connectors & governance",
+      "bullets": [
+        "Per subscription you choose: free CSPM stays on; turn paid Defender plans on for deeper protection.",
+        "Connect AWS and GCP accounts here so one dashboard covers your whole multicloud estate.",
+        "Set governance rules to assign owners and due dates so recommendations actually get fixed."
+      ],
+      "narration": "Finally, the control room. Environment settings is where you decide, for each subscription, how much protection you want. Foundational cloud security posture management — the secure score and recommendations we've been touring — stays on for free. From here you also turn on the paid Defender plans for deeper, workload-specific protection, which is the subject of the next module. This is also where multicloud happens: you connect your A.W.S. accounts and G.C.P. projects so this one dashboard covers everything, not just Azure. And through governance rules you can assign an owner and a due date to recommendations, so posture management drives real accountability instead of a report nobody reads."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Defender for Cloud posture in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Free CSPM is on by default — every subscription gets a secure score.",
+        "2 · Secure score = % of recommended controls in place; chase high-risk first.",
+        "3 · Recommendations are ranked by risk and attack-path impact.",
+        "4 · Regulatory compliance maps your posture to MCSB, CIS, PCI, NIST.",
+        "5 · Attack paths show the real route — break one choke point, kill the chain."
+      ]
+    },
+    "narration": "So, to recap the posture story. Foundational cloud security posture management is free and on by default, so every subscription already has a secure score waiting for you. That score is just the share of recommended controls you've actually put in place — so chase the high-risk recommendations first, because they move the needle most. Use regulatory compliance to map your posture onto the standards your business answers to, and use attack path analysis to find the one choke point that breaks an entire chain. See your risk, then shrink it.",
+    "examTip": "Exam tip: know that foundational CSPM and secure score are free, while Defender plans are paid and per-resource-type. Secure score is weighted by control impact, and the Microsoft cloud security benchmark is the default compliance standard applied to every subscription."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-dfc-1", "title": "Exercise 1 — Read and raise your secure score", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Move the score with the highest-leverage fix",
+          "1 · Open Defender for Cloud → Recommendations; sort by risk level = High",
+          "2 · Pick one high-risk recommendation; read its affected resources + attack-path flag",
+          "3 · Remediate it (use 'Fix' / 'Quick fix' where offered) on a test resource",
+          "✓ DONE WHEN · The recommendation shows Healthy and your secure score ticks up"
+        ],
+        "narration": "In your own subscription, open Defender for Cloud and go to recommendations. Filter to risk level high, and pick a single recommendation — ideally one flagged as sitting on an attack path. Read who it affects and why it's risky, then remediate it on a test resource; many recommendations offer a one-click Fix button right there. You're done when that recommendation flips to Healthy and you can watch your secure score tick upward. That feedback loop — find high-risk, fix, watch the score move — is the whole discipline of posture management."
+      },
+      {
+        "id": "lab-dfc-2", "title": "Exercise 2 — Add a compliance standard", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Map your posture to a real framework",
+          "1 · Go to Regulatory compliance → Manage compliance standards",
+          "2 · Assign a standard to a subscription (e.g. CIS Azure or PCI DSS)",
+          "3 · Let it evaluate, then open a failing control to see the backing recommendations",
+          "✓ DONE WHEN · You can export an audit-ready report for that standard"
+        ],
+        "narration": "Second exercise: make compliance real. Open regulatory compliance, choose manage compliance standards, and assign a framework your organization actually cares about — say C.I.S. Azure Foundations or P.C.I. D.S.S. — to a subscription. Give Defender a few minutes to evaluate, then drill into a failing control and notice that it's backed by the very same recommendations you saw earlier. You're done when you can export an audit-ready compliance report for that standard. Now your secure score work and your audit evidence are the same effort, not two."
+      }
+    ]
+  }
+}

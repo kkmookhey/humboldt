@@ -1,0 +1,113 @@
+{
+  "id": "az-entra-identity-protection",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Manage identity and access",
+  "title": {
+    "kicker": "Let the machine spot the breach",
+    "title": "Entra ID Protection",
+    "lines": ["Risk detection, scoring & response", "— automate the response to compromise —"]
+  },
+  "intro": "You can't watch every sign-in by hand. Microsoft Entra ID Protection does it for you — applying Microsoft's threat intelligence and machine learning to every authentication, scoring the risk that an account is compromised, and then acting on that risk automatically. It answers two questions continuously: is this particular sign-in suspicious, and is this user's identity compromised? In this module we'll tour the risk detections, the risky-users and risky-sign-ins reports, and the two risk-based policies that turn a detection into an automatic response — forcing multifactor authentication or a secure password change without waking up your S.O.C.",
+  "sections": [
+    {
+      "id": "overview", "section": "Identity Protection overview",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/Overview",
+      "focus": { "text": "Identity Protection" },
+      "kicker": "Two kinds of risk", "cardTitle": "Sign-in risk vs user risk",
+      "bullets": [
+        "Sign-in risk = is THIS authentication suspicious right now (impossible travel, anonymous IP).",
+        "User risk = is this IDENTITY likely compromised (leaked credentials found on the dark web).",
+        "Requires Entra ID P2; risk feeds directly into Conditional Access."
+      ],
+      "narration": "Entra ID Protection watches what no human team can — every sign-in, all the time — and it reasons about two different kinds of risk that the exam wants you to keep separate. Sign-in risk asks: is this specific authentication, happening right now, suspicious? Signals like impossible travel, sign-in from an anonymous V.P.N. or Tor, or an unfamiliar location drive that score. User risk asks a deeper question: is this person's identity itself likely compromised? The biggest driver there is leaked credentials — Microsoft finds your users' username-and-password pairs dumped on the dark web and flags the account before an attacker uses them. Identity Protection requires Entra ID Premium P2, and its real power is that these risk scores don't just sit in a report — they become live signals that Conditional Access can act on, which is how detection turns into enforcement."
+    },
+    {
+      "id": "detections", "section": "Risk detections",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/RiskDetections",
+      "kicker": "The evidence behind the score", "cardTitle": "What raises a risk score",
+      "bullets": [
+        "Detections include impossible travel, anonymous IP, malware-linked IP, password spray, leaked creds.",
+        "Each detection has a type, risk level, and is tied to a user and sign-in.",
+        "Microsoft's threat intelligence updates detections continuously — no tuning required."
+      ],
+      "narration": "This is the risk detections feed — the raw evidence behind every score. Each entry is one thing Identity Protection noticed: an impossible-travel event where the same account signed in from two cities too far apart to be real; a sign-in from an anonymous I.P. address; a connection from an address Microsoft associates with malware or a botnet; a password-spray pattern hitting many accounts with common passwords; or the big one, leaked credentials matched against breach data. Every detection carries a type, a risk level — low, medium, or high — and a link to the affected user and sign-in. What makes this valuable is that it's powered by Microsoft's global threat intelligence, processing trillions of signals a day, and it updates continuously. You don't write these detections or tune them — you consume them, and you decide what your policies do in response."
+    },
+    {
+      "id": "risky-users", "section": "Risky users",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/RiskyUsers",
+      "kicker": "Who might be compromised", "cardTitle": "Risky users & remediation",
+      "bullets": [
+        "A prioritized list of accounts with elevated user risk and why.",
+        "Remediate by forcing a secure password reset, or dismiss a false positive.",
+        "Confirming compromise feeds Microsoft's model and improves future detection."
+      ],
+      "narration": "The risky users report rolls everything up to the level you'll actually act on: which accounts are probably compromised, ranked by risk, with the detections that drove each score. From here you respond. If an account is genuinely at risk, you remediate — typically by forcing a secure password change, which the user completes through self-service password reset after proving themselves, clearing the risk. If you've investigated and it's a false positive, you dismiss the risk, which tells the system to lower its concern. And if you've confirmed an account really was taken over, you confirm compromise — that not only locks things down but feeds Microsoft's machine-learning model, sharpening detection for you and everyone else. This is the human-in-the-loop layer that sits on top of the automation we're about to configure."
+    },
+    {
+      "id": "risky-signins", "section": "Risky sign-ins",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/RiskySignIns",
+      "kicker": "Suspicious authentications", "cardTitle": "Risky sign-ins, in detail",
+      "bullets": [
+        "Every sign-in that scored risky, with location, device, IP, and detection type.",
+        "Real-time risk is evaluated at sign-in; aggregate risk reflects offline analysis.",
+        "Investigate the pattern here, then let a policy enforce the response."
+      ],
+      "narration": "Where risky users is about accounts, risky sign-ins is about individual authentication attempts. This report lists every sign-in that scored as risky, with the full context: the location it came from, the device and browser, the I.P. address, and which detection raised the flag. One nuance worth knowing for the exam: some risk is calculated in real time, during the sign-in itself, so a policy can act on it immediately; other risk is computed offline, after Microsoft correlates more signals, and may raise a score minutes or hours later. Both feed your reports and your policies. The workflow here is investigate-then-automate: you use this detail to understand the attack pattern, but you don't want to be manually chasing every risky sign-in — that's what the risk-based policies are for. Let's configure them."
+    },
+    {
+      "id": "policies", "section": "Risk-based policies",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "kicker": "Detection becomes response", "cardTitle": "Sign-in & user risk policies",
+      "bullets": [
+        "Sign-in risk policy: if sign-in risk is high, require MFA (or block).",
+        "User risk policy: if user risk is high, require a secure password change.",
+        "Built as Conditional Access policies — pilot in report-only, exclude break-glass."
+      ],
+      "narration": "Here's where it all comes together — detection becomes automatic response. There are two risk-based policies, and the modern way to build both is as Conditional Access policies using risk as the condition. The sign-in risk policy says: if the sign-in risk for this attempt is medium or high, require multifactor authentication right now — or, if you're strict, block it. That stops a suspicious sign-in cold without any analyst involved. The user risk policy says: if a user's overall risk is high — they showed up in leaked credentials, say — require a secure password change before they can continue, which forces the compromised credential out of circulation. Together these close the loop: Identity Protection detects, and Conditional Access enforces, in real time, around the clock. And the same safety rules from the last module apply — pilot in report-only and exclude your break-glass account, because a misconfigured risk policy can lock people out just as fast as it protects them."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "ID Protection in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Sign-in risk = is THIS sign-in suspicious; user risk = is the IDENTITY compromised.",
+        "2 · Leaked credentials is the headline user-risk detection; requires Entra ID P2.",
+        "3 · Risky users → force password reset; risky sign-ins → investigate the attempt.",
+        "4 · Sign-in risk policy → require MFA; user risk policy → require password change.",
+        "5 · Build risk policies in Conditional Access; pilot in report-only, exclude break-glass."
+      ]
+    },
+    "narration": "Let's automate the response to compromise. Keep the two risks straight: sign-in risk is about a single suspicious authentication, user risk is about an identity that's probably been taken over, with leaked credentials the headline signal — and all of it needs Premium P2. Use the risky-users report to force password resets and the risky-sign-ins report to investigate attempts. Then turn detection into enforcement with two policies: a sign-in risk policy that requires multifactor authentication on a risky sign-in, and a user risk policy that requires a secure password change on a risky user. Build them in Conditional Access, pilot in report-only, and exclude break-glass. Let the machine spot the breach and respond before you've even read the alert.",
+    "examTip": "Exam tip: leaked credentials is a USER-risk detection; impossible travel and anonymous IP are SIGN-IN-risk detections. The sign-in risk policy requires MFA; the user risk policy requires a secure password change. Identity Protection requires Entra ID P2, and risk-based policies are now configured within Conditional Access."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-idp-1", "title": "Exercise 1 — Build both risk-based policies", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Turn risk signals into automatic enforcement",
+          "1 · Conditional Access → New policy → Conditions → Sign-in risk = High → Grant: Require MFA",
+          "2 · Second policy → Conditions → User risk = High → Grant: Require password change",
+          "3 · Exclude break-glass; set both to Report-only and review the impact in Insights",
+          "✓ DONE WHEN · Both policies evaluate risk and log the intended action"
+        ],
+        "narration": "First exercise: wire risk to response. Create a Conditional Access policy whose condition is sign-in risk equals high and whose grant control requires multifactor authentication. Create a second policy whose condition is user risk equals high and whose grant control requires a secure password change. Exclude your break-glass account from both, and start both in report-only. Then watch the insights workbook to see whom they'd affect. You're done when both policies are evaluating the risk conditions and logging the action they would take. That's Identity Protection and Conditional Access working as one system."
+      },
+      {
+        "id": "lab-idp-2", "title": "Exercise 2 — Simulate risk & remediate a user", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Trigger a detection and walk the response",
+          "1 · Sign in to a test account over Tor / a known anonymous VPN to raise sign-in risk",
+          "2 · Identity Protection → Risky sign-ins / Risky users → find the detection",
+          "3 · Remediate: confirm compromise or dismiss; force a secure password reset",
+          "✓ DONE WHEN · You raise, investigate, and clear a risk end to end"
+        ],
+        "narration": "Second exercise: make a detection happen and walk the response. Using a disposable test account, sign in through the Tor browser or a known anonymous V.P.N. to deliberately raise sign-in risk. Then open Identity Protection and find that detection in the risky sign-ins and risky users reports. Walk the remediation: investigate the context, then either confirm compromise or dismiss it as a false positive, and force a secure password reset to clear the user's risk. You're done when you've raised, investigated, and cleared a risk from end to end. Doing it once by hand makes the automated policies you just built far more intuitive."
+      }
+    ]
+  }
+}

@@ -8,14 +8,19 @@
   "title": {
     "kicker": "A guided tour",
     "title": "Azure VM Security",
-    "lines": ["Network, disk & threat protection", "— locking down a vulnerable VM —"]
+    "lines": [
+      "Network, disk & threat protection",
+      "— locking down a vulnerable VM —"
+    ]
   },
   "intro": "Let's secure a real virtual machine — and not a tidy one. This is juice-shop, a deliberately vulnerable demo app, and it's exposed in ways that should make you wince. We'll walk its networking, its disk encryption, its threat protection, and its patching, and turn it from a target into something defensible.",
   "sections": [
     {
-      "id": "overview", "section": "VM overview",
+      "id": "overview",
+      "section": "VM overview",
       "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/AIAgentDemoRG/providers/Microsoft.Compute/virtualMachines/juice-shop/overview",
-      "kicker": "Know your attack surface", "cardTitle": "Start with the VM overview",
+      "kicker": "Know your attack surface",
+      "cardTitle": "Start with the VM overview",
       "bullets": [
         "The overview shows the VM's public IP, OS, size, and resource group — the first things an attacker also sees.",
         "A public IP plus open management ports equals an internet-reachable target. juice-shop has both.",
@@ -24,10 +29,14 @@
       "narration": "This is the overview for juice-shop, a deliberately vulnerable demo VM. Right here you can read its public IP address, operating system, size, and resource group — and that's exactly the information an attacker enumerates first. The moment a VM has a public IP and open management ports, it becomes an internet-reachable target. So our job across the next few blades is simple: shrink the attack surface, encrypt the disks, turn on threat detection, and keep it patched. Let's start where the danger usually lives — the network."
     },
     {
-      "id": "networking", "section": "Networking — NSG inbound rules",
-      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/AIAgentDemoRG/providers/Microsoft.Compute/virtualMachines/juice-shop/networking",
-      "focus": { "text": "Port 22 (SSH) · Source * — open to the internet" },
-      "kicker": "The classic mistake", "cardTitle": "NSG: SSH open to the whole internet",
+      "id": "networking",
+      "section": "Networking — NSG inbound rules",
+      "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/AIAgentDemoRG/providers/Microsoft.Network/networkSecurityGroups/juice-shop-nsg/overview",
+      "focus": {
+        "text": "SSH"
+      },
+      "kicker": "The classic mistake",
+      "cardTitle": "NSG: SSH open to the whole internet",
       "bullets": [
         "The network security group juice-shop-nsg controls inbound traffic to the VM's NIC and subnet.",
         "Look at the inbound rules: port 22 (SSH) is allowed from Source '*' — that's 0.0.0.0/0, the entire internet. Ports 443, 8080 and 6001 are wide open too.",
@@ -36,9 +45,11 @@
       "narration": "This is the networking blade, and it shows the inbound rules from the network security group, the N.S.G., named juice-shop-nsg. Here's the classic mistake, highlighted for you: port twenty-two, S.S.H., is allowed from source star — and star means zero-dot-zero-dot-zero-dot-zero slash zero, the entire internet. Ports four-forty-three, eighty-eighty, and six-thousand-one are wide open too. This is how VMs get brute-forced and owned. The rule is absolute: never expose S.S.H. or R.D.P. to star. Scope your management ports to a single trusted I.P. address or, better, put them behind Azure Bastion so the VM needs no public management port at all. Remember N.S.G. rules are evaluated by priority, lowest number first, so a tight allow rule followed by a deny-all is how you lock this down."
     },
     {
-      "id": "disks", "section": "Disks — encryption at rest",
+      "id": "disks",
+      "section": "Disks — encryption at rest",
       "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/AIAgentDemoRG/providers/Microsoft.Compute/virtualMachines/juice-shop/disks",
-      "kicker": "Encrypt the data at rest", "cardTitle": "Disks: SSE, CMK & encryption at host",
+      "kicker": "Encrypt the data at rest",
+      "cardTitle": "Disks: SSE, CMK & encryption at host",
       "bullets": [
         "Server-side encryption (SSE) is always on — every managed disk is AES-256 encrypted at rest with platform-managed keys, for free.",
         "For key control, use a customer-managed key (CMK) from Key Vault via a disk encryption set — you rotate it, you can revoke it.",
@@ -47,10 +58,14 @@
       "narration": "On the disks blade you control encryption at rest. Start with the good news: server-side encryption is always on, so every managed disk is already encrypted with two-fifty-six-bit A.E.S. using platform-managed keys, at no cost. But platform-managed keys are controlled by Microsoft. For real key control, switch to a customer-managed key — a C.M.K. — stored in Key Vault and wired in through a disk encryption set; now you own rotation and you can revoke access. To go further, enable encryption at host: that extends encryption to the temporary disk and the disk caches, giving you end-to-end coverage without touching the V.M.'s C.P.U. Encryption at host is the modern choice — Azure Disk Encryption, the older in-guest approach, is heading for retirement."
     },
     {
-      "id": "defender", "section": "Defender for Servers + JIT",
+      "id": "defender",
+      "section": "Defender for Servers + JIT",
       "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/AIAgentDemoRG/providers/Microsoft.Compute/virtualMachines/juice-shop/connect",
-      "focus": { "text": "Defender for Servers is OFF — JIT is the upgrade to enable" },
-      "kicker": "From always-open to on-demand", "cardTitle": "Defender for Servers & Just-in-Time access",
+      "focus": {
+        "text": "Defender for Servers is OFF — JIT is the upgrade to enable"
+      },
+      "kicker": "From always-open to on-demand",
+      "cardTitle": "Defender for Servers & Just-in-Time access",
       "bullets": [
         "Microsoft Defender for Servers is currently OFF on this subscription — so there's no threat detection or hardening on juice-shop yet. This is the upgrade to turn on.",
         "Plan 2 unlocks Just-in-Time (JIT) VM access: management ports stay closed and open only on request, from your IP, for a short, audited window.",
@@ -59,9 +74,11 @@
       "narration": "Now the upgrade that ties the network story together. Microsoft Defender for Servers is currently turned off on this subscription, which means juice-shop has no real-time threat detection and no hardening recommendations yet. If we enable Defender for Servers Plan two, we unlock Just-in-Time V.M. access — J.I.T. With J.I.T., your management ports stay closed by default and open only when you request them, only from your I.P. address, only for a short, fully audited window. Think about what that does to the problem we saw earlier: instead of port twenty-two standing open to the whole internet, S.S.H. is a door that's locked until you ask, then automatically re-locked. You'd request that access right here from the Connect experience. Defender for Servers also adds vulnerability scanning and alerting on top — exactly what a vulnerable box like this needs."
     },
     {
-      "id": "updates", "section": "Update & patch management",
+      "id": "updates",
+      "section": "Update & patch management",
       "url": "https://portal.azure.com/#@017c6f31-f951-4bda-a50a-c168c0e6f815/resource/subscriptions/cb0d6ed4-a7c9-4929-8707-4a477a2cc9b5/resourceGroups/AIAgentDemoRG/providers/Microsoft.Compute/virtualMachines/juice-shop/updates",
-      "kicker": "Close the vulnerability window", "cardTitle": "Updates: patch fast, patch automatically",
+      "kicker": "Close the vulnerability window",
+      "cardTitle": "Updates: patch fast, patch automatically",
       "bullets": [
         "Azure Update Manager assesses and patches Windows and Linux VMs from one place — no agent juggling, with periodic 24-hour assessment.",
         "Set a patch orchestration mode (e.g. customer-managed schedules or Azure-managed safe deployment) and a maintenance window so updates land predictably.",
@@ -72,7 +89,9 @@
   ],
   "recap": {
     "card": {
-      "kicker": "Remember", "title": "VM security in five rules", "accent": "#56d364",
+      "kicker": "Remember",
+      "title": "VM security in five rules",
+      "accent": "#56d364",
       "lines": [
         "1 · Never expose SSH/RDP to '*' — scope NSGs or use Bastion.",
         "2 · Encryption at rest is on; add CMK + encryption at host.",
@@ -88,7 +107,9 @@
     "kicker": "Do this in your lab",
     "exercises": [
       {
-        "id": "lab-vm-1", "title": "Exercise 1 — Close the open management port", "accent": "#f0883e",
+        "id": "lab-vm-1",
+        "title": "Exercise 1 — Close the open management port",
+        "accent": "#f0883e",
         "lines": [
           "GOAL · Stop SSH being open to the internet",
           "1 · VM → Networking → open the NSG; find the inbound rule for port 22 from Source '*'",
@@ -99,7 +120,9 @@
         "narration": "In your own lab, take a VM with a public IP and open the networking blade. Find the inbound N.S.G. rule that allows port twenty-two from source star, and fix it: change the source to your own I.P. address, or delete it entirely and route S.S.H. through Azure Bastion instead. Then add a low-priority deny-all inbound rule underneath your explicit allow rules, so anything you didn't expressly permit is blocked. You're done when you run I.P. flow verify in Network Watcher and it shows port twenty-two denied from every address except yours."
       },
       {
-        "id": "lab-vm-2", "title": "Exercise 2 — Defender, JIT & encryption", "accent": "#f0883e",
+        "id": "lab-vm-2",
+        "title": "Exercise 2 — Defender, JIT & encryption",
+        "accent": "#f0883e",
         "lines": [
           "GOAL · Turn on-demand access and full disk encryption on",
           "1 · Enable Microsoft Defender for Servers Plan 2 on the subscription",

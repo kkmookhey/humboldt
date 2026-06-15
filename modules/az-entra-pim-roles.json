@@ -1,0 +1,113 @@
+{
+  "id": "az-entra-pim-roles",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Manage identity and access",
+  "title": {
+    "kicker": "Just-in-time privilege",
+    "title": "Entra Roles & PIM",
+    "lines": ["Eligible, not standing, access", "— zero standing privilege, on demand —"]
+  },
+  "intro": "The accounts that can do the most damage are your privileged ones — Global Administrators, Security Administrators, the keys to the kingdom. The old model gave those people their power permanently, twenty-four hours a day, whether they were using it or not. Privileged Identity Management flips that: privilege becomes something you're eligible for and activate just-in-time, for a few hours, with multifactor authentication and a justification, and it expires on its own. In this module we'll separate Entra roles from Azure RBAC, walk the eligible-versus-active distinction, activate a role the way you did to fix your own access, and lock the whole thing down with role settings and access reviews.",
+  "sections": [
+    {
+      "id": "roles", "section": "Roles and administrators",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/RolesManagementMenuBlade/~/AllRoles",
+      "focus": { "text": "Global Administrator" },
+      "kicker": "Two RBAC systems, don't confuse them", "cardTitle": "Entra roles vs Azure RBAC",
+      "bullets": [
+        "Entra roles govern the directory: users, groups, apps, Conditional Access, other roles.",
+        "Azure RBAC governs resources: VMs, storage, networks — scoped to subscriptions and groups.",
+        "Global Administrator is the most powerful directory role — keep the count tiny."
+      ],
+      "narration": "Start by separating two things the exam deliberately tries to blur. There are two distinct role-based access control systems in Azure. Entra roles — what you see on this blade — govern the directory itself: managing users, resetting passwords, configuring Conditional Access, assigning other roles. Azure R.B.A.C. roles, which we covered in the governance modules, govern Azure resources — virtual machines, storage accounts, networks — and are scoped to management groups, subscriptions, and resource groups. A Global Administrator in Entra is not automatically an owner of your Azure resources, and vice versa, though a Global Admin can elevate to gain that access. The single most important number in this whole blade is how many people hold Global Administrator. Microsoft's guidance is to keep it to a small handful — fewer than five — because each one is a master key to your entire directory."
+    },
+    {
+      "id": "pim-overview", "section": "PIM overview",
+      "url": "https://entra.microsoft.com/#view/Microsoft_Azure_PIMCommon/CommonMenuBlade/~/quickStart",
+      "kicker": "Zero standing privilege", "cardTitle": "Privileged Identity Management",
+      "bullets": [
+        "PIM provides just-in-time, time-bound role activation instead of permanent assignment.",
+        "Requires Entra ID P2; covers Entra roles, Azure resource roles, and PIM for Groups.",
+        "Activation can require MFA, justification, ticket number, and approval."
+      ],
+      "narration": "Privileged Identity Management — PIM — is how you achieve zero standing privilege. The principle is that nobody should hold dangerous permissions around the clock when they only need them occasionally. With PIM, instead of permanently assigning someone the security administrator role, you make them eligible for it. When they actually need it, they activate it — just-in-time — for a limited window, say four hours, after which it automatically expires. PIM requires Entra ID Premium P2, and it governs three things: Entra directory roles, Azure resource R.B.A.C. roles, and membership of privileged groups through PIM for Groups. Crucially, activation isn't free — you can require multifactor authentication, a written justification, a ticket number, and even approval from a designated approver before the role turns on. That's how you turn a standing risk into an auditable, on-demand event."
+    },
+    {
+      "id": "eligible-active", "section": "Eligible vs active",
+      "url": "https://entra.microsoft.com/#view/Microsoft_Azure_PIMCommon/ResourceMenuBlade/~/MyActions/resourceId//resourceType/tenant/provider/aadroles",
+      "kicker": "The distinction that fixed your access", "cardTitle": "Eligible vs active assignments",
+      "bullets": [
+        "Eligible = you CAN activate the role when needed; it grants nothing until you do.",
+        "Active = the role is live now, no activation step (use only for break-glass).",
+        "An eligible role sitting un-activated grants zero permissions — that's by design."
+      ],
+      "narration": "This is the single most important concept in PIM, and it's the exact distinction that explains the access problem we fixed earlier. There are two assignment types. An eligible assignment means you are permitted to activate the role when you need it — but until you actually activate it, it grants you nothing. An active assignment means the role is live right now, with no activation step required. Remember the Security Reader puzzle: the role already existed, yet the active assignments list was empty and you still got access-denied. That's because it was an eligible assignment waiting to be activated — un-activated eligible roles grant zero permissions, exactly as designed. The whole security value of PIM lives in that gap. Reserve permanent active assignments for break-glass accounts only; for everyone else, eligible plus activate is the model."
+    },
+    {
+      "id": "activation", "section": "Activate a role",
+      "url": "https://entra.microsoft.com/#view/Microsoft_Azure_PIMCommon/ResourceMenuBlade/~/MyActions/resourceId//resourceType/tenant/provider/aadroles",
+      "kicker": "Privilege on demand", "cardTitle": "Activation: MFA, justification, expiry",
+      "bullets": [
+        "Select the eligible role, set a duration within the policy max, give a justification.",
+        "Satisfy MFA and, if configured, wait for an approver — then the role goes live.",
+        "When the window ends the role deactivates automatically — no cleanup, no drift."
+      ],
+      "narration": "Let's walk the activation flow — the everyday PIM experience. From my-roles, you pick an eligible role you want to use, choose how long you need it within the maximum the policy allows, and type a justification explaining why. If the role requires it, you complete a multifactor authentication check, and if approval is configured, your request goes to a designated approver who grants or denies it. Once those conditions are met, the role goes live and you do your privileged work. Then the magic part: when your window expires, the role deactivates itself automatically. There's no standing assignment left behind, no permission drift, no quarterly clean-up project — the access simply evaporates. Every activation is logged with who, when, why, and for how long, which turns your most sensitive operations into a clean audit trail instead of a mystery."
+    },
+    {
+      "id": "settings", "section": "Govern privileged access",
+      "url": "https://entra.microsoft.com/#view/Microsoft_Azure_PIMCommon/CommonMenuBlade/~/quickStart",
+      "kicker": "The PIM lifecycle", "cardTitle": "Settings, approval & access reviews",
+      "bullets": [
+        "Per-role policy sets max activation duration, MFA, justification, and approval.",
+        "Require approval for the most dangerous roles like Global Administrator.",
+        "Access reviews recertify who's eligible — stale privilege gets removed automatically."
+      ],
+      "narration": "Running PIM well is a lifecycle — assign, activate, approve, audit. You start by assigning eligibility, granting someone the right to a role without making it active. Then, per role, you tune the activation policy: the maximum duration, whether multifactor authentication and a justification are required, and crucially whether activation needs approval. Make the most dangerous roles the hardest to activate — Global Administrator should require approval and the shortest sensible window, so that even an eligible user can't grant themselves the keys to the kingdom unilaterally; someone else has to say yes. A lower-impact role might just need a justification. And you close the loop by reviewing: PIM logs every activation for audit, and access reviews periodically ask whether each person still needs to be eligible at all, automatically removing anyone who doesn't. Assign, activate, approve, audit — that's how privilege stays just-in-time, month after month."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Roles & PIM in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Entra roles govern the directory; Azure RBAC governs resources — different systems.",
+        "2 · PIM = just-in-time, time-bound activation; requires Entra ID P2.",
+        "3 · Eligible CAN activate (grants nothing until you do); active is live now.",
+        "4 · Gate activation with MFA, justification & approval; reserve active for break-glass.",
+        "5 · Access reviews recertify eligibility so privilege doesn't accumulate."
+      ]
+    },
+    "narration": "Let's lock in just-in-time privilege. Keep Entra directory roles and Azure resource R.B.A.C. straight — they're two systems, and Global Administrator is the master key you ration to a tiny few. Privileged Identity Management, which needs Premium P2, replaces standing privilege with eligible-plus-activate: you hold the right to a role, but it grants nothing until you activate it just-in-time, with multifactor authentication, justification, and approval, and it expires on its own. That eligible-versus-active gap is exactly what tripped up your Security Reader access — and it's the heart of the model. Finish with access reviews so eligibility never quietly accumulates. Zero standing privilege, on demand.",
+    "examTip": "Exam tip: an eligible PIM assignment grants no permissions until activated — this is the classic 'role exists but access denied' scenario. PIM requires Entra ID P2. Entra roles ≠ Azure RBAC roles. Use approval + MFA + short duration on Global Administrator; reserve permanent active assignments for break-glass accounts."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-pim-1", "title": "Exercise 1 — Make a role eligible, then activate it", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Experience just-in-time privilege end to end",
+          "1 · PIM → Entra roles → Assignments → Add → assign a test user as Eligible for Security Reader",
+          "2 · As that user: PIM → My roles → Activate; give a justification + complete MFA",
+          "3 · Confirm access appears, then let it expire (or deactivate) and confirm it's gone",
+          "✓ DONE WHEN · Access works only during the active window, then vanishes"
+        ],
+        "narration": "First exercise: live the eligible-to-active journey yourself. In PIM, assign a test user as eligible — not active — for the Security Reader role. Then sign in as that user, go to my-roles, and activate it: choose a short duration, type a justification, and complete the multifactor authentication check. Confirm the read access now works. Then let the window expire, or deactivate manually, and confirm the access is gone. You're done when access exists only inside the active window and disappears afterward. That round trip is the whole point of PIM, and it's the concept the exam tests most."
+      },
+      {
+        "id": "lab-pim-2", "title": "Exercise 2 — Lock down a role with settings + a review", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Add approval and recertification to a privileged role",
+          "1 · PIM → Entra roles → Settings → pick a high-privilege role → Edit",
+          "2 · Require MFA + justification on activation; require approval and set an approver",
+          "3 · PIM → Access reviews → create a review of who's eligible for that role",
+          "✓ DONE WHEN · Activation now needs approval and a review is scheduled"
+        ],
+        "narration": "Second exercise: harden a privileged role. Open the role settings for a high-privilege role and edit its activation policy: require multifactor authentication and a justification, then switch on require approval and name an approver. Now even an eligible user can't self-elevate without a second person's yes. Finally, create an access review over who is eligible for that role so the list gets recertified on a schedule. You're done when activation demands approval and a recurring review is in place. Settings tighten each activation; reviews keep the eligible list honest over time."
+      }
+    ]
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "id": "az-entra-app-identity",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Manage identity and access",
+  "title": {
+    "kicker": "Apps and code have identities too",
+    "title": "App & Workload Identity Security",
+    "lines": ["App registrations, consent & managed identity", "— secure the identities that aren't people —"]
+  },
+  "intro": "Not every identity is a person. Applications, scripts, and Azure resources all need to authenticate, and these workload identities now outnumber human ones in most tenants — yet they're often the least governed. A leaked client secret or an over-consented app can be just as devastating as a stolen password. In this module we'll untangle app registrations from enterprise applications, see where credentials and the consent framework live, understand how malicious consent attacks work, and then meet the best answer of all — managed identities, which let Azure resources authenticate with no secret for you to leak.",
+  "sections": [
+    {
+      "id": "app-registrations", "section": "App registrations",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade",
+      "focus": { "text": "App registrations" },
+      "kicker": "The application's blueprint", "cardTitle": "App registrations & service principals",
+      "bullets": [
+        "An app registration is the global definition of an app — its identity and API permissions.",
+        "It creates a service principal in your tenant: the local identity the app signs in as.",
+        "One registration (home tenant) can have a service principal in every tenant that uses it."
+      ],
+      "narration": "Let's start with the concept that confuses everyone, including exam candidates: app registrations versus service principals. An app registration is the blueprint — the global definition of an application, living in its home tenant, describing the app's identity, its credentials, and the A.P.I. permissions it wants. When that app is used in a tenant, Entra creates a service principal — the local instance of the app inside your directory, the actual identity it authenticates as and that you grant access to. Think of the registration as the class and the service principal as the object: one registration in the home tenant, but a service principal in every tenant where the app is used. This is why a multi-tenant app like a popular SaaS tool has one registration at the vendor but a service principal sitting in your directory — and that service principal is something you need to govern."
+    },
+    {
+      "id": "credentials", "section": "Credentials & secrets",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade",
+      "kicker": "Secrets leak — prefer certs", "cardTitle": "Client secrets vs certificates",
+      "bullets": [
+        "Apps authenticate with a client secret (a password) or a certificate (stronger).",
+        "Secrets get committed to code and leaked — certificates and managed identity are safer.",
+        "Set short expiries, rotate, and audit for credentials that never expire."
+      ],
+      "narration": "Under each app registration sit its credentials — and this is where so many breaches begin. An application proves who it is using either a client secret, which is essentially a password string, or a certificate, which uses a private key. Client secrets are the dangerous default: developers paste them into code, commit them to source control, drop them in config files, and they leak. Certificates are meaningfully stronger because the private key can live in a vault and never travels. The hygiene rules the exam expects: give credentials short expiries, rotate them on a schedule, and audit your tenant for secrets that were set to never expire — those are time bombs. But hold that thought, because in a moment we'll see the best option of all, where there's no credential to manage because Azure handles it for you."
+    },
+    {
+      "id": "enterprise-apps", "section": "Enterprise applications",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/StartboardApplicationsMenuBlade/~/AppAppsPreview",
+      "kicker": "Apps in use in your tenant", "cardTitle": "Enterprise apps, SSO & provisioning",
+      "bullets": [
+        "Enterprise applications are the service principals — the apps actually used in your tenant.",
+        "Configure single sign-on, user assignment, and automated user provisioning here.",
+        "Restrict who can sign in: require assignment so only approved users get access."
+      ],
+      "narration": "The enterprise applications blade is the other side of the coin — this is the list of service principals, the applications actually in use in your tenant, whether you registered them or consented to them from the gallery. This is your management surface for apps-as-they're-used. Here you configure single sign-on, so users reach a SaaS app with their Entra identity and your Conditional Access policies apply. You set up automated user provisioning, so accounts are created and deprovisioned in the app as people join and leave. And one control matters for security above the rest: user assignment. By default many apps let any user in your tenant sign in; flip on require assignment and only the users or groups you explicitly assign can access it. That's least privilege for applications — and it pairs naturally with Conditional Access targeting that same app."
+    },
+    {
+      "id": "consent", "section": "Permissions & consent",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/~/UserSettings",
+      "kicker": "Stop illicit consent grants", "cardTitle": "The consent framework",
+      "bullets": [
+        "Delegated permissions act as the signed-in user; application permissions act as the app itself.",
+        "Illicit consent attacks trick users into granting a malicious app access to their data.",
+        "Restrict user consent and require admin consent for risky or high-privilege permissions."
+      ],
+      "narration": "Now the attack you must understand: illicit consent. When an app wants access to data — your mail, your files, the directory — it requests permissions, and someone has to consent. Two permission types: delegated permissions let the app act on behalf of the signed-in user, bounded by what that user can do; application permissions let the app act as itself, with no user present, which is far more powerful. The danger is that, left at the defaults, ordinary users can consent to apps on their own. Attackers exploit this with a phishing link that leads not to a fake login but to a real Microsoft consent screen for a malicious app — the user clicks accept, and now the attacker's app has standing access to their mailbox, no password required and multifactor authentication bypassed entirely. The defense lives right here: restrict user consent so users can only consent to low-risk permissions from verified publishers, and route everything else through an admin consent workflow where a human reviews the request. This is one of the highest-value identity settings in the entire tenant."
+    },
+    {
+      "id": "managed-identity", "section": "Managed identities",
+      "url": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/StartboardApplicationsMenuBlade/~/AppAppsPreview",
+      "kicker": "Authentication with no secret", "cardTitle": "Managed identities: the secretless ideal",
+      "bullets": [
+        "An Azure-managed service principal for a resource — no credential for you to store or rotate.",
+        "System-assigned is tied to one resource's lifecycle; user-assigned is shared across many.",
+        "The resource gets a token from Entra automatically — the gold standard for Azure-to-Azure auth."
+      ],
+      "narration": "And here's the payoff — the best answer to every credential problem we've discussed: managed identities. A managed identity is a service principal that Azure creates and fully manages for one of your resources — a virtual machine, a function, an app service, a logic app. The resource uses it to authenticate to other Azure services, like pulling a secret from Key Vault or reading a storage account, and the entire credential lifecycle is handled by the platform. There is no secret for you to store, no certificate to rotate, nothing to leak — that's the whole point. Two flavors to know: a system-assigned managed identity is created with the resource and deleted with it, a one-to-one bond; a user-assigned managed identity is a standalone object you create once and attach to many resources, ideal when several services share the same access. Behind the scenes the resource just asks Entra for a token and gets one. For any Azure-to-Azure authentication, managed identity is the gold standard — reach for it before you ever create a client secret."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Workload identity in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · App registration = the blueprint; service principal / enterprise app = the local identity.",
+        "2 · Prefer certificates over client secrets; set short expiries and rotate.",
+        "3 · Require assignment so only approved users can use an app.",
+        "4 · Restrict user consent + require admin consent to stop illicit consent attacks.",
+        "5 · Managed identities = no secret to leak — the gold standard for Azure-to-Azure auth."
+      ]
+    },
+    "narration": "Let's secure the identities that aren't people. An app registration is the blueprint; the service principal — shown as an enterprise application — is the local identity you actually govern. For credentials, prefer certificates over client secrets, keep expiries short, and rotate. Require assignment so only approved users can reach an app. Then defend against illicit consent attacks by restricting user consent and routing risky permissions through admin consent — that single setting blocks a whole class of phishing. And above all, when an Azure resource needs to authenticate to another, use a managed identity: there's simply no secret to leak, because the platform handles it. Secure the identities that aren't people.",
+    "examTip": "Exam tip: app registration (blueprint, home tenant) vs service principal / enterprise app (local instance). Delegated permissions act as the user; application permissions act as the app. Restrict user consent + admin consent workflow defeats illicit consent grants. System-assigned managed identity is tied to one resource; user-assigned is shared and independent."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-app-1", "title": "Exercise 1 — Lock down consent + require assignment", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Close the illicit-consent hole",
+          "1 · Entra ID → Enterprise apps → Consent and permissions → restrict user consent",
+          "2 · Enable the admin consent request workflow and set reviewers",
+          "3 · Pick an enterprise app → Properties → Assignment required = Yes; assign one group",
+          "✓ DONE WHEN · Users can't self-consent and only assigned users can access the app"
+        ],
+        "narration": "First exercise: close the consent hole. In enterprise applications, open consent and permissions and restrict user consent so users can no longer grant arbitrary apps access to their data. Turn on the admin consent request workflow and nominate reviewers, so legitimate requests still have a path. Then pick one enterprise app, set assignment required to yes, and assign a single group. You're done when ordinary users can't self-consent and only your assigned group can use that app. Two settings, and you've shut down one of the most common identity attack paths in Microsoft 365."
+      },
+      {
+        "id": "lab-app-2", "title": "Exercise 2 — Use a managed identity to reach Key Vault", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Authenticate Azure-to-Azure with zero secrets",
+          "1 · On a test VM → Identity → System assigned → On",
+          "2 · Key Vault → Access (RBAC) → grant the VM's identity 'Key Vault Secrets User'",
+          "3 · From the VM, get a token via IMDS and read a secret — no credential stored",
+          "✓ DONE WHEN · The VM reads a secret with no client secret anywhere"
+        ],
+        "narration": "Second exercise: authenticate with no secret at all. On a test virtual machine, turn on the system-assigned managed identity. Then in Key Vault, grant that identity the Key Vault Secrets User role. Now from inside the V.M., request a token from the instance metadata endpoint and use it to read a secret out of the vault. You're done when the V.M. successfully reads a secret and you can confirm there's no client secret, no certificate, no credential stored anywhere on that machine. That is the secretless ideal — and once you've felt how easy it is, you'll never want to manage an app secret again."
+      }
+    ]
+  }
+}
