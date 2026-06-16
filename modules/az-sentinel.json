@@ -1,0 +1,153 @@
+{
+  "id": "az-sentinel",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "instructions": "Speak like a friendly, confident cybersecurity expert explaining to a colleague. Clear and measured pace, natural emphasis on key terms, calm and authoritative — not rushed, not robotic.",
+  "examDomain": "AZ-500 · Manage security operations",
+  "title": {
+    "kicker": "A guided tour",
+    "title": "Microsoft Sentinel",
+    "lines": ["Cloud-native SIEM and SOAR", "— collect, detect, investigate, respond —"]
+  },
+  "intro": "Microsoft Sentinel is Azure's cloud-native SIEM — Security Information and Event Management — with SOAR, security orchestration and automated response, built right in. In plain terms: it collects security data from across your whole estate into one place, detects threats with analytics rules, groups those detections into incidents your analysts can investigate, and then automates the response so the routine work happens without a human. It runs on a Log Analytics workspace, so there's no infrastructure to manage and it scales with your data. In this module we'll walk a real security operations workspace from end to end — ingest, detect, investigate, hunt, and respond.",
+  "sections": [
+    {
+      "id": "overview", "section": "Sentinel overview",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security_Insights/MainMenuBlade/~/0/id/%2Fsubscriptions%2F6f4323b1-6e73-4cfe-aec1-56262cbf4f9d%2Fresourcegroups%2Fnii_gsoc_qradar%2Fproviders%2Fmicrosoft.securityinsightsarg%2Fsentinel%2Fnii-soc-log-analytics",
+      "kicker": "One workspace for the whole SOC", "cardTitle": "The security operations dashboard",
+      "bullets": [
+        "Sentinel sits on a Log Analytics workspace — no servers to run, billed by data ingested.",
+        "The overview rolls up events received, alerts, incidents, and automation at a glance.",
+        "It's a true SIEM plus SOAR: collect, detect, investigate, and respond in one place."
+      ],
+      "narration": "This is the Microsoft Sentinel overview, the front door to the security operations centre. The first thing to understand is what sits underneath it: a Log Analytics workspace. Sentinel isn't a separate appliance you patch and scale — it's a layer of detection and response on top of Azure Monitor's log platform, so it's serverless and you pay for the data you bring in. Across this dashboard you can see the shape of operations at a glance: events received over the last day, the alerts those events triggered, the open incidents waiting for an analyst, and how much of the response is being automated. Keep the four verbs in mind as we go — collect, detect, investigate, respond. Everything in Sentinel maps to one of them."
+    },
+    {
+      "id": "connectors", "section": "Data connectors",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security_Insights/MainMenuBlade/~/DataConnectors/id/%2Fsubscriptions%2F6f4323b1-6e73-4cfe-aec1-56262cbf4f9d%2Fresourcegroups%2Fnii_gsoc_qradar%2Fproviders%2Fmicrosoft.securityinsightsarg%2Fsentinel%2Fnii-soc-log-analytics",
+      "kicker": "Get the data in first", "cardTitle": "Data connectors feed the SIEM",
+      "bullets": [
+        "Hundreds of out-of-box connectors: Entra ID, Microsoft 365, Defender, Azure Activity, AWS, firewalls.",
+        "Microsoft sources connect with a click; third-party logs arrive via Syslog, CEF, or the API.",
+        "No data, no detections — connectors are the foundation everything else stands on."
+      ],
+      "narration": "Before Sentinel can detect anything, it needs data, and that's what data connectors are for. There are hundreds of them out of the box. The Microsoft sources — Entra I.D. sign-in and audit logs, Microsoft 365, Defender, Azure activity — connect with little more than a click, because the plumbing already exists inside Azure. For everything else there are connectors for firewalls, network gear, and other clouds like A.W.S., and where there's no purpose-built connector you fall back on the open standards: Syslog, Common Event Format, or the ingestion A.P.I. The rule to remember is simple — no data, no detection. Every analytics rule, every hunt, every incident we're about to see is only as good as the tables these connectors fill. So connecting the right sources is genuinely the first job when you stand up a workspace."
+    },
+    {
+      "id": "analytics", "section": "Analytics rules",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security_Insights/MainMenuBlade/~/Analytics/id/%2Fsubscriptions%2F6f4323b1-6e73-4cfe-aec1-56262cbf4f9d%2Fresourcegroups%2Fnii_gsoc_qradar%2Fproviders%2Fmicrosoft.securityinsightsarg%2Fsentinel%2Fnii-soc-log-analytics",
+      "waitMs": 10000,
+      "kicker": "Turn logs into detections", "cardTitle": "Analytics rules detect threats",
+      "bullets": [
+        "Rules run Kusto queries on a schedule; a match raises an alert and opens an incident.",
+        "Start from Microsoft's rule templates, mapped to MITRE ATT&CK tactics and techniques.",
+        "Includes machine-learning rules — Fusion correlates weak signals into high-fidelity attacks."
+      ],
+      "narration": "Once data is flowing, analytics rules are how Sentinel turns raw logs into real detections. Most rules are scheduled queries written in Kusto Query Language — they run on an interval, and when the query matches something suspicious, the rule raises an alert and bundles it into an incident automatically. You rarely start from a blank page: Microsoft ships a large library of rule templates, and each one is mapped to the MITRE attack framework, so you can see exactly which adversary tactics and techniques your detections cover, and where the gaps are. Beyond the query-based rules there are machine-learning ones — Fusion is the headline example, correlating low-confidence signals from different sources into a single high-fidelity, multi-stage attack alert. The discipline here is coverage: enable the templates that matter for your environment, tune them so they're not noisy, and watch your MITRE coverage grow."
+    },
+    {
+      "id": "incidents", "section": "Incidents",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security_Insights/MainMenuBlade/~/6/id/%2Fsubscriptions%2F6f4323b1-6e73-4cfe-aec1-56262cbf4f9d%2Fresourcegroups%2Fnii_gsoc_qradar%2Fproviders%2Fmicrosoft.securityinsightsarg%2Fsentinel%2Fnii-soc-log-analytics",
+      "kicker": "Where analysts live", "cardTitle": "Incidents: triage and investigate",
+      "bullets": [
+        "Related alerts group into one incident with a severity, a status, and an owner.",
+        "Counters at the top show the live queue — open, new, and active, split by severity.",
+        "Assign, comment, and track to closure; this queue is the heartbeat of the SOC."
+      ],
+      "narration": "Alerts on their own are just noise unless someone works them, and the incidents queue is where that work happens — it's the heartbeat of the security operations centre. The counters across the top give you the live picture at a glance: in this workspace there are twenty-five open incidents, and notice every one of them is high severity. Sentinel groups related alerts into a single incident, so an analyst chases one story instead of dozens of disconnected pings — and here many of these are flowing in from Microsoft Defender X.D.R., which feeds its alerts straight into Sentinel. Each incident carries a severity, a status, and an owner, so nothing falls through the cracks. The day-to-day rhythm is a simple loop — group the alerts, assign an owner, investigate, and drive to closure. Let's open one and look inside.",
+      "drill": {
+        "id": "incident-detail", "section": "Incidents · Incident detail",
+        "expandText": "S2S VPN Tunnel Disconnected",
+        "kicker": "Everything about one incident", "cardTitle": "Inside a single incident",
+        "bullets": [
+          "Severity, status, and owner up top — reassign or change status without leaving the page.",
+          "Evidence counts the alerts and events; entities (users, hosts, IPs) are the pivot points.",
+          "Open the full investigation graph, or hand off to Defender XDR, from right here."
+        ],
+        "narration": "Selecting an incident opens its detail pane, and this is the analyst's cockpit. Up top you confirm the essentials — severity, status, and owner — and you can reassign or change status without leaving the page. The evidence section counts the alerts and events that make up the incident, and the entities involved — the users, the hosts, the I.P. addresses — are listed so you can pivot from any one of them into a deeper investigation. From here you can open the full investigation graph to see how everything connects, or, because these particular alerts originate in Microsoft Defender X.D.R., jump straight across to investigate them there. One incident, the whole story, and every next action just a click away."
+      }
+    },
+    {
+      "id": "hunting", "section": "Hunting",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security_Insights/MainMenuBlade/~/Hunting/id/%2Fsubscriptions%2F6f4323b1-6e73-4cfe-aec1-56262cbf4f9d%2Fresourcegroups%2Fnii_gsoc_qradar%2Fproviders%2Fmicrosoft.securityinsightsarg%2Fsentinel%2Fnii-soc-log-analytics",
+      "kicker": "Assume breach, go looking", "cardTitle": "Proactive threat hunting",
+      "bullets": [
+        "Hunting flips the model: search for threats that no rule has alerted on yet.",
+        "Built-in hunting queries are organised by MITRE ATT&CK tactic.",
+        "Promising leads become bookmarks, then a new analytics rule for next time."
+      ],
+      "narration": "Detection waits for a rule to fire; hunting doesn't wait at all. This is the proactive side of Sentinel, built on an assume-breach mindset — you go looking for the attacker who's already inside and hasn't tripped an alert yet. Sentinel ships with a library of hunting queries, again organised by the MITRE attack tactics, so you can systematically ask questions like, where might persistence be hiding, or what does unusual data movement look like across my environment. When a hunt turns up something interesting, you save it as a bookmark so the evidence is preserved, and you can pull bookmarks into an investigation. And here's the virtuous loop: a successful hunt that finds a real pattern becomes a new analytics rule, so next time the machine catches it automatically. Hunting is how a mature SOC turns human curiosity into permanent, automated detection."
+    },
+    {
+      "id": "automation", "section": "Automation & playbooks",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security_Insights/MainMenuBlade/~/Automation/id/%2Fsubscriptions%2F6f4323b1-6e73-4cfe-aec1-56262cbf4f9d%2Fresourcegroups%2Fnii_gsoc_qradar%2Fproviders%2Fmicrosoft.securityinsightsarg%2Fsentinel%2Fnii-soc-log-analytics",
+      "waitMs": 10000,
+      "kicker": "The SOAR in Sentinel", "cardTitle": "Automation rules & playbooks",
+      "bullets": [
+        "Automation rules are the traffic cop: trigger on an incident, then act or call a playbook.",
+        "Playbooks are Logic Apps — enrich, notify Teams or Slack, open a ticket, isolate a host.",
+        "Automate the repetitive response so analysts spend their time on real decisions."
+      ],
+      "narration": "The last verb is respond, and this is where the SOAR in Sentinel lives. There are two pieces that work together. Automation rules are the traffic cop — they trigger when an incident is created or updated, and they can set severity, assign an owner, close obvious false positives, or hand off to a playbook. Playbooks are the muscle: they're Azure Logic Apps, so they can do almost anything through hundreds of connectors. A typical playbook enriches an alert with threat intelligence, posts a message to Teams or Slack, opens a ticket in ServiceNow or Jira, and — for a serious detection — takes a containment action like disabling a user or isolating a host. The goal isn't to remove the analyst; it's to delete the boring, repetitive work so your people spend their attention on the decisions that actually need a human. That's what separates a SIEM that merely alerts from one that genuinely responds."
+    },
+    {
+      "id": "contenthub", "section": "Content hub",
+      "url": "https://portal.azure.com/#view/Microsoft_Azure_Security_Insights/MainMenuBlade/~/ContentHub/id/%2Fsubscriptions%2F6f4323b1-6e73-4cfe-aec1-56262cbf4f9d%2Fresourcegroups%2Fnii_gsoc_qradar%2Fproviders%2Fmicrosoft.securityinsightsarg%2Fsentinel%2Fnii-soc-log-analytics",
+      "kicker": "Don't build from scratch", "cardTitle": "Content hub: solutions in a box",
+      "bullets": [
+        "Solutions bundle a connector, analytics rules, workbooks, hunting queries, and playbooks together.",
+        "Install one product's solution and you get end-to-end coverage for that source instantly.",
+        "Centralised, versioned content — install, update, and manage it all from one place."
+      ],
+      "narration": "It would be exhausting to build every connector, rule, workbook, and playbook by hand, and the content hub means you don't have to. It's a marketplace of solutions, and a solution is a packaged bundle for a particular product or scenario — say, the solution for a specific firewall vendor brings its data connector, a set of analytics rules, ready-made workbooks for dashboards, hunting queries, and playbooks, all in one install. So instead of wiring up coverage piece by piece, you install the solution and you get an end-to-end detection package for that source in minutes. Everything is versioned and managed centrally here, so you can update content as Microsoft and partners improve it. When you onboard a new data source, your first stop should be the content hub — there's a very good chance someone has already built the detections you were about to write."
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember", "title": "Microsoft Sentinel in five rules", "accent": "#56d364",
+      "lines": [
+        "1 · Sentinel = cloud-native SIEM + SOAR on a Log Analytics workspace.",
+        "2 · Data connectors first — no data, no detection.",
+        "3 · Analytics rules turn KQL queries into alerts, mapped to MITRE ATT&CK.",
+        "4 · Incidents group alerts; analysts triage, investigate, and close them.",
+        "5 · Automation rules + Logic App playbooks deliver the automated response."
+      ]
+    },
+    "narration": "Let's pull the whole story together. Microsoft Sentinel is a cloud-native SIEM with SOAR built in, running on a Log Analytics workspace, so there's nothing to patch and it scales with your data. Always start with data connectors, because no data means no detection. Analytics rules turn Kusto queries into alerts and map your coverage to the MITRE attack framework. Those alerts group into incidents, where analysts triage, investigate the entities and timeline, and drive to closure. And automation rules with Logic App playbooks deliver the response — handling the repetitive work so humans focus on real decisions. Collect, detect, investigate, respond — that's Sentinel.",
+    "examTip": "Exam tip: Sentinel requires a Log Analytics workspace and is billed on data ingestion (with a commitment-tier option). Know the split — analytics rules detect and create incidents; automation rules trigger on incidents and run playbooks; playbooks are Azure Logic Apps. Fusion is the built-in ML rule for multi-stage attack detection, and Sentinel roles are Reader, Responder, and Contributor."
+  },
+  "action": {
+    "kicker": "Do this in your lab",
+    "exercises": [
+      {
+        "id": "lab-sentinel-1", "title": "Exercise 1 — Connect a source and enable a rule", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Get one detection live end-to-end",
+          "1 · Sentinel → Content hub: install the 'Azure Activity' solution",
+          "2 · Open its data connector and connect your subscription's activity logs",
+          "3 · Analytics → Rule templates: enable one Azure Activity rule",
+          "✓ DONE WHEN · The rule shows Enabled and data appears in the AzureActivity table"
+        ],
+        "narration": "First exercise, and it walks the whole pipeline in miniature. In your own workspace, open the content hub and install the Azure Activity solution. Then open its data connector and connect your subscription so the activity logs start flowing. Now go to analytics, find the rule templates, and enable one Azure Activity detection rule from the template. You're done when the rule reports Enabled and you can query the AzureActivity table and see real rows. In ten minutes you've done collect and detect — the two halves that everything else builds on."
+      },
+      {
+        "id": "lab-sentinel-2", "title": "Exercise 2 — Automate an incident response", "accent": "#f0883e",
+        "lines": [
+          "GOAL · Make a response happen with no human",
+          "1 · Automation → create an automation rule triggered on incident creation",
+          "2 · Add a playbook (Logic App) that posts the incident to Teams or sends an email",
+          "3 · Trigger a test incident and watch the rule fire",
+          "✓ DONE WHEN · A new incident auto-posts a notification without you touching it"
+        ],
+        "narration": "Second exercise: prove the SOAR side to yourself. Go to automation and create an automation rule that triggers whenever an incident is created. Attach a playbook — a simple Logic App that posts the incident details to a Teams channel or sends you an email is perfect for a first one. Then generate a test incident and watch the chain react on its own. You're done when a brand-new incident fires that notification with no human in the loop. Once you've felt automation work end-to-end, you'll start seeing every repetitive analyst action as a candidate for a playbook."
+      }
+    ]
+  },
+  "redactions": [
+    { "section": "*", "regions": [ { "x": 52, "y": 102, "w": 262, "h": 26 } ] },
+    { "section": "incidents", "regions": [ { "x": 466, "y": 384, "w": 326, "h": 691 } ] },
+    { "section": "incident-detail", "regions": [ { "x": 466, "y": 384, "w": 326, "h": 691 }, { "x": 1495, "y": 248, "w": 400, "h": 52 }, { "x": 1465, "y": 798, "w": 312, "h": 26 } ] },
+    { "section": "analytics", "regions": [ { "x": 500, "y": 388, "w": 162, "h": 260 } ] }
+  ]
+}
