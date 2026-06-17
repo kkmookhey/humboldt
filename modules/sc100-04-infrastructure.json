@@ -1,0 +1,125 @@
+{
+  "id": "sc100-04-infrastructure",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "deck": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-04-infrastructure-deck/deck.html",
+  "instructions": "Narrate as a senior Microsoft security architect delivering exam preparation to a peer. Formal, precise, measured — authoritative, calm, never chatty or hyped. Natural pronunciation of acronyms. No filler words.",
+  "examDomain": "SC-100 · Design security solutions for infrastructure",
+  "title": {
+    "kicker": "SC-100 · Domain 3",
+    "title": "Infrastructure Security",
+    "lines": [
+      "Posture · Endpoints · Network & SSE"
+    ]
+  },
+  "intro": "Domain three is the architect's infrastructure domain, and it is the largest infrastructure block on the exam. It asks three questions across every environment. How do we see our security state everywhere — that is posture management. How do we harden the things that run workloads — servers, clients, I-o-T, operational technology, and the platform tiers. And how do we control the network path to and from those workloads — network design and Security Service Edge. The scope spans on-premises, Azure, and other clouds. Never Azure alone.",
+  "sections": [
+    {
+      "id": "defender-cloud",
+      "section": "Defender for Cloud, MCSB & Secure Score",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-04-infrastructure-deck/deck.html#defender-cloud",
+      "narration": "Microsoft Defender for Cloud is the cloud-native application protection platform, and it delivers two complementary functions across Azure, A-W-S, G-C-P, and on-premises. CSPM — cloud security posture management — is continuous configuration assessment: prevention and hygiene. CWPP — cloud workload protection — is workload-specific threat detection through the Defender plans: detection and response. When you enable Defender for Cloud, the Microsoft cloud security benchmark is applied by default. MCSB is the prescriptive control standard, and only built-in MCSB recommendations move the score. Note a current exam trap. There are two Secure Score models. Classic Secure Score in the Azure portal aggregates MCSB compliance into a single percentage. The newer risk-based Cloud Secure Score, in the Microsoft Defender portal, incorporates asset criticality and risk factors. They are distinct calculations. Do not treat them as interchangeable.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "plans",
+      "section": "CSPM & CWP plan selection",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-04-infrastructure-deck/deck.html#plans",
+      "narration": "The recurring design decision is which protection to enable, and at what tier. For posture, Foundational CSPM is free and on by default — centralized MCSB policy, Secure Score, recommendations, and multicloud coverage. Defender CSPM is paid, and it adds attack path analysis, risk prioritization, AI security posture management, and agentless scanning. Attack paths and AI posture require the paid tier. For workloads, cloud workload protection is delivered as per-resource-type Defender plans — Defender for Servers, Containers, Storage, Databases, App Service, Key Vault, A-P-Is, and Resource Manager. The architect selects plans by the workloads present and the risk they carry. As an example, Defender for Servers Plan 2 adds vulnerability management, agentless scanning, and File Integrity Monitoring over Plan 1's core endpoint detection.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "arc",
+      "section": "Azure Arc — the hybrid control plane",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-04-infrastructure-deck/deck.html#arc",
+      "narration": "When a scenario says non-Azure servers or non-Azure Kubernetes need Defender coverage, the architecture answer is Azure Arc. Arc projects on-premises and other-cloud machines and clusters into Azure as first-class resources, so Defender for Cloud, Azure Policy, and Microsoft Sentinel govern them consistently. Onboarding non-Azure servers with Arc-enabled servers is the recommended path, and the A-W-S and G-C-P multicloud connectors deploy Arc for you. Defender for Containers reaches non-Azure Kubernetes by onboarding Arc-enabled Kubernetes and deploying the Defender sensor as an Arc extension. Arc is the single control plane that makes hybrid and multicloud governance uniform.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "exposure",
+      "section": "Defender EASM & Security Exposure Management",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-04-infrastructure-deck/deck.html#exposure",
+      "narration": "Two capabilities extend posture beyond inside-out configuration scanning. Microsoft Defender External Attack Surface Management is the outside-in view. From discovery seeds, it recursively crawls and indexes your internet-exposed assets — domains, I-P blocks, hosts, and A-S-Ns — surfacing shadow I-T and the unknown unknowns outside the firewall. Microsoft Security Exposure Management is the unifying layer, and it supports a Continuous Threat Exposure Management program. Know its exact terms: attack paths, the visualized chains to critical assets including hybrid on-premises-to-cloud routes; the attack surface map, with choke points as the high-leverage remediation nodes; security insights and metrics; and security initiatives that bundle progress against a goal. The positioning is the point. Secure Score answers how compliant your configurations are against MCSB. Exposure management answers what the real, exploitable paths to your critical assets are, and where to cut them.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "endpoints",
+      "section": "Servers, clients & Windows LAPS",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-04-infrastructure-deck/deck.html#endpoints",
+      "narration": "Hardening the things that run workloads begins with servers, across Windows and Linux, on Azure virtual machines and on hybrid machines onboarded through Azure Arc. The stack is Defender for Servers with the integrated Microsoft Defender for Endpoint sensor, vulnerability management, agentless scanning, and File Integrity Monitoring, with security baselines delivered through MCSB so configuration is measured continuously. For clients and mobile, the requirements are endpoint protection, hardening, and configuration through Defender for Endpoint, managed by Microsoft Intune. The hardening levers are attack surface reduction rules, controlled folder access, and network, web, and exploit protection. And note a named exam item: Windows LAPS automatically rotates and backs up the local administrator password to Microsoft Entra ID or Active Directory, mitigating pass-the-hash and lateral traversal. It is supported on Entra-joined and Entra hybrid-joined devices only — Entra registered is not supported.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "iot-workloads",
+      "section": "IoT/OT, containers & platform tiers",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-04-infrastructure-deck/deck.html#iot-workloads",
+      "narration": "For operational technology and industrial control systems, the design answer is Microsoft Defender for I-o-T, because traditional agent-based tooling cannot run on those devices. It uses agentless, network-layer sensors that passively monitor mirrored traffic, with detection engines for protocol violations, policy violations, industrial malware, and anomalies, mapped to MITRE ATT and CK for I-C-S, and integrated with Microsoft Sentinel. Across the platform tiers, responsibility shifts: with infrastructure-as-a-service the customer owns the most, with platform-as-a-service it shifts toward Microsoft, and software-as-a-service is governed through Defender for Cloud Apps and the SaaS Security initiative. Containers and orchestration are covered by Defender for Containers — registry image scanning, runtime detection from the Defender sensor, and Kubernetes posture through Azure Policy for Kubernetes across A-K-S, Arc-enabled, E-K-S, and G-K-E. The newest objective is Azure AI services security: private networking, Key Vault-backed secrets, identity-based access, and AI security posture management.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "network",
+      "section": "Network designs at architect altitude",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-04-infrastructure-deck/deck.html#network",
+      "narration": "We turn now to the network path. At design altitude the recurring controls are segmentation and micro-segmentation, deny-by-default egress filtering, private connectivity through Private Link and private endpoints, encryption in transit, and centralized inspection with Azure Firewall and its intrusion detection and prevention. Defender for Cloud network recommendations and MCSB carry the prescriptive network controls. The architect's job is to design the network so that posture management and endpoint controls are reinforced by the network path, never bypassed by it. The network is the third reinforcing layer, not an independent one.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "sse",
+      "section": "Global Secure Access — SSE",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-04-infrastructure-deck/deck.html#sse",
+      "narration": "Security Service Edge is the identity-aware, cloud-delivered category that replaces appliance-bound perimeters. Microsoft Global Secure Access is the unifying product, built on Zero Trust, and it comprises two services. Microsoft Entra Internet Access is an identity-centric Secure Web Gateway for internet and SaaS traffic: web content filtering, TLS inspection, threat-intelligence filtering, and a cloud firewall, with filtering policies grouped into security profiles that link to Conditional Access. It also secures Microsoft traffic, including cross-tenant configurations. Microsoft Entra Private Access is Zero Trust Network Access — it publishes private applications without a traditional VPN, through private network connectors, with per-application access governed by Entra ID. One precise distinction the exam probes: Global Secure Access acquires traffic through forwarding profiles, and Universal Conditional Access targets the Microsoft and Internet Access tunnels, while Private Access is targeted per application. Do not swap Internet Access and Private Access — one is the Secure Web Gateway, the other is the VPN replacement.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember",
+      "title": "Infrastructure Security in six rules",
+      "accent": "#56d364",
+      "lines": [
+        "placeholder"
+      ]
+    },
+    "narration": "To bring it together. Defender for Cloud delivers CSPM and CWPP across hybrid and multicloud, with MCSB as the default standard. Know that two Secure Score models exist — classic in the Azure portal, risk-based Cloud Secure Score in the Defender portal. Foundational CSPM is free; attack paths and AI posture need paid Defender CSPM. Azure Arc is the hybrid and multicloud onboarding answer for non-Azure servers and Kubernetes. Defender EASM is outside-in discovery, and Security Exposure Management maps the exploitable paths Secure Score cannot. For workloads, harden servers and clients, rotate the local admin password with Windows LAPS, and remember operational technology and industrial control systems use Defender for I-o-T, not endpoint agents. And Global Secure Access is the Security Service Edge — Entra Internet Access for the Secure Web Gateway, Entra Private Access for Zero Trust Network Access."
+  },
+  "action": {
+    "kicker": "Do this",
+    "exercises": [
+      {
+        "id": "lab-sc100-4-1",
+        "title": "Exercise 1 — Map the posture stack to one estate",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Here is your first exercise. For a sample environment with Azure, A-W-S, on-premises servers, and an A-K-S cluster, write the one-page design. State that MCSB is on by default, that Defender CSPM is enabled for attack paths, that Azure Arc onboards the non-Azure servers and Kubernetes, and which specific workload protection plans each resource needs — Servers Plan 2, Containers, Storage. That table is a Domain three design artifact. You are done when every workload in the estate has a named protection plan and an onboarding path."
+      },
+      {
+        "id": "lab-sc100-4-2",
+        "title": "Exercise 2 — Design the SSE cutover",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Second exercise. Replace a legacy VPN-and-proxy design with Global Secure Access. Use Entra Private Access to publish the private applications with no VPN, and Entra Internet Access as the Secure Web Gateway, with TLS inspection and web content filtering linked to Conditional Access. State which traffic forwarding profiles you enable, and be explicit about where Universal Conditional Access applies versus where Private Access is targeted per application. You are done when the design names every profile and shows no remaining broad VPN tunnel."
+      }
+    ]
+  }
+}

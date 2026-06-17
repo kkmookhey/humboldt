@@ -1,0 +1,116 @@
+{
+  "id": "sc100-03-identity-privileged-access",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "deck": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-03-identity-privileged-access-deck/deck.html",
+  "instructions": "Narrate as a senior Microsoft security architect delivering exam preparation to a peer. Formal, precise, measured — authoritative, calm, never chatty or hyped. Natural pronunciation of acronyms. No filler words.",
+  "examDomain": "SC-100 · Design solutions for securing identity and access",
+  "title": {
+    "kicker": "SC-100 · Domain 2",
+    "title": "Identity & Privileged Access",
+    "lines": [
+      "Verify · Govern · Isolate"
+    ]
+  },
+  "intro": "Identity is the new perimeter. In a Zero Trust world there is no trusted network to hide behind, so every access decision collapses onto identity — who is asking, from what device, under what risk, for which resource. Domain two of the SC-100 is the identity control plane, and it has two linked halves. The first designs how every identity proves trust before it gets access. The second designs the disproportionately stronger controls that wrap the few identities that can change the environment. Hold this distinction throughout: privileged access is a separate, harder design problem, not a tier of normal identity and access management. This builds directly on the Zero Trust identity principles — verify explicitly, least privilege, assume breach — and it picks up the resiliency module's second phase: protect privileged access first.",
+  "sections": [
+    {
+      "id": "entra-control-plane",
+      "section": "Entra ID as the control plane",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-03-identity-privileged-access-deck/deck.html#entra-control-plane",
+      "narration": "The architecture centralizes authentication, single sign-on, and policy enforcement in Microsoft Entra ID — for software as a service, platform as a service, infrastructure as a service, on-premises applications, and multicloud. You design three control surfaces together. Identity governs who authenticates and how. Networking governs where they connect from, through Global Secure Access and its Private and Internet Access components. Application controls govern consent, app roles, and app protection on the resource side. Treating these as one coherent design, rather than three disconnected projects, is what makes Entra ID a true control plane rather than just a directory.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "hybrid-external",
+      "section": "Hybrid & external identities",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-03-identity-privileged-access-deck/deck.html#hybrid-external",
+      "narration": "For hybrid identity, choose the sign-in method by dependency and resilience. Password hash synchronization has no on-premises dependency at authentication time, which makes it the simplest and most resilient option, and it enables leaked-credential detection. It is Microsoft's default recommendation. Pass-through authentication validates against on-premises Active Directory through an agent, so a domain controller must be reachable at sign-in. Federation, using Active Directory Federation Services, is required only for specific needs such as smartcard sign-in or on-premises multifactor authentication, and it adds the most infrastructure and failure surface. Password hash synchronization can run alongside federation as a fallback during an outage. For external identities, distinguish two models the exam tests apart. Business-to-business collaboration brings partner and guest accounts into your tenant, governed by cross-tenant access settings and Conditional Access. Verified ID is decentralized identity — W3C decentralized identifiers and verifiable credentials, on an issuer, holder, and verifier model, where the holder keeps the credential in a wallet. Do not conflate the two.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "modern-auth",
+      "section": "Modern authentication & authorization",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-03-identity-privileged-access-deck/deck.html#modern-auth",
+      "narration": "Modern authentication is the heart of this half. Conditional Access is the policy engine — it evaluates signals such as user, device compliance, location, application, and risk, then enforces grant controls like require multifactor authentication, require a compliant device, or block legacy authentication. Risk scoring comes from Entra ID Protection, feeding risk-based policies that step up or block at medium and high risk. Continuous access evaluation moves enforcement past token lifetime. Entra ID pushes critical events — a disabled or deleted account, a password reset, an admin token revocation, or elevated risk — to enabled resources, which revoke access in near real time. That is its value: it is near-real-time revocation, not a token-lifetime tweak. Protected actions add a Conditional Access requirement in front of the most sensitive Entra operations — editing Conditional Access policies, cross-tenant settings, or privileged identity management settings — so that even a compromised administrator cannot quietly weaken the control plane. Validate Conditional Access against Zero Trust using the three protection levels — starting point, enterprise, and specialized. Confirm every access path is covered, legacy authentication is blocked, device compliance gates sensitive data, and privileged accounts sit at enterprise as a minimum, specialized preferred.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "key-vault",
+      "section": "Harden AD DS & Key Vault",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-03-identity-privileged-access-deck/deck.html#key-vault",
+      "narration": "On-premises Active Directory Domain Services remains a high-value target and is part of the Tier 0 control plane. The design intent is to reduce dependence on it — favor password hash synchronization and certificate-based authentication — protect the synchronization path, and recognize that a forest compromise is recoverable only with isolated identity backups, which connects back to the resiliency module. For secrets, keys, and certificates, centralize the cryptographic material in Azure Key Vault, or Managed HSM where you need FIPS-validated hardware protection. Three design rules the exam favors. Prefer managed identities over stored secrets, delegating credential handling to the platform so the secret surface shrinks toward nothing. Use Azure role-based access control rather than legacy access policies, and scope tightly, because the Contributor role is a control-plane risk — a Contributor can grant itself data-plane access. And store certificates as certificate objects for lifecycle management and auto-renewal, set expiration on keys, rotate regularly, and enable soft delete and purge protection.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "enterprise-access",
+      "section": "The enterprise access model",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-03-identity-privileged-access-deck/deck.html#enterprise-access",
+      "narration": "The enterprise access model is the design backbone for privileged access, and it supersedes the legacy Active Directory tier model. It organizes access into planes. The control plane, formerly Tier 0, holds the centralized identity systems and the access control that governs everything — Active Directory Domain Services, Entra ID, and the roles that configure them. The management plane holds enterprise-wide IT management functions. The data and workload plane is where business value actually lives. Crossing these planes are the user access, application access, and privileged access pathways. The governing rules are precise: enforce Zero Trust on all access, apply policy across every access method, and never permit control of a higher plane from a lower one — no escalation upward. Privileged access is the only administrative path into the control plane, which is why it demands the strongest protection. Microsoft frames the strategy as four initiatives: end-to-end session security, protecting and monitoring the identity systems, mitigating lateral traversal, and rapid threat response. A single privileged-access tool is not sufficient; the strategy combines several, on the assumption that cloud is a source of security.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "pim-governance",
+      "section": "PIM & privileged governance",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-03-identity-privileged-access-deck/deck.html#pim-governance",
+      "narration": "Entra governance is how you operate privileged access. Privileged Identity Management makes privileged roles eligible rather than standing — activation is just-in-time, time-bound, approval-gated, multifactor-required, and justification-logged, with alerting on excess administrators. This is the single finding the exam expects you to eliminate: standing Global Administrators. Note the distinction it tests — administrators having multifactor authentication is not the same as having no standing privilege. Entitlement management packages access into access packages with policies, approval, and expiration, and lets you delegate catalog ownership to the people who understand the business need. Access reviews periodically re-attest Entra-role, Azure-resource-role, group, and application access, and denied access is removed when the review is applied. Underlying all of this is least privilege: assign the narrowest built-in role at the narrowest scope, prefer fine-grained roles over Global Administrator, use administrative units to bound scope, and separate admin accounts from daily-use accounts.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "paw-ciem",
+      "section": "PAW, remote access & CIEM",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-03-identity-privileged-access-deck/deck.html#paw-ciem",
+      "narration": "The privileged access workstation is the only trusted entry point to the control plane — a dedicated, hardened device used solely for administration, never for email or web browsing, which are the top phishing vectors. It has no local admin rights, denies outbound traffic except to approved endpoints, and its Conditional Access is gated on device compliance. Administrators receive a separate productivity device. For remote administration, broker connections through controlled intermediaries — Azure Bastion for remote desktop and secure shell into virtual machines, and Entra Private Access for private applications — rather than broad VPN. Be clear on one limit: a privileged access workstation prevents compromise of the control plane, but it does not undo a forest already breached at domain-admin level. For multicloud, cloud infrastructure entitlement management — CIEM — discovers and right-sizes entitlements across Azure, Amazon Web Services, and Google Cloud, surfacing super identities, inactive identities, unused permissions, and lateral-movement paths. CIEM is not Privileged Identity Management: PIM governs Entra and Azure role activation, while CIEM right-sizes multicloud entitlements. State the product change accurately — the standalone Microsoft Entra Permissions Management product is retired, and these CIEM capabilities now live natively in Microsoft Defender for Cloud, in Defender CSPM.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember",
+      "title": "Identity & Privileged Access in five rules",
+      "accent": "#56d364",
+      "lines": [
+        "placeholder"
+      ]
+    },
+    "narration": "To bring it together. Centralize on Entra ID across every resource type, designing identity, networking, and application controls as one — and remember that password hash synchronization is the resilient hybrid default. Modern authentication is Conditional Access plus risk plus continuous access evaluation, with protected actions guarding control-plane operations rather than resource access. Use the enterprise access model to place every privileged role, and never control a higher plane from a lower one. Privileged Identity Management eliminates standing access, while cloud infrastructure entitlement management right-sizes multicloud entitlements — they are different controls. And the privileged access workstation is the only trusted path to the control plane. Above all: privileged access is a separate, harder design problem. Verify, govern, isolate."
+  },
+  "action": {
+    "kicker": "Do this",
+    "exercises": [
+      {
+        "id": "lab-sc100-3-1",
+        "title": "Exercise 1 — Map admin roles to the access model",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Here is your first exercise. List your privileged roles and place each one on the control, management, or data-workload plane. Any role that can configure identity or access belongs to the control plane and earns the strongest controls — Privileged Identity Management eligibility, a privileged access workstation, and protected actions. The misplaced ones are your first design gaps. Then take your three highest-impact roles, starting with Global Administrator, and in Privileged Identity Management make them eligible rather than standing — time-bound, approval-required, multifactor-required, with an access review scheduled. You are done when no standing Global Administrators remain and every misplaced role is flagged, because standing Global Admins are the single finding the exam expects you to eliminate."
+      },
+      {
+        "id": "lab-sc100-3-2",
+        "title": "Exercise 2 — Validate one path against Zero Trust",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Second exercise: prove the difference between multifactor authentication existing and an access path actually aligned with Zero Trust. Take one sensitive application and trace its access path end to end. Confirm that legacy authentication is blocked, that multifactor authentication is required, that device compliance is enforced, that a risk-based policy exists, and that continuous access evaluation is on. Wherever any link is missing, that is your Conditional Access design gap. You are done when every link in the chain is present, or the gap is written down as the next design fix."
+      }
+    ]
+  }
+}
