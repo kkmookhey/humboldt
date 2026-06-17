@@ -1,0 +1,107 @@
+{
+  "id": "sc100-01-strategy-resiliency",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "deck": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-01-deck/deck.html",
+  "instructions": "Narrate as a senior Microsoft security architect delivering exam preparation to a peer. Formal, precise, measured — authoritative, calm, never chatty or hyped. Natural pronunciation of acronyms. No filler words.",
+  "examDomain": "SC-100 · Design solutions that align with security best practices & priorities",
+  "title": {
+    "kicker": "SC-100 · Domain 1",
+    "title": "Security Strategy & Resiliency",
+    "lines": [
+      "Prioritize · Withstand · Recover"
+    ]
+  },
+  "intro": "Every cybersecurity architect answers two questions before any control is chosen. What do we protect first, and how do we stay standing when an attack lands. Domain one of the SC-100 is exactly these two decisions: setting priorities, and designing for resilience. Prioritize, withstand, recover — that is the arc of this module.",
+  "sections": [
+    {
+      "id": "priorities",
+      "section": "Setting priorities",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-01-deck/deck.html#priorities",
+      "narration": "You do not secure everything at once. You prioritize by business impact — rank your business-critical assets and the threats most likely to take them down. The frameworks you already know are the toolkit for that judgment: Zero Trust is the strategy, MCRA the reference picture, and the Microsoft cloud security benchmark the prescriptive checklist, measured right here as secure score in Defender for Cloud. And because a mature architect assumes breach, resilience becomes a first-class design goal, not an afterthought bolted on at the end.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "threephase",
+      "section": "The three-phase model",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-01-deck/deck.html#threephase",
+      "narration": "Microsoft's guidance to protect against ransomware and extortion is three phases, and the order is the whole point. Phase one: prepare a recovery plan, so you can recover without paying — that removes the attacker's incentive. Phase two: limit the scope of damage by protecting privileged roles. Phase three: make it harder to get in by removing risk at the entry points. Recovery comes first. And critically, work on phase three must never slow phases one and two — hardening the front door while your backups remain mutable is the wrong order.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "phase1",
+      "section": "Phase 1 — secure backups",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-01-deck/deck.html#phase1",
+      "narration": "Phase one rests entirely on secure backups, and a backup an attacker can encrypt or delete is not protection. Apply the three-two-one rule: three copies, two different media types, and one kept offsite or cold. Make the backups immutable or fully offline, and require an out-of-band step — multifactor authentication or a PIN — before any backup can be modified. Protect the things you need to recover with: Active Directory, and the recovery documents themselves, because attackers target them deliberately. Then prove it — exercise a recover-from-zero scenario and confirm your mean time to recover actually meets the business continuity goal.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "phase2",
+      "section": "Phase 2 — privileged access",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-01-deck/deck.html#phase2",
+      "narration": "Phase two limits the blast radius. The more privileged access an attacker gains, the higher the damage they can do, so the design goal is to make a foothold expensive. Privileged Identity Management is the lever: admin access becomes eligible rather than standing, time-bound, and gated behind multifactor authentication and approval. A compromised account can no longer pivot to everything at once. This is the same priority the Rapid Modernization Plan leads with — protect privileged access first.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "restore",
+      "section": "Restore discipline & BC/DR",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-01-deck/deck.html#restore",
+      "narration": "When an incident actually happens, your prioritized backup list becomes your prioritized restore list. Restore the business-critical systems first — the top five, not everything at once — and bring identity services back before the rest. Validate that the backup is clean before you restore it: find a safe point-in-time image and scan it, so you do not reinfect the environment. And test all of this ahead of time with a recover-from-zero exercise, assuming every system, including Active Directory and email, is down. Whatever gap that exercise exposes is your resilience roadmap, and the same tested plan serves a region outage or an accidental deletion just as well as ransomware.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "mapforward",
+      "section": "How it maps forward",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-01-deck/deck.html#mapforward",
+      "narration": "Domain one does not stand alone — it sets up everything that follows. You cannot recover from what you never detected, which is why detection and response sit at the center of security operations, here in Microsoft Sentinel. Phase two flows into the identity and privileged-access design of Domain two. Secure backups and Defender flow into the infrastructure posture of Domain three. The throughline is simple: Domain one sets the floor — the priorities and the resilience baseline — and Domains two through four build the specific capabilities that deliver them.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember",
+      "title": "Security Strategy & Resiliency in five rules",
+      "accent": "#56d364",
+      "lines": [
+        "placeholder"
+      ]
+    },
+    "narration": "To bring it together. Prioritize by business-critical assets — the frameworks are the toolkit, not the goal. Hold the three phases in order: recovery plan, then limit scope, then make it hard to get in. Secure backups must be immutable or offline, multifactor-protected, three-two-one, and tested. Protect privileged access to cap the blast radius. And remember that resilience is assume-breach in action — it is a Zero Trust outcome, not a separate discipline. Prioritize, withstand, recover."
+  },
+  "action": {
+    "kicker": "Do this",
+    "exercises": [
+      {
+        "id": "lab-sc100-1",
+        "title": "Exercise 1 — Rank your crown jewels",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Here is your first exercise. List your top five business-critical systems, and for each, name the single threat most likely to take it down. Then score each system's backup against three tests: is it immutable or offline, is it protected by multifactor authentication or a PIN against deletion, and does it satisfy the three-two-one rule. Every 'no' you write down is a phase-one quick win. You are done when you have a ranked list, because that same list doubles as your restore order."
+      },
+      {
+        "id": "lab-sc100-2",
+        "title": "Exercise 2 — Run a Recover-from-Zero tabletop",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Second exercise: prove the floor holds. Run a recover-from-zero tabletop. Assume every system is down, including Active Directory and email. Walk the restore order out loud, confirm your recovery documents survive the scenario, and bring identity back first. Then measure whether your mean time to recover actually meets your business continuity goal. You are done when the gap between target and actual is written down, because that gap is your resilience roadmap."
+      }
+    ]
+  }
+}

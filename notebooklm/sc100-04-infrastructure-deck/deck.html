@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SC-100 · Infrastructure Security</title>
+<style>
+  :root{
+    --bg:#0a0e14; --bg2:#0d1320; --panel:#111927; --panel2:#0f1622;
+    --ink:#e6edf3; --dim:#9aa7b8; --faint:#5b6b80; --line:#1f2a3a;
+    --green:#56d364; --orange:#f0883e; --blue:#58a6ff; --red:#f85149; --violet:#bc8cff;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  .slide{position:fixed;inset:0;display:none;flex-direction:column;
+    padding:78px 110px 70px;
+    background:radial-gradient(1400px 760px at 78% -8%,#10203a 0%,rgba(16,32,58,0) 60%),
+               radial-gradient(1100px 620px at 0% 108%,#10261c 0%,rgba(16,38,28,0) 55%),
+               linear-gradient(160deg,var(--bg) 0%,var(--bg2) 100%);}
+  .slide.active{display:flex}
+  /* top bar */
+  .top{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);
+    font-size:21px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase}
+  .top .brand{color:var(--dim)} .top .brand b{color:var(--blue);font-weight:600}
+  .kicker{font-family:var(--mono);font-size:24px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--blue);margin:54px 0 14px}
+  .kicker.green{color:var(--green)} .kicker.orange{color:var(--orange)}
+  h1{font-size:78px;line-height:1.04;font-weight:800;letter-spacing:-.018em;max-width:1500px}
+  h1 .sub{display:block;font-size:38px;font-weight:500;color:var(--dim);margin-top:18px;letter-spacing:-.005em}
+  .lead{font-size:33px;line-height:1.5;color:var(--dim);max-width:1320px;margin-top:30px}
+  .lead b{color:var(--ink);font-weight:600}
+  ul{list-style:none;margin-top:40px;display:flex;flex-direction:column;gap:26px;max-width:1480px}
+  li{font-size:31px;line-height:1.4;color:#c9d6e5;padding-left:46px;position:relative}
+  li::before{content:"";position:absolute;left:0;top:14px;width:18px;height:18px;border-radius:5px;
+    background:var(--blue);box-shadow:0 0 0 5px rgba(88,166,255,.16)}
+  li.g::before{background:var(--green);box-shadow:0 0 0 5px rgba(86,211,100,.16)}
+  li.o::before{background:var(--orange);box-shadow:0 0 0 5px rgba(240,136,62,.16)}
+  li b{color:#fff;font-weight:650} li .m{font-family:var(--mono);color:var(--blue);font-size:.92em}
+  .spacer{flex:1}
+  .foot{font-family:var(--mono);font-size:19px;color:var(--faint);letter-spacing:.04em}
+  /* layout helpers */
+  .row{display:flex;gap:54px;align-items:center;margin-top:30px}
+  .col{flex:1}
+  /* three-phase diagram */
+  .phases{display:flex;align-items:stretch;gap:0;margin-top:54px}
+  .ph{flex:1;background:linear-gradient(165deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:20px;padding:38px 36px;position:relative}
+  .ph .n{font-family:var(--mono);font-size:30px;color:var(--bg);font-weight:800;
+    width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+  .ph1 .n{background:var(--green)} .ph2 .n{background:var(--orange)} .ph3 .n{background:var(--blue)}
+  .ph h3{font-size:33px;font-weight:750;line-height:1.12;margin-bottom:14px}
+  .ph p{font-size:24px;line-height:1.42;color:var(--dim)}
+  .arrow{align-self:center;color:var(--faint);font-size:46px;padding:0 18px;flex:0 0 auto}
+  .note{margin-top:40px;font-size:27px;color:var(--ink);font-family:var(--mono);
+    background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.4);border-radius:14px;
+    padding:22px 30px;letter-spacing:.01em}
+  .note b{color:var(--red)}
+  /* 3-2-1 cards */
+  .cards{display:flex;gap:34px;margin-top:50px}
+  .card{flex:1;background:linear-gradient(165deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:20px;padding:40px 36px;text-align:center}
+  .card .big{font-family:var(--mono);font-size:84px;font-weight:800;color:var(--green);line-height:1}
+  .card .lbl{font-size:27px;color:var(--ink);margin-top:18px;font-weight:600}
+  .card .sm{font-size:21px;color:var(--dim);margin-top:10px;line-height:1.4}
+  .chips{display:flex;gap:18px;flex-wrap:wrap;margin-top:42px}
+  .chip{font-family:var(--mono);font-size:23px;letter-spacing:.04em;color:#cfe3ff;
+    background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.35);border-radius:999px;padding:14px 28px}
+  .chip.g{color:#c7f4d0;background:rgba(86,211,100,.1);border-color:rgba(86,211,100,.4)}
+  /* grounded screenshot */
+  .screenwrap{margin-top:34px;display:flex;gap:50px;align-items:flex-start}
+  .browser{flex:1.55;border-radius:16px;overflow:hidden;border:1px solid var(--line);
+    box-shadow:0 40px 90px rgba(0,0,0,.55);background:#0b0f16}
+  .chrome{display:flex;align-items:center;gap:12px;background:#161b22;padding:16px 22px;border-bottom:1px solid var(--line)}
+  .chrome i{width:15px;height:15px;border-radius:50%;display:inline-block}
+  .chrome .r{background:#ff5f57}.chrome .y{background:#febc2e}.chrome .g{background:#28c840}
+  .chrome span{font-family:var(--mono);font-size:19px;color:var(--faint);margin-left:14px}
+  .browser img{display:block;width:100%}
+  .ground-side{flex:1;display:flex;flex-direction:column;gap:24px;padding-top:8px}
+  .tag{align-self:flex-start;font-family:var(--mono);font-size:19px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--green);background:rgba(86,211,100,.1);border:1px solid rgba(86,211,100,.35);border-radius:8px;padding:9px 16px}
+  .ground-side h3{font-size:36px;font-weight:750;line-height:1.15}
+  .ground-side p{font-size:27px;line-height:1.5;color:var(--dim)}
+  .ground-side p b{color:var(--ink)}
+  /* title slide */
+  .title-slide{justify-content:center}
+  .title-slide .eyebrow{font-family:var(--mono);font-size:26px;letter-spacing:.28em;color:var(--blue);text-transform:uppercase}
+  .title-slide h1{font-size:104px;margin-top:26px}
+  .title-slide .lead{font-size:38px;margin-top:34px}
+  .verbs{display:flex;gap:18px;margin-top:50px;font-family:var(--mono);font-size:26px;color:var(--faint);letter-spacing:.06em}
+  .verbs b{color:var(--green);font-weight:600}
+  /* recap */
+  .recap li::before{background:var(--green);box-shadow:0 0 0 5px rgba(86,211,100,.16)}
+  .recap li .m{color:var(--green)}
+  /* lab */
+  .lab .kicker{color:var(--orange)}
+  .lab li::before{background:var(--orange);box-shadow:0 0 0 5px rgba(240,136,62,.16)}
+  .lab .goal{font-size:30px;color:var(--orange);font-family:var(--mono);margin-top:30px;letter-spacing:.02em}
+  .done{margin-top:36px;font-family:var(--mono);font-size:26px;color:var(--green)}
+</style>
+</head>
+<body>
+
+<!-- INTRO / TITLE -->
+<section class="slide title-slide" data-id="intro">
+  <div class="eyebrow">SC-100 · Domain 3 — Design Security Solutions for Infrastructure</div>
+  <h1>Infrastructure<br>Security</h1>
+  <div class="lead">The architect's largest infrastructure block — across <b>on-prem, Azure, AWS &amp; GCP</b>, never Azure alone.</div>
+  <div class="verbs"><b>POSTURE</b> → <b>ENDPOINTS</b> → <b>NETWORK &amp; SSE</b></div>
+</section>
+
+<!-- ===== AREA A — POSTURE MANAGEMENT ===== -->
+
+<!-- DEFENDER FOR CLOUD + Secure Score grounding -->
+<section class="slide" data-id="defender-cloud">
+  <div class="top"><span>Area A · Posture management</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · SC-100</span></div>
+  <div class="kicker">Defender for Cloud, MCSB &amp; Secure Score</div>
+  <h1 style="font-size:58px">See your security state everywhere</h1>
+  <div class="screenwrap">
+    <div class="ground-side">
+      <span class="tag">Grounded · Microsoft Defender for Cloud</span>
+      <h3>One CNAPP, two functions</h3>
+      <p><b>CSPM</b> is config hygiene; <b>CWPP</b> is workload threat protection — across Azure, AWS, GCP &amp; on-prem. <b>MCSB</b> is the default standard and the basis of Secure Score.</p>
+      <p>Exam trap: <b>two Secure Score models</b> — classic (Azure portal) and risk-based Cloud Secure Score (Defender portal, asset criticality).</p>
+    </div>
+    <div class="browser">
+      <div class="chrome"><i class="r"></i><i class="y"></i><i class="g"></i><span>portal.azure.com — Microsoft Defender for Cloud · Secure Score</span></div>
+      <img src="img/defender.png" alt="Defender for Cloud secure score and posture">
+    </div>
+  </div>
+</section>
+
+<!-- PLAN SELECTION + workload-protection grounding -->
+<section class="slide" data-id="plans">
+  <div class="top"><span>Area A · Plan selection</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · SC-100</span></div>
+  <div class="kicker">CSPM tier &amp; CWP plans — the design decision</div>
+  <h1 style="font-size:58px">Which protection, enabled where</h1>
+  <div class="screenwrap">
+    <div class="browser">
+      <div class="chrome"><i class="r"></i><i class="y"></i><i class="g"></i><span>portal.azure.com — Defender for Cloud · Workload protection plans</span></div>
+      <img src="img/plans.png" alt="Defender for Cloud workload protection plans">
+    </div>
+    <div class="ground-side">
+      <span class="tag">Grounded · Workload protection plans</span>
+      <h3>Free vs. paid, then per-workload</h3>
+      <p><b>Foundational CSPM</b> is free &amp; default. <b>Defender CSPM</b> (paid) adds <b>attack paths</b>, AI posture, risk prioritization, agentless scanning.</p>
+      <p><b>CWP = per-resource Defender plans</b> — Servers P1/P2, Containers, Storage, Databases. Select by workload &amp; risk.</p>
+    </div>
+  </div>
+</section>
+
+<!-- AZURE ARC -->
+<section class="slide" data-id="arc">
+  <div class="top"><span>Area A · Hybrid &amp; multicloud</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · SC-100</span></div>
+  <div class="kicker green">Azure Arc — the control plane for non-Azure</div>
+  <h1 style="font-size:58px">"On-prem or other-cloud needs Defender" → Arc</h1>
+  <div class="phases">
+    <div class="ph ph1"><div class="n">1</div><h3>Project into Azure</h3><p>Arc makes on-prem &amp; other-cloud <b style="color:#c9d6e5">machines and clusters</b> first-class Azure resources.</p></div>
+    <div class="arrow">→</div>
+    <div class="ph ph2"><div class="n">2</div><h3>Govern consistently</h3><p><b style="color:#c9d6e5">Defender for Cloud, Azure Policy &amp; Sentinel</b> reach Arc resources uniformly.</p></div>
+    <div class="arrow">→</div>
+    <div class="ph ph3"><div class="n">3</div><h3>Connectors deploy Arc</h3><p>AWS/GCP multicloud connectors deploy Arc for you; <b style="color:#c9d6e5">Arc-enabled Kubernetes</b> gets the Defender sensor as an extension.</p></div>
+  </div>
+  <div class="note"><b>Remember.</b> &nbsp;Non-Azure servers and non-Azure Kubernetes get Defender coverage <b>through Azure Arc</b>.</div>
+</section>
+
+<!-- EASM + EXPOSURE MANAGEMENT -->
+<section class="slide" data-id="exposure">
+  <div class="top"><span>Area A · Exposure</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · SC-100</span></div>
+  <div class="kicker">Defender EASM &amp; Security Exposure Management</div>
+  <h1 style="font-size:58px">From compliance to exploitable paths</h1>
+  <ul>
+    <li><b>Defender EASM — outside-in.</b> From discovery seeds, indexes internet-exposed domains, IP blocks, hosts &amp; ASNs — the shadow IT "unknown unknowns".</li>
+    <li class="g"><b>Security Exposure Management — the unifying CTEM layer.</b> Attack paths (incl. hybrid on-prem→cloud), attack surface map, <b>choke points</b>, security insights &amp; initiatives.</li>
+    <li><span class="m">vs ·</span> Secure Score asks <b>"how compliant against MCSB?"</b>; Exposure Management asks <b>"what are the real paths to my crown jewels, and where do I cut them?"</b></li>
+  </ul>
+</section>
+
+<!-- ===== AREA B — ENDPOINTS & WORKLOADS ===== -->
+
+<!-- SERVERS, CLIENTS, LAPS -->
+<section class="slide" data-id="endpoints">
+  <div class="top"><span>Area B · Endpoints</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · SC-100</span></div>
+  <div class="kicker">Servers, clients &amp; Windows LAPS</div>
+  <h1 style="font-size:58px">Harden what runs the workloads</h1>
+  <ul>
+    <li><b>Servers (Windows + Linux, Azure + Arc)</b> — Defender for Servers with the MDE sensor, vuln management, agentless scanning, FIM; MCSB security baselines measured continuously.</li>
+    <li><b>Clients &amp; mobile</b> — Defender for Endpoint + Intune: ASR rules, controlled folder access, network / web / exploit protection.</li>
+    <li class="g"><b>Windows LAPS</b> — rotates &amp; backs up the local admin password to Entra ID / AD; mitigates pass-the-hash. <b>Entra-joined or hybrid-joined only</b> — registered is not supported.</li>
+  </ul>
+</section>
+
+<!-- IOT/OT, CONTAINERS, PLATFORM TIERS -->
+<section class="slide" data-id="iot-workloads">
+  <div class="top"><span>Area B · Workloads</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · SC-100</span></div>
+  <div class="kicker">IoT/OT, containers &amp; the platform tiers</div>
+  <h1 style="font-size:56px">Devices that can't run an agent, and the layers above</h1>
+  <ul>
+    <li class="g"><b>OT/ICS → Microsoft Defender for IoT</b> — agentless, network-layer sensors; protocol / anomaly / industrial-malware detection; MITRE ATT&amp;CK for ICS; Sentinel integration. <b>Not</b> endpoint agents.</li>
+    <li><b>IaaS → PaaS → SaaS</b> — responsibility shifts toward Microsoft; SaaS governed via Defender for Cloud Apps + the SaaS Security initiative.</li>
+    <li><b>Containers</b> — Defender for Containers: image scanning, runtime detection, Kubernetes posture via Azure Policy for Kubernetes (AKS, Arc, EKS, GKE). Plus <b>Azure AI services</b> security.</li>
+  </ul>
+</section>
+
+<!-- ===== AREA C — NETWORK & SSE ===== -->
+
+<!-- NETWORK DESIGN -->
+<section class="slide" data-id="network">
+  <div class="top"><span>Area C · Network design</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · SC-100</span></div>
+  <div class="kicker green">Network designs at architect altitude</div>
+  <h1 style="font-size:58px">Reinforce posture &amp; endpoints — don't bypass them</h1>
+  <div class="chips">
+    <span class="chip g">SEGMENTATION / MICRO-SEG</span>
+    <span class="chip g">DENY-BY-DEFAULT EGRESS</span>
+    <span class="chip">PRIVATE LINK / ENDPOINTS</span>
+    <span class="chip">ENCRYPTION IN TRANSIT</span>
+    <span class="chip">AZURE FIREWALL · IDPS</span>
+  </div>
+  <div class="note"><b>Design intent.</b> &nbsp;The network path is the <b>third reinforcing layer</b> — Defender for Cloud network recommendations &amp; MCSB carry the prescriptive controls.</div>
+</section>
+
+<!-- GLOBAL SECURE ACCESS / SSE + network grounding -->
+<section class="slide" data-id="sse">
+  <div class="top"><span>Area C · Security Service Edge</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · SC-100</span></div>
+  <div class="kicker">Global Secure Access — the SSE solution</div>
+  <h1 style="font-size:56px">Internet Access (SWG) + Private Access (ZTNA)</h1>
+  <div class="screenwrap">
+    <div class="ground-side">
+      <span class="tag">Grounded · Microsoft Global Secure Access</span>
+      <h3>Identity-aware, perimeter-free</h3>
+      <p><b>Entra Internet Access</b> = identity-centric SWG: web content filtering, TLS inspection, threat-intel, cloud firewall, security profiles linked to <b>Conditional Access</b>; secures cross-tenant Microsoft traffic.</p>
+      <p><b>Entra Private Access</b> = ZTNA — private apps, no VPN. Universal CA targets the <b>Microsoft &amp; Internet tunnels</b>; Private Access is <b>per-application</b>.</p>
+    </div>
+    <div class="browser">
+      <div class="chrome"><i class="r"></i><i class="y"></i><i class="g"></i><span>portal.azure.com — Global Secure Access · Network</span></div>
+      <img src="img/network.png" alt="Global Secure Access network configuration">
+    </div>
+  </div>
+</section>
+
+<!-- RECAP -->
+<section class="slide recap" data-id="recap">
+  <div class="top"><span>Remember</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · SC-100</span></div>
+  <div class="kicker green">Infrastructure Security in six rules</div>
+  <h1 style="font-size:58px">The architect's infrastructure floor</h1>
+  <ul>
+    <li><span class="m">1 ·</span> <b>Defender for Cloud = CSPM + CWPP</b>; MCSB is the default standard. Two Secure Score models — classic &amp; risk-based.</li>
+    <li><span class="m">2 ·</span> Foundational CSPM is free; <b>attack paths &amp; AI posture need paid Defender CSPM</b>.</li>
+    <li><span class="m">3 ·</span> <b>Azure Arc</b> onboards non-Azure servers &amp; Kubernetes for Defender coverage.</li>
+    <li><span class="m">4 ·</span> EASM is outside-in; <b>Exposure Management</b> maps the exploitable paths Secure Score can't.</li>
+    <li><span class="m">5 ·</span> Harden servers/clients; <b>Windows LAPS</b> for local admin; <b>OT/ICS = Defender for IoT</b>, not agents.</li>
+    <li><span class="m">6 ·</span> <b>Global Secure Access</b> = Internet Access (SWG) + Private Access (ZTNA).</li>
+  </ul>
+</section>
+
+<!-- LAB 1 -->
+<section class="slide lab" data-id="lab-sc100-4-1">
+  <div class="top"><span>Hands-on · 1 of 2</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · SC-100</span></div>
+  <div class="kicker orange">Do this</div>
+  <h1 style="font-size:58px">Map the posture stack to one estate</h1>
+  <div class="goal">GOAL · Produce a one-page Domain 3 design artifact</div>
+  <ul>
+    <li class="o">For Azure + AWS + on-prem servers + an <b>AKS cluster</b>, write the design: MCSB on by default, <b>Defender CSPM</b> for attack paths.</li>
+    <li class="o">Use <b>Azure Arc</b> to onboard the non-Azure servers and Kubernetes.</li>
+    <li class="o">Name the specific <b>CWP plans</b> per workload — Servers P2, Containers, Storage.</li>
+  </ul>
+  <div class="done">✓ DONE WHEN · Every workload has a named protection plan and an onboarding path</div>
+</section>
+
+<!-- LAB 2 -->
+<section class="slide lab" data-id="lab-sc100-4-2">
+  <div class="top"><span>Hands-on · 2 of 2</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · SC-100</span></div>
+  <div class="kicker orange">Do this</div>
+  <h1 style="font-size:58px">Design the SSE cutover</h1>
+  <div class="goal">GOAL · Replace a legacy VPN-and-proxy design with Global Secure Access</div>
+  <ul>
+    <li class="o"><b>Entra Private Access</b> publishes the private apps — <b>no VPN</b>.</li>
+    <li class="o"><b>Entra Internet Access</b> as the SWG — TLS inspection &amp; web content filtering linked to <b>Conditional Access</b>.</li>
+    <li class="o">State which <b>traffic forwarding profiles</b> you enable; Universal CA vs. per-app Private Access targeting.</li>
+  </ul>
+  <div class="done">✓ DONE WHEN · The design names every profile and shows no remaining broad VPN tunnel</div>
+</section>
+
+<script>
+  function showSlide(id){
+    var ss=document.querySelectorAll('.slide'),i,found=false;
+    for(i=0;i<ss.length;i++){var on=ss[i].getAttribute('data-id')===id;ss[i].classList.toggle('active',on);if(on)found=true;}
+    if(!found && ss.length){ss[0].classList.add('active');}
+  }
+  function fromHash(){var h=decodeURIComponent(location.hash.replace(/^#/,''));showSlide(h|| (document.querySelector('.slide')||{}).getAttribute&&document.querySelector('.slide').getAttribute('data-id'));}
+  window.addEventListener('hashchange',fromHash);
+  fromHash();
+</script>
+</body>
+</html>

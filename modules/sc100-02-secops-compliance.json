@@ -1,0 +1,125 @@
+{
+  "id": "sc100-02-secops-compliance",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "deck": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-02-secops-compliance-deck/deck.html",
+  "instructions": "Narrate as a senior Microsoft security architect delivering exam preparation to a peer. Formal, precise, measured — authoritative, calm, never chatty or hyped. Natural pronunciation of acronyms. No filler words.",
+  "examDomain": "SC-100 · Design security operations, identity, and compliance capabilities",
+  "title": {
+    "kicker": "SC-100 · Domain 2",
+    "title": "Security Operations & Compliance",
+    "lines": [
+      "Detect · Respond · Prove"
+    ]
+  },
+  "intro": "Domain two of the SC-100 asks a cybersecurity architect to design two linked capabilities. The first is a security operations capability that detects, investigates, and responds to threats across hybrid and multicloud estates. The second is a regulatory compliance capability that translates external obligations into enforced, continuously measured controls. The emphasis throughout is design and evaluation — choosing the right capability, standard, and tool for a requirement — not configuring portals click by click. Detect, respond, prove — that is the arc of this module.",
+  "sections": [
+    {
+      "id": "frame",
+      "section": "Framing Domain 2",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-02-secops-compliance-deck/deck.html#frame",
+      "narration": "Begin with the frame. Domain two is two capabilities that answer two different questions. Security operations answers: are we under attack, and can we respond fast enough across everything we own. Regulatory compliance answers: can we prove our controls hold against the obligations imposed on us. Both are design problems. As an architect you are deciding what each capability owns, which Microsoft service delivers it, and where the seams between them sit. The mechanics of configuring each console belong to the AZ-500 level; here the work is selecting and evaluating the architecture.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "unified-secops",
+      "section": "Unified security operations",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-02-secops-compliance-deck/deck.html#unified-secops",
+      "narration": "Modern security operations centers on the unified platform in the Microsoft Defender portal, which combines the SIEM, the SOAR, XDR, exposure management, threat intelligence, and the generative AI assistant Security Copilot in one location. The distinction the exam rewards is the division of labor. Microsoft Defender XDR is the XDR layer — deep, high-fidelity detection and automated response across identities, endpoints, apps, and email in the Microsoft estate. Microsoft Sentinel is the cloud-native SIEM and SOAR layer — broad across the entire digital estate through hundreds of connectors, owning correlation, long retention, and playbook automation. When Sentinel is onboarded to the Defender portal, incidents stay bidirectionally synced and detections converge on unified custom detections. Note the current-state design fact: after March thirty-first, 2027, Sentinel is supported only in the Defender portal, so design new operations on the unified model.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "logging",
+      "section": "Logging, auditing, multicloud",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-02-secops-compliance-deck/deck.html#logging",
+      "narration": "Centralized logging is two planes an architect must place deliberately. Microsoft Purview Audit, the unified audit log, captures thousands of user and admin operations across Microsoft services for security, forensic, internal, and compliance investigations — this is the activity-audit plane. Microsoft Sentinel with Log Analytics is the security-telemetry plane for detection, correlation, and long retention. Route forensic and compliance activity through Purview Audit; route detection telemetry through Sentinel. They are complementary, not interchangeable. For reach beyond Azure, Defender for Cloud onboards Amazon Web Services accounts and Google Cloud projects through connectors, and on-premises servers through Azure Arc, so one set of detection, posture, and compliance controls spans the whole estate rather than three disconnected stacks.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "workflows",
+      "section": "Workflows & MITRE ATT and CK",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-02-secops-compliance-deck/deck.html#workflows",
+      "narration": "Security workflows run in a single pane. Alerts are grouped into incidents that carry their entities, evidence, and tagged techniques to support triage. Threat hunting is proactive and hypothesis-driven, using query-based hunting tagged to adversary tactics, with findings feeding new analytics rules. Incident response investigates and remediates with automated and playbook-driven actions. Coverage is evaluated against the MITRE ATT and CK knowledge base. In Sentinel, the MITRE ATT and CK page — currently in preview and aligned to framework version eighteen — shows current coverage from active rules against simulated coverage you could reach by enabling available detections; that gap is your detection-engineering roadmap. Match the matrix to the estate: Enterprise for most environments, Mobile for mobile, and the industrial control systems matrix for operational technology.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "compliance-controls",
+      "section": "Requirements to controls",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-02-secops-compliance-deck/deck.html#compliance-controls",
+      "narration": "The compliance half begins with translation: turning an external regulation into concrete, enforced, measured controls. Microsoft Purview Compliance Manager is the engine for that step. It offers more than three hundred sixty prebuilt regulatory templates — among them ISO 27001, NIST 800-53, the General Data Protection Regulation, and the Payment Card Industry Data Security Standard — with the Microsoft Data Protection Baseline included for every subscription. Controls are typed explicitly as Microsoft-managed, customer-managed, or shared, which makes the shared-responsibility split visible. Controls group into assessments that produce a score, and improvement actions are assignable remediation tasks with guidance and evidence storage that roll up into a risk-based compliance score. Compliance Manager assesses across multicloud environments, and it is the artifact you take to auditors.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "privacy-policy",
+      "section": "Priva & Azure Policy",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-02-secops-compliance-deck/deck.html#privacy-policy",
+      "narration": "Two more tools sit beside Compliance Manager, each with a distinct job. Microsoft Priva targets privacy specifically. Its privacy risk management defines policies for data overexposure, data transfer, and data minimization, and its subject rights requests automate the fulfillment of data-subject requests — access, rectification, erasure, and portability — across Microsoft 365 data and beyond. Reach for Priva for privacy-rights and personal-data obligations, not for general control mapping. Azure Policy is the enforcement and assessment plane inside Azure. Its regulatory-compliance built-in initiative definitions map a standard's compliance domains and controls to individual policy definitions, evaluated continuously and held in line with audit and deny effects. The exam-relevant caveat: compliant in Azure Policy refers only to the policies themselves, which rarely map one-to-one to controls, so it is a partial view, not proof of full regulatory compliance.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "defender-compliance",
+      "section": "Defender for Cloud compliance",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-02-secops-compliance-deck/deck.html#defender-compliance",
+      "narration": "Microsoft Defender for Cloud is where the architect evaluates and validates alignment. Its regulatory compliance dashboard presents industry, regulatory, and benchmark standards as security standards, assessed continuously across Azure subscriptions, Amazon Web Services accounts, and Google Cloud projects. The Microsoft cloud security benchmark is assigned by default when Defender for Cloud is enabled and applies across all three clouds. Each standard is a set of compliance controls mapped to security assessments; controls that cannot be assessed automatically appear grayed out because they are manual, process, or platform-responsibility controls, and they are satisfied by manual attestation with linked evidence. Hold the distinction clearly: the Microsoft cloud security benchmark measured in Defender for Cloud is the prescriptive control benchmark, while Compliance Manager is the cross-cloud, regulation-mapped, audit-facing scoring tool. They are complementary lenses on compliance.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember",
+      "title": "Security Operations & Compliance in five rules",
+      "accent": "#56d364",
+      "lines": [
+        "placeholder"
+      ]
+    },
+    "narration": "To bring it together. Defender XDR is deep within the Microsoft estate; Sentinel is broad across all sources and owns the SIEM and SOAR — and the unified Defender portal is the current target architecture. Keep the logging planes separate: Purview Audit for forensic activity, Sentinel for detection telemetry. Use MITRE ATT and CK to measure coverage — current against simulated — and match the matrix to the estate. Keep the compliance tools distinct: Compliance Manager translates and scores against regulations, Priva owns privacy and subject rights, Azure Policy enforces in Azure, and Defender for Cloud evaluates against standards across Azure, Amazon Web Services, and Google Cloud. And remember that Azure Policy compliant reflects only the policies — it is a partial view, never full regulatory proof. Detect, respond, prove.",
+    "kicker": "-",
+    "cardTitle": "-",
+    "bullets": []
+  },
+  "action": {
+    "kicker": "Do this",
+    "exercises": [
+      {
+        "id": "lab-sc100-2-1",
+        "title": "Exercise 1 — Draw your XDR/SIEM seam",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Here is your first exercise. On a single diagram, place Defender XDR over identities, endpoints, apps, and email, and place Sentinel over everything else — correlation, retention, and the SOAR playbooks. Show incidents syncing into the unified Defender portal, and mark which detections you would author as unified custom detections. Then read your MITRE ATT and CK coverage as a gap map: in the Sentinel coverage page, compare current against simulated, and list the three highest-value techniques that have available but unconfigured detections. You are done when you have one diagram of the seam and a short, ranked detection-engineering backlog.",
+        "kicker": "-",
+        "cardTitle": "-",
+        "bullets": []
+      },
+      {
+        "id": "lab-sc100-2-2",
+        "title": "Exercise 2 — Trace one requirement end to end",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Second exercise: prove a control holds end to end. Pick a single regulatory clause — an encryption-at-rest control works well. Map it to a Compliance Manager improvement action that translates the clause and stores the evidence. Map it to an Azure Policy built-in that enforces and assesses it in Azure. Then map it to the matching Defender for Cloud regulatory-compliance control that evaluates and validates it across Azure, Amazon Web Services, and Google Cloud. You are done when one clause is traced through all three tools, because that trace is the Domain two compliance design in miniature.",
+        "kicker": "-",
+        "cardTitle": "-",
+        "bullets": []
+      }
+    ]
+  }
+}

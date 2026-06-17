@@ -1,0 +1,131 @@
+{
+  "id": "sc100-05-applications-data",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "deck": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-05-applications-data-deck/deck.html",
+  "instructions": "Narrate as a senior Microsoft security architect delivering exam preparation to a peer. Formal, precise, measured — authoritative, calm, never chatty or hyped. Natural pronunciation of acronyms. No filler words.",
+  "examDomain": "SC-100 · Design security solutions for applications and data",
+  "title": {
+    "kicker": "SC-100 · Domain 4",
+    "title": "Applications & Data",
+    "lines": [
+      "Discover · Classify · Model · Protect"
+    ]
+  },
+  "intro": "Domain four of the SC-100 turns to the two things an organization actually runs on: the applications that do the work, and the data they handle. We design security across three estates — the Microsoft 365 productivity environment, custom and business-critical applications, and the Azure data platform. The discipline is the same in all three. Discover what you have, classify it by sensitivity and criticality, model the threats against it, and apply layered, identity-aware controls that follow the workload and the data wherever they travel.",
+  "sections": [
+    {
+      "id": "m365-posture",
+      "section": "Securing Microsoft 365 — posture",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-05-applications-data-deck/deck.html#m365-posture",
+      "narration": "Begin with posture. Microsoft Secure Score is the measurement of an organization's Microsoft 365 security posture, surfaced in the Microsoft Defender portal. It organizes recommended actions into four groups — identity, device, apps, and data — and scores most actions in binary fashion, full points when implemented, partial credit for percentage coverage. It offers three comparison views: planned score, current-license score, and achievable score. For the architect, Secure Score is the posture baseline and the prioritization instrument for productivity and collaboration workloads. The exam trap to remember: it measures control adoption, not breach probability. It is a posture tool, not a risk score, and never a guarantee.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "m365-protect",
+      "section": "Microsoft 365 protection layers",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-05-applications-data-deck/deck.html#m365-protect",
+      "narration": "Four protection layers sit on top of that posture. Defender for Office 365 protects the most common entry point — email and collaboration across Exchange Online, SharePoint, OneDrive, and Teams — against phishing, malware, and business email compromise. Defender for Cloud Apps is the cloud access security broker layer: shadow IT discovery, SaaS security posture management, threat protection, and OAuth app governance for the SaaS estate. Hold these two apart on the exam — Defender for Office 365 protects the content channel; Defender for Cloud Apps protects the SaaS estate and its data. Microsoft Intune establishes device compliance that feeds Conditional Access, the endpoint half of validating trust. And Microsoft Purview discovers, classifies, and labels data with sensitivity labels that carry encryption and usage rights, backed by data loss prevention across services and endpoints.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "copilot",
+      "section": "Copilot for Microsoft 365 data security",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-05-applications-data-deck/deck.html#copilot",
+      "narration": "Copilot for Microsoft 365 inherits your data-governance posture rather than bypassing it. It never returns data the user cannot already access, and where a sensitivity label applies encryption, the user must hold the EXTRACT usage right, in addition to view, before Copilot will return that content. The architect's front door is Data Security Posture Management for AI, which assesses oversharing risk, applies one-click policies, and reports on sensitive and risky Copilot interactions. Data loss prevention supports a dedicated Microsoft 365 Copilot policy location to keep labeled content out of Copilot processing. The exam framing is precise: the real risk Copilot surfaces is the oversharing of already-accessible data, so the answer is to secure the data first with Purview. Copilot is then governed as a consequence.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "app-portfolio",
+      "section": "Securing applications — posture & threat modeling",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-05-applications-data-deck/deck.html#app-portfolio",
+      "narration": "Turn now to custom applications. Before securing apps individually, the architect inventories the portfolio and ranks each application by business criticality and exposure, then maps it to the controls it needs. Defender for Cloud's cloud-native application protection plans, including Defender for App Service and Defender for APIs, provide posture and threat detection for hosted apps and APIs. The design-phase practice is threat modeling — enumerating threats and the controls that mitigate them. Microsoft uses the STRIDE taxonomy: spoofing addressed by authentication, tampering by integrity, repudiation by audit logging, information disclosure by encryption, denial of service by availability controls, and elevation of privilege by authorization. The Microsoft Threat Modeling Tool supports this with Azure stencils. Model at design time, when fixes are cheap — not as a post-deployment audit.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "app-lifecycle",
+      "section": "The application security lifecycle",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-05-applications-data-deck/deck.html#app-lifecycle",
+      "narration": "The application security lifecycle is the Security Development Lifecycle — the SDL. It embeds security across five core phases — requirements, design, implementation, verification, and release — bracketed by training at the front and response at the back. The architect's standard is to shift left: integrate security into every stage of the software development lifecycle rather than bolt it on at the end, because the later a flaw is fixed, the more it costs. DevSecOps operationalizes this with static application security testing of source code, dynamic testing at runtime, dependency and secret scanning, a software bill of materials, and supply-chain protection that extends to developer workstations, repositories, build systems, and deployment environments.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "app-edge",
+      "section": "Workload identities, API Management & WAF",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-05-applications-data-deck/deck.html#app-edge",
+      "narration": "Applications need identities and an edge. A workload identity is an identity assigned to software — an application, service principal, or managed identity. The design rule: prefer managed identities for workloads running in Azure, where the platform manages and rotates the credential and no secret lives in code; and use workload identity federation for workloads outside Azure, exchanging a trusted external token for an Entra access token to eliminate stored secrets. Conditional Access for workload identities governs single-tenant service principals only. At the edge, Azure API Management is the governed front door — authenticate gateway requests with Entra ID OAuth, connect to dependencies with managed identities over private connectivity, enforce strong TLS, and reduce surface area. In front of internet-exposed apps and APIs, place an Azure Web Application Firewall, on Application Gateway regionally or Front Door globally, with Microsoft-managed core rule sets covering the OWASP Top Ten. Operate it Detection mode first to tune false positives, then Prevention mode to block.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "data-classify",
+      "section": "Securing data — discover & classify",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-05-applications-data-deck/deck.html#data-classify",
+      "narration": "We cross now into the data estate, and the first move is unchanged: you cannot protect what you have not found. Microsoft Purview discovers, classifies, and labels sensitive data across Azure, on-premises, Microsoft 365, and multicloud, using sensitive information types, trainable classifiers, and the data map. Sensitivity labels are the foundational control — they carry persistent, document-level encryption and usage rights that travel with the data. For structured data, SQL Data Discovery and Classification labels columns in Azure SQL, SQL Managed Instance, Synapse, and SQL Server, optionally reusing the same Purview labels for a unified taxonomy. With data classified, rank it by sensitivity and business impact, then prioritize the threats — exfiltration, unauthorized access, ransomware, and oversharing — and key your controls to the label rather than to location.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "data-encrypt",
+      "section": "Encryption & data threat detection",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/sc100-05-applications-data-deck/deck.html#data-encrypt",
+      "narration": "Encryption comes in layers. Azure encrypts data at rest by default with platform-managed keys, using 256-bit AES. For greater control, supply customer-managed keys in Azure Key Vault or Managed HSM — Key Vault is the control plane for keys, secrets, and certificates, itself protectable with Defender for Key Vault. Infrastructure, or double, encryption adds a second independent layer with a separate platform-managed key and a different algorithm; it is a high-assurance option, not a default. Distinguish the two on the exam: customer-managed keys are a customer-controlled service-level key, while infrastructure encryption is a second platform layer. In transit, TLS 1.2 secures traffic to and from the cloud, and MACsec protects traffic between datacenters. For detection, name the correct Defender plan per asset: Defender for Storage covers Blob, Files, and Data Lake with malware scanning, exfiltration detection, and SAS-token-misuse alerts; Defender for Databases covers Azure SQL, SQL on machines, open-source relational databases, and Cosmos DB.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember",
+      "title": "Applications & Data in five rules",
+      "accent": "#56d364",
+      "lines": [
+        "placeholder"
+      ]
+    },
+    "narration": "To bring it together. Secure Score measures Microsoft 365 control adoption across identity, device, apps, and data — not breach probability. Keep Defender for Office 365, the content channel, distinct from Defender for Cloud Apps, the SaaS estate; and remember Copilot inherits your data posture, so the control for oversharing is Purview, not locking down Copilot. For applications, model threats with STRIDE at design time, embed security through the SDL and shift-left DevSecOps, and go secretless with managed identities, federating outside Azure. Front internet-exposed apps with Azure WAF, Detection then Prevention. For data, discover and classify first with Purview, encrypt at rest with platform-managed keys or customer-managed keys in Key Vault, and name the right Defender plan per asset — Storage versus Databases. Discover, classify, model, protect."
+  },
+  "action": {
+    "kicker": "Do this",
+    "exercises": [
+      {
+        "id": "lab-sc100-5-1",
+        "title": "Exercise 1 — STRIDE a business-critical app",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Here is your first exercise. Take your highest-criticality application and draw its data flow across trust boundaries. Then enumerate one threat per STRIDE letter, naming the Azure control that mitigates each: spoofing answered by Entra authentication, tampering by TLS and integrity checks, repudiation by audit logging, information disclosure by encryption with customer-managed keys, denial of service by Web Application Firewall and DDoS protection, and elevation of privilege by Privileged Identity Management and least privilege. That six-row table is a threat model. You are done when every letter maps to a concrete control.",
+        "kicker": "-",
+        "cardTitle": "-",
+        "bullets": []
+      },
+      {
+        "id": "lab-sc100-5-2",
+        "title": "Exercise 2 — Run the discover-to-detect chain",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Second exercise: run the full data chain on one store, end to end. Run Purview or SQL Data Discovery and Classification against a single data store. Apply a sensitivity label to the sensitive columns or files. Confirm that customer-managed keys in Key Vault back its encryption. Then turn on the matching Defender plan — Defender for Storage for Blob, Files, or Data Lake, or Defender for Databases for a SQL or Cosmos DB store. You are done when one store has completed the discover, classify, encrypt, and detect chain in miniature, because that chain is the pattern you repeat across the estate.",
+        "kicker": "-",
+        "cardTitle": "-",
+        "bullets": []
+      }
+    ]
+  }
+}
