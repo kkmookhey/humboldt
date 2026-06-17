@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>D0 Foundations · Zero Trust Strategy</title>
+<style>
+  :root{
+    --bg:#0a0e14; --bg2:#0d1320; --panel:#111927; --panel2:#0f1622;
+    --ink:#e6edf3; --dim:#9aa7b8; --faint:#5b6b80; --line:#1f2a3a;
+    --green:#56d364; --orange:#f0883e; --blue:#58a6ff; --red:#f85149; --violet:#bc8cff;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  .slide{position:fixed;inset:0;display:none;flex-direction:column;
+    padding:78px 110px 70px;
+    background:radial-gradient(1400px 760px at 78% -8%,#10203a 0%,rgba(16,32,58,0) 60%),
+               radial-gradient(1100px 620px at 0% 108%,#10261c 0%,rgba(16,38,28,0) 55%),
+               linear-gradient(160deg,var(--bg) 0%,var(--bg2) 100%);}
+  .slide.active{display:flex}
+  /* top bar */
+  .top{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);
+    font-size:21px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase}
+  .top .brand{color:var(--dim)} .top .brand b{color:var(--blue);font-weight:600}
+  .kicker{font-family:var(--mono);font-size:24px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--blue);margin:54px 0 14px}
+  .kicker.green{color:var(--green)} .kicker.orange{color:var(--orange)}
+  h1{font-size:78px;line-height:1.04;font-weight:800;letter-spacing:-.018em;max-width:1500px}
+  h1 .sub{display:block;font-size:38px;font-weight:500;color:var(--dim);margin-top:18px;letter-spacing:-.005em}
+  .lead{font-size:33px;line-height:1.5;color:var(--dim);max-width:1320px;margin-top:30px}
+  .lead b{color:var(--ink);font-weight:600}
+  ul{list-style:none;margin-top:40px;display:flex;flex-direction:column;gap:26px;max-width:1480px}
+  li{font-size:31px;line-height:1.4;color:#c9d6e5;padding-left:46px;position:relative}
+  li::before{content:"";position:absolute;left:0;top:14px;width:18px;height:18px;border-radius:5px;
+    background:var(--blue);box-shadow:0 0 0 5px rgba(88,166,255,.16)}
+  li.g::before{background:var(--green);box-shadow:0 0 0 5px rgba(86,211,100,.16)}
+  li.o::before{background:var(--orange);box-shadow:0 0 0 5px rgba(240,136,62,.16)}
+  li b{color:#fff;font-weight:650} li .m{font-family:var(--mono);color:var(--blue);font-size:.92em}
+  .spacer{flex:1}
+  .foot{font-family:var(--mono);font-size:19px;color:var(--faint);letter-spacing:.04em}
+  /* layout helpers */
+  .row{display:flex;gap:54px;align-items:center;margin-top:30px}
+  .col{flex:1}
+  /* three-phase diagram */
+  .phases{display:flex;align-items:stretch;gap:0;margin-top:54px}
+  .ph{flex:1;background:linear-gradient(165deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:20px;padding:38px 36px;position:relative}
+  .ph .n{font-family:var(--mono);font-size:30px;color:var(--bg);font-weight:800;
+    width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+  .ph1 .n{background:var(--green)} .ph2 .n{background:var(--orange)} .ph3 .n{background:var(--blue)}
+  .ph h3{font-size:33px;font-weight:750;line-height:1.12;margin-bottom:14px}
+  .ph p{font-size:24px;line-height:1.42;color:var(--dim)}
+  .arrow{align-self:center;color:var(--faint);font-size:46px;padding:0 18px;flex:0 0 auto}
+  .note{margin-top:40px;font-size:27px;color:var(--ink);font-family:var(--mono);
+    background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.4);border-radius:14px;
+    padding:22px 30px;letter-spacing:.01em}
+  .note b{color:var(--red)}
+  /* 3-2-1 cards */
+  .cards{display:flex;gap:34px;margin-top:50px}
+  .card{flex:1;background:linear-gradient(165deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:20px;padding:40px 36px;text-align:center}
+  .card .big{font-family:var(--mono);font-size:84px;font-weight:800;color:var(--green);line-height:1}
+  .card .lbl{font-size:27px;color:var(--ink);margin-top:18px;font-weight:600}
+  .card .sm{font-size:21px;color:var(--dim);margin-top:10px;line-height:1.4}
+  .chips{display:flex;gap:18px;flex-wrap:wrap;margin-top:42px}
+  .chip{font-family:var(--mono);font-size:23px;letter-spacing:.04em;color:#cfe3ff;
+    background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.35);border-radius:999px;padding:14px 28px}
+  .chip.g{color:#c7f4d0;background:rgba(86,211,100,.1);border-color:rgba(86,211,100,.4)}
+  /* grounded screenshot */
+  .screenwrap{margin-top:34px;display:flex;gap:50px;align-items:flex-start}
+  .browser{flex:1.55;border-radius:16px;overflow:hidden;border:1px solid var(--line);
+    box-shadow:0 40px 90px rgba(0,0,0,.55);background:#0b0f16}
+  .chrome{display:flex;align-items:center;gap:12px;background:#161b22;padding:16px 22px;border-bottom:1px solid var(--line)}
+  .chrome i{width:15px;height:15px;border-radius:50%;display:inline-block}
+  .chrome .r{background:#ff5f57}.chrome .y{background:#febc2e}.chrome .g{background:#28c840}
+  .chrome span{font-family:var(--mono);font-size:19px;color:var(--faint);margin-left:14px}
+  .browser img{display:block;width:100%}
+  .ground-side{flex:1;display:flex;flex-direction:column;gap:24px;padding-top:8px}
+  .tag{align-self:flex-start;font-family:var(--mono);font-size:19px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--green);background:rgba(86,211,100,.1);border:1px solid rgba(86,211,100,.35);border-radius:8px;padding:9px 16px}
+  .ground-side h3{font-size:36px;font-weight:750;line-height:1.15}
+  .ground-side p{font-size:27px;line-height:1.5;color:var(--dim)}
+  .ground-side p b{color:var(--ink)}
+  /* title slide */
+  .title-slide{justify-content:center}
+  .title-slide .eyebrow{font-family:var(--mono);font-size:26px;letter-spacing:.28em;color:var(--blue);text-transform:uppercase}
+  .title-slide h1{font-size:104px;margin-top:26px}
+  .title-slide .lead{font-size:38px;margin-top:34px}
+  .verbs{display:flex;gap:18px;margin-top:50px;font-family:var(--mono);font-size:26px;color:var(--faint);letter-spacing:.06em}
+  .verbs b{color:var(--green);font-weight:600}
+  /* recap */
+  .recap li::before{background:var(--green);box-shadow:0 0 0 5px rgba(86,211,100,.16)}
+  .recap li .m{color:var(--green)}
+  /* lab */
+  .lab .kicker{color:var(--orange)}
+  .lab li::before{background:var(--orange);box-shadow:0 0 0 5px rgba(240,136,62,.16)}
+  .lab .goal{font-size:30px;color:var(--orange);font-family:var(--mono);margin-top:30px;letter-spacing:.02em}
+  .done{margin-top:36px;font-family:var(--mono);font-size:26px;color:var(--green)}
+</style>
+</head>
+<body>
+
+<!-- INTRO / TITLE -->
+<section class="slide title-slide" data-id="intro">
+  <div class="eyebrow">AZ-500 / SC-100 · FOUNDATIONS</div>
+  <h1>Zero Trust<br>Strategy</h1>
+  <div class="lead">Never trust, always verify. The strategy that every other Microsoft security framework operationalizes — <b>three principles</b>, <b>seven pillars</b>, one adoption journey.</div>
+  <div class="verbs"><b>VERIFY EXPLICITLY</b> → <b>LEAST PRIVILEGE</b> → <b>ASSUME BREACH</b></div>
+</section>
+
+<!-- THE 3 PRINCIPLES -->
+<section class="slide" data-id="principles">
+  <div class="top"><span>The three principles</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker green">The exam's anchor — memorize these</div>
+  <h1 style="font-size:60px">Trust by exception, not by default</h1>
+  <div class="phases">
+    <div class="ph ph1"><div class="n">1</div><h3>Verify explicitly</h3><p>Authenticate and authorize <b style="color:#c9d6e5">every request</b> using all signals — identity, device health, location, behavior, risk. Continuously.</p></div>
+    <div class="arrow">→</div>
+    <div class="ph ph2"><div class="n">2</div><h3>Least-privilege access</h3><p>Only the access needed, for the <b style="color:#c9d6e5">shortest time</b> — just-in-time, just-enough-access. Humans and workloads alike.</p></div>
+    <div class="arrow">→</div>
+    <div class="ph ph3"><div class="n">3</div><h3>Assume breach</h3><p>Design as if the attacker is <b style="color:#c9d6e5">already inside</b> — segment, minimize blast radius, verify end-to-end, detect fast.</p></div>
+  </div>
+  <div class="note"><b>Not a product.</b> &nbsp;Zero Trust is a strategy realized through many controls — and verification is continuous, never one-time at login.</div>
+</section>
+
+<!-- VERIFY EXPLICITLY — grounded in Conditional Access -->
+<section class="slide" data-id="verify">
+  <div class="top"><span>Verify explicitly · in practice</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">Where principle one becomes a control</div>
+  <h1 style="font-size:58px">Every sign-in, evaluated on signals</h1>
+  <div class="screenwrap">
+    <div class="ground-side">
+      <span class="tag">Grounded · AZ-500 · Entra Conditional Access</span>
+      <h3>Conditional Access is verify-explicitly</h3>
+      <p>Each policy evaluates <b>identity, device state, location, and risk</b> at sign-in, then grants, blocks, or steps up. Verification is <b>continuous</b> — paired with Continuous Access Evaluation, not a single gate.</p>
+      <p>This is principle one made operational in the <b>Identities</b> pillar.</p>
+    </div>
+    <div class="browser">
+      <div class="chrome"><i class="r"></i><i class="y"></i><i class="g"></i><span>portal.azure.com — Microsoft Entra Conditional Access</span></div>
+      <img src="img/conditional-access.png" alt="Entra Conditional Access policies">
+    </div>
+  </div>
+</section>
+
+<!-- THE 7 PILLARS -->
+<section class="slide" data-id="pillars">
+  <div class="top"><span>The technology pillars</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">The architecture map — six assets, one integrator</div>
+  <h1 style="font-size:58px">Apply the three principles, pillar by pillar</h1>
+  <div class="cards" style="gap:22px;margin-top:42px">
+    <div class="card" style="padding:32px 22px"><div class="lbl" style="margin-top:0">Identities</div><div class="sm">The access decision itself</div></div>
+    <div class="card" style="padding:32px 22px"><div class="lbl" style="margin-top:0">Endpoints</div><div class="sm">Device health &amp; compliance</div></div>
+    <div class="card" style="padding:32px 22px"><div class="lbl" style="margin-top:0">Data</div><div class="sm">Classify, label, encrypt</div></div>
+    <div class="card" style="padding:32px 22px"><div class="lbl" style="margin-top:0">Apps</div><div class="sm">App &amp; API access controls</div></div>
+    <div class="card" style="padding:32px 22px"><div class="lbl" style="margin-top:0">Infrastructure</div><div class="sm">Harden compute &amp; services</div></div>
+    <div class="card" style="padding:32px 22px"><div class="lbl" style="margin-top:0">Network</div><div class="sm">Segment, stop lateral movement</div></div>
+  </div>
+  <div class="chips">
+    <span class="chip g">SECOPS — VISIBILITY, AUTOMATION &amp; ORCHESTRATION</span>
+    <span class="chip">THE 7TH PILLAR STITCHES SIGNALS FROM ALL SIX</span>
+  </div>
+</section>
+
+<!-- ADOPTION MODEL — grounded in PIM -->
+<section class="slide" data-id="adoption">
+  <div class="top"><span>How an architect adopts it</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker orange">Reason top-down, then sequence the work</div>
+  <h1 style="font-size:58px">Why → what → where, then quick wins</h1>
+  <div class="screenwrap">
+    <div class="browser">
+      <div class="chrome"><i class="r"></i><i class="y"></i><i class="g"></i><span>portal.azure.com — Microsoft Entra Privileged Identity Management</span></div>
+      <img src="img/pim.png" alt="Entra Privileged Identity Management quick start">
+    </div>
+    <div class="ground-side">
+      <span class="tag">Grounded · AZ-500 · Entra PIM</span>
+      <h3>Least privilege, sequenced by adoption</h3>
+      <p><b>Business scenarios</b> set the why, <b>security disciplines</b> the what, the <b>seven pillars</b> the where. PIM is the canonical least-privilege win — eligible, time-bound, MFA-gated access.</p>
+      <p><b>RaMP</b> supplies the quick-win checklists to start moving — covered next module.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHERE ZERO TRUST SITS AMONG THE FRAMEWORKS -->
+<section class="slide" data-id="frameworks">
+  <div class="top"><span>The connective tissue</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">The question SC-100 Domain 1 loves</div>
+  <h1 style="font-size:58px">Zero Trust is the strategy; the rest operationalize it</h1>
+  <ul style="margin-top:36px">
+    <li><b>Zero Trust</b> — the <b>strategy</b> and principles. The why behind every control.</li>
+    <li><b>MCRA</b> — the reference architecture: Zero Trust drawn across the <b>whole estate</b>.</li>
+    <li class="g"><b>MCSB</b> — the prescriptive <b>checklist</b> you measure against in Defender for Cloud.</li>
+    <li><b>Azure WAF (Security pillar)</b> — Zero Trust applied at the <b>workload-design</b> level.</li>
+    <li class="g"><b>CAF (Secure)</b> — Zero Trust across the cloud-adoption <b>journey</b> and landing zones.</li>
+  </ul>
+</section>
+
+<!-- RECAP -->
+<section class="slide recap" data-id="recap">
+  <div class="top"><span>Remember</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker green">Zero Trust in five rules</div>
+  <h1 style="font-size:60px">The strategy that anchors everything</h1>
+  <ul>
+    <li><span class="m">1 ·</span> One idea: <b>never trust, always verify</b> — and verification is continuous.</li>
+    <li><span class="m">2 ·</span> Three principles: <b>verify explicitly, least privilege, assume breach</b>.</li>
+    <li><span class="m">3 ·</span> Seven pillars — six assets plus <b>SecOps</b> as the integrating seventh.</li>
+    <li><span class="m">4 ·</span> Adopt top-down: <b>business scenarios → disciplines → pillars</b>, then RaMP.</li>
+    <li><span class="m">5 ·</span> Zero Trust is the <b>strategy</b>; MCRA the picture, MCSB the checklist, WAF the workload lens, CAF the journey.</li>
+  </ul>
+</section>
+
+<!-- LAB 1 -->
+<section class="slide lab" data-id="lab-d0-1">
+  <div class="top"><span>Hands-on · 1 of 2</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker orange">Do this</div>
+  <h1 style="font-size:60px">Map your tenant to the three principles</h1>
+  <div class="goal">GOAL · Turn the principles into a control-and-gap inventory</div>
+  <ul>
+    <li class="o"><b>Verify explicitly</b> — name one control you have and one gap. Conditional Access plus MFA coverage?</li>
+    <li class="o"><b>Least privilege</b> — PIM eligible-not-standing, access reviews? Where is standing access still live?</li>
+    <li class="o"><b>Assume breach</b> — network segmentation and Defender alerts? What is unmonitored?</li>
+  </ul>
+  <div class="done">✓ DONE WHEN · Each principle has one named control and one named gap</div>
+</section>
+
+<!-- LAB 2 -->
+<section class="slide lab" data-id="lab-d0-2">
+  <div class="top"><span>Hands-on · 2 of 2</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker orange">Do this</div>
+  <h1 style="font-size:58px">Draw the maturity grid</h1>
+  <div class="goal">GOAL · Produce a one-page Zero Trust snapshot</div>
+  <ul>
+    <li class="o">Score one pillar first — pick <b>Identities</b>. Rate 1 to 5 on explicit verification, least privilege, and assume-breach.</li>
+    <li class="o">Write down the single <b>highest-leverage fix</b> that score reveals.</li>
+    <li class="o">Then draw the grid: <b>three principles across, seven pillars down</b>; mark each cell red, amber, or green.</li>
+  </ul>
+  <div class="done">✓ DONE WHEN · You hold a one-page grid that doubles as an SC-100 design artifact</div>
+</section>
+
+<script>
+  function showSlide(id){
+    var ss=document.querySelectorAll('.slide'),i,found=false;
+    for(i=0;i<ss.length;i++){var on=ss[i].getAttribute('data-id')===id;ss[i].classList.toggle('active',on);if(on)found=true;}
+    if(!found && ss.length){ss[0].classList.add('active');}
+  }
+  function fromHash(){var h=decodeURIComponent(location.hash.replace(/^#/,''));showSlide(h|| (document.querySelector('.slide')||{}).getAttribute&&document.querySelector('.slide').getAttribute('data-id'));}
+  window.addEventListener('hashchange',fromHash);
+  fromHash();
+</script>
+</body>
+</html>

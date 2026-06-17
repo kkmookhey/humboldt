@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AZ-500 / SC-100 · Cloud Adoption Framework — Secure</title>
+<style>
+  :root{
+    --bg:#0a0e14; --bg2:#0d1320; --panel:#111927; --panel2:#0f1622;
+    --ink:#e6edf3; --dim:#9aa7b8; --faint:#5b6b80; --line:#1f2a3a;
+    --green:#56d364; --orange:#f0883e; --blue:#58a6ff; --red:#f85149; --violet:#bc8cff;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  .slide{position:fixed;inset:0;display:none;flex-direction:column;
+    padding:78px 110px 70px;
+    background:radial-gradient(1400px 760px at 78% -8%,#10203a 0%,rgba(16,32,58,0) 60%),
+               radial-gradient(1100px 620px at 0% 108%,#10261c 0%,rgba(16,38,28,0) 55%),
+               linear-gradient(160deg,var(--bg) 0%,var(--bg2) 100%);}
+  .slide.active{display:flex}
+  /* top bar */
+  .top{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);
+    font-size:21px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase}
+  .top .brand{color:var(--dim)} .top .brand b{color:var(--blue);font-weight:600}
+  .kicker{font-family:var(--mono);font-size:24px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--blue);margin:54px 0 14px}
+  .kicker.green{color:var(--green)} .kicker.orange{color:var(--orange)}
+  h1{font-size:78px;line-height:1.04;font-weight:800;letter-spacing:-.018em;max-width:1500px}
+  h1 .sub{display:block;font-size:38px;font-weight:500;color:var(--dim);margin-top:18px;letter-spacing:-.005em}
+  .lead{font-size:33px;line-height:1.5;color:var(--dim);max-width:1320px;margin-top:30px}
+  .lead b{color:var(--ink);font-weight:600}
+  ul{list-style:none;margin-top:40px;display:flex;flex-direction:column;gap:26px;max-width:1480px}
+  li{font-size:31px;line-height:1.4;color:#c9d6e5;padding-left:46px;position:relative}
+  li::before{content:"";position:absolute;left:0;top:14px;width:18px;height:18px;border-radius:5px;
+    background:var(--blue);box-shadow:0 0 0 5px rgba(88,166,255,.16)}
+  li.g::before{background:var(--green);box-shadow:0 0 0 5px rgba(86,211,100,.16)}
+  li.o::before{background:var(--orange);box-shadow:0 0 0 5px rgba(240,136,62,.16)}
+  li b{color:#fff;font-weight:650} li .m{font-family:var(--mono);color:var(--blue);font-size:.92em}
+  .spacer{flex:1}
+  .foot{font-family:var(--mono);font-size:19px;color:var(--faint);letter-spacing:.04em}
+  /* layout helpers */
+  .row{display:flex;gap:54px;align-items:center;margin-top:30px}
+  .col{flex:1}
+  /* three-phase diagram */
+  .phases{display:flex;align-items:stretch;gap:0;margin-top:54px}
+  .ph{flex:1;background:linear-gradient(165deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:20px;padding:38px 36px;position:relative}
+  .ph .n{font-family:var(--mono);font-size:30px;color:var(--bg);font-weight:800;
+    width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+  .ph1 .n{background:var(--green)} .ph2 .n{background:var(--orange)} .ph3 .n{background:var(--blue)}
+  .ph h3{font-size:33px;font-weight:750;line-height:1.12;margin-bottom:14px}
+  .ph p{font-size:24px;line-height:1.42;color:var(--dim)}
+  .arrow{align-self:center;color:var(--faint);font-size:46px;padding:0 18px;flex:0 0 auto}
+  .note{margin-top:40px;font-size:27px;color:var(--ink);font-family:var(--mono);
+    background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.4);border-radius:14px;
+    padding:22px 30px;letter-spacing:.01em}
+  .note b{color:var(--red)}
+  /* 3-2-1 cards */
+  .cards{display:flex;gap:34px;margin-top:50px}
+  .card{flex:1;background:linear-gradient(165deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:20px;padding:40px 36px;text-align:center}
+  .card .big{font-family:var(--mono);font-size:84px;font-weight:800;color:var(--green);line-height:1}
+  .card .lbl{font-size:27px;color:var(--ink);margin-top:18px;font-weight:600}
+  .card .sm{font-size:21px;color:var(--dim);margin-top:10px;line-height:1.4}
+  .chips{display:flex;gap:18px;flex-wrap:wrap;margin-top:42px}
+  .chip{font-family:var(--mono);font-size:23px;letter-spacing:.04em;color:#cfe3ff;
+    background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.35);border-radius:999px;padding:14px 28px}
+  .chip.g{color:#c7f4d0;background:rgba(86,211,100,.1);border-color:rgba(86,211,100,.4)}
+  /* grounded screenshot */
+  .screenwrap{margin-top:34px;display:flex;gap:50px;align-items:flex-start}
+  .browser{flex:1.55;border-radius:16px;overflow:hidden;border:1px solid var(--line);
+    box-shadow:0 40px 90px rgba(0,0,0,.55);background:#0b0f16}
+  .chrome{display:flex;align-items:center;gap:12px;background:#161b22;padding:16px 22px;border-bottom:1px solid var(--line)}
+  .chrome i{width:15px;height:15px;border-radius:50%;display:inline-block}
+  .chrome .r{background:#ff5f57}.chrome .y{background:#febc2e}.chrome .g{background:#28c840}
+  .chrome span{font-family:var(--mono);font-size:19px;color:var(--faint);margin-left:14px}
+  .browser img{display:block;width:100%}
+  .ground-side{flex:1;display:flex;flex-direction:column;gap:24px;padding-top:8px}
+  .tag{align-self:flex-start;font-family:var(--mono);font-size:19px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--green);background:rgba(86,211,100,.1);border:1px solid rgba(86,211,100,.35);border-radius:8px;padding:9px 16px}
+  .ground-side h3{font-size:36px;font-weight:750;line-height:1.15}
+  .ground-side p{font-size:27px;line-height:1.5;color:var(--dim)}
+  .ground-side p b{color:var(--ink)}
+  /* title slide */
+  .title-slide{justify-content:center}
+  .title-slide .eyebrow{font-family:var(--mono);font-size:26px;letter-spacing:.28em;color:var(--blue);text-transform:uppercase}
+  .title-slide h1{font-size:104px;margin-top:26px}
+  .title-slide .lead{font-size:38px;margin-top:34px}
+  .verbs{display:flex;gap:18px;margin-top:50px;font-family:var(--mono);font-size:26px;color:var(--faint);letter-spacing:.06em}
+  .verbs b{color:var(--green);font-weight:600}
+  /* recap */
+  .recap li::before{background:var(--green);box-shadow:0 0 0 5px rgba(86,211,100,.16)}
+  .recap li .m{color:var(--green)}
+  /* lab */
+  .lab .kicker{color:var(--orange)}
+  .lab li::before{background:var(--orange);box-shadow:0 0 0 5px rgba(240,136,62,.16)}
+  .lab .goal{font-size:30px;color:var(--orange);font-family:var(--mono);margin-top:30px;letter-spacing:.02em}
+  .done{margin-top:36px;font-family:var(--mono);font-size:26px;color:var(--green)}
+</style>
+</head>
+<body>
+
+<!-- INTRO / TITLE -->
+<section class="slide title-slide" data-id="intro">
+  <div class="eyebrow">AZ-500 / SC-100 · Foundations</div>
+  <h1>Cloud Adoption<br>Framework — Secure</h1>
+  <div class="lead">Security is not a stage you reach later. The <b>Secure methodology</b> is the thread that runs through <b>every phase</b> of the cloud-adoption lifecycle — and the landing zones every workload lands in.</div>
+  <div class="verbs"><b>ASSESS</b> → <b>SECURE</b> → <b>SUSTAIN</b></div>
+</section>
+
+<!-- THE CAF MAP — where Secure fits -->
+<section class="slide" data-id="cafmap">
+  <div class="top"><span>The CAF map</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">Seven methodologies — Secure runs through all of them</div>
+  <h1 style="font-size:56px">A roadmap for the whole adoption lifecycle</h1>
+  <div class="chips">
+    <span class="chip">STRATEGY</span>
+    <span class="chip">PLAN</span>
+    <span class="chip">READY</span>
+    <span class="chip">ADOPT</span>
+    <span class="chip">GOVERN</span>
+    <span class="chip g">SECURE</span>
+    <span class="chip">MANAGE</span>
+  </div>
+  <ul>
+    <li><b>Foundational and sequential</b> — Strategy, Plan, Ready, Adopt: define outcomes, build the plan, prepare <b>landing zones</b>, then migrate and innovate.</li>
+    <li class="g"><b>Operational and parallel</b> — Govern, Secure, Manage: once workloads run, these continue without end.</li>
+    <li class="g"><b>Secure is methodology six</b> — operational and continuous — yet its guidance applies across <b>all</b> phases. A gap in strategy or readiness weakens posture as much as a gap in operations.</li>
+  </ul>
+</section>
+
+<!-- THE FOUR THEMES + LANDING ZONES -->
+<section class="slide" data-id="themes">
+  <div class="top"><span>The Secure methodology</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker green">Four recurring themes, hardening the landing zone</div>
+  <h1 style="font-size:54px">Risk → strategy → controls, every phase</h1>
+  <div class="phases">
+    <div class="ph ph1"><div class="n">1</div><h3>Modernize posture</h3><p>Identity strengthening, segmentation, just-in-time access, baseline automation — validated by <b style="color:#c9d6e5">secure score</b>.</p></div>
+    <div class="arrow">→</div>
+    <div class="ph ph2"><div class="n">2</div><h3>Prepare &amp; respond</h3><p>The full incident lifecycle: readiness, detection, containment, recovery, and post-incident learning.</p></div>
+    <div class="arrow">→</div>
+    <div class="ph ph3"><div class="n">3</div><h3>CIA triad</h3><p>Map controls to <b style="color:#c9d6e5">Confidentiality, Integrity, Availability</b> — not encryption alone.</p></div>
+  </div>
+  <div class="note"><b>Sustain posture</b> &nbsp;is the fourth theme — the disciplined cycle of measure, remediate, and validate, feeding retrospectives back into the backlog. All four harden the <b style="color:var(--red)">landing zone</b>, so security is built in, not bolted on.</div>
+</section>
+
+<!-- CONTINUOUS IMPROVEMENT — grounded shot -->
+<section class="slide" data-id="improve">
+  <div class="top"><span>Posture sustainment</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">Continuous security improvement, measured</div>
+  <h1 style="font-size:58px">The cycle the Secure methodology drives</h1>
+  <div class="screenwrap">
+    <div class="ground-side">
+      <span class="tag">Grounded · AZ-500 · Defender for Cloud</span>
+      <h3>Posture is the running scoreboard</h3>
+      <p>The Secure methodology validates through <b>policy, infrastructure as code, continuous compliance scanning,</b> and <b>secure score</b>. Here the Microsoft cloud security benchmark shows controls passed feeding directly into the score.</p>
+      <p>This is <b>sustain posture</b> made concrete — measure, remediate, re-measure, without end.</p>
+    </div>
+    <div class="browser">
+      <div class="chrome"><i class="r"></i><i class="y"></i><i class="g"></i><span>portal.azure.com — Microsoft Defender for Cloud · Overview</span></div>
+      <img src="img/defender-posture.png" alt="Defender for Cloud posture and secure score">
+    </div>
+  </div>
+</section>
+
+<!-- CONNECTIVE TISSUE -->
+<section class="slide" data-id="connective">
+  <div class="top"><span>How it relates to the other frameworks</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">The connective tissue Domain 1 tests</div>
+  <h1 style="font-size:56px">Zero Trust is the strategy; CAF is the journey</h1>
+  <ul>
+    <li><b>Zero Trust</b> = the strategy and principles — CAF Secure sequences it across the lifecycle and bakes it into landing zones.</li>
+    <li><b>MCRA</b> = the picture — the reference architecture of Microsoft capabilities across the estate.</li>
+    <li><b>MCSB</b> = the checklist — the prescriptive controls you measure against in Defender for Cloud.</li>
+    <li class="g"><b>WAF</b> = the workload lens — the security design of one specific workload.</li>
+    <li class="g"><b>CAF Secure</b> = the journey — security across the whole adoption lifecycle and the landing zones every workload lands in.</li>
+  </ul>
+  <div class="note"><b>CAF Secure ≠ WAF.</b> &nbsp;CAF governs security across the organization's adoption lifecycle and platform; WAF governs the design of a single workload.</div>
+</section>
+
+<!-- SC-100 DOMAIN 1 FIT -->
+<section class="slide" data-id="examfit">
+  <div class="top"><span>SC-100 · Domain 1</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">Landing zones &amp; DevSecOps are first-class objectives</div>
+  <h1 style="font-size:56px">How the exam tests CAF Secure</h1>
+  <ul>
+    <li>Design — or evaluate — a strategy for <b>security and governance</b> based on <b>CAF and WAF</b>.</li>
+    <li class="g">Design solutions for implementing and governing security using <b>Azure landing zones</b> — secure by design, hardened at the Ready phase.</li>
+    <li class="g">Design a <b>DevSecOps process</b> aligned with CAF — infrastructure as code, policy as code, continuous compliance, so controls travel with the workload.</li>
+    <li>Remember the traps: CAF Secure is <b>not a one-time phase</b>, it is <b>not the WAF Security pillar</b>, and it <b>aligns to</b> Zero Trust rather than replacing it.</li>
+  </ul>
+</section>
+
+<!-- RECAP -->
+<section class="slide recap" data-id="recap">
+  <div class="top"><span>Remember</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker green">The Cloud Adoption Framework — Secure in five rules</div>
+  <h1 style="font-size:58px">Security across the whole journey</h1>
+  <ul>
+    <li><span class="m">1 ·</span> CAF is the <b>whole adoption lifecycle</b>; Secure is a <b>thread across every phase</b>, not a stage reached later.</li>
+    <li><span class="m">2 ·</span> Seven methodologies — <b>foundational and sequential</b> versus <b>operational and parallel</b>; Secure is methodology six.</li>
+    <li><span class="m">3 ·</span> Four themes: <b>modernize posture, prepare and respond, the CIA triad, and sustain posture</b>.</li>
+    <li><span class="m">4 ·</span> It hardens <b>secure-by-design landing zones</b> and embeds <b>DevSecOps</b> in the pipeline.</li>
+    <li><span class="m">5 ·</span> Among the frameworks it is <b>the journey</b> — and it aligns to <b>Zero Trust</b>, not replaces it.</li>
+  </ul>
+</section>
+
+<!-- LAB 1 -->
+<section class="slide lab" data-id="lab-caf-1">
+  <div class="top"><span>Hands-on · 1 of 2</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker orange">Do this</div>
+  <h1 style="font-size:58px">Map your org to the Secure phases</h1>
+  <div class="goal">GOAL · Turn the methodology map into a backlog</div>
+  <ul>
+    <li class="o">Place your organization on the <b>seven-methodology map</b> — Strategy through Manage.</li>
+    <li class="o">For the phase you are in, name <b>one task</b> under each Secure theme: posture modernization, incident readiness, a CIA-triad control, and a sustainment metric.</li>
+    <li class="o">The <b>gaps</b> you cannot fill are your backlog.</li>
+  </ul>
+  <div class="done">✓ DONE WHEN · You have one named task per theme and a written list of gaps</div>
+</section>
+
+<!-- LAB 2 -->
+<section class="slide lab" data-id="lab-caf-2">
+  <div class="top"><span>Hands-on · 2 of 2</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker orange">Do this</div>
+  <h1 style="font-size:58px">Audit one landing zone</h1>
+  <div class="goal">GOAL · Prove security is built in, not bolted on</div>
+  <ul>
+    <li class="o">Take an existing <b>Azure landing zone</b> and check it against the modernization theme: identity strengthening, segmentation, just-in-time and least-privilege access, baseline automation.</li>
+    <li class="o">Confirm <b>secure-score tracking</b> in Defender for Cloud is active for it.</li>
+    <li class="o">Record the single <b>highest-leverage gap</b>.</li>
+  </ul>
+  <div class="done">✓ DONE WHEN · One landing zone is scored against the baselines and its top gap is written down</div>
+</section>
+
+<script>
+  function showSlide(id){
+    var ss=document.querySelectorAll('.slide'),i,found=false;
+    for(i=0;i<ss.length;i++){var on=ss[i].getAttribute('data-id')===id;ss[i].classList.toggle('active',on);if(on)found=true;}
+    if(!found && ss.length){ss[0].classList.add('active');}
+  }
+  function fromHash(){var h=decodeURIComponent(location.hash.replace(/^#/,''));showSlide(h|| (document.querySelector('.slide')||{}).getAttribute&&document.querySelector('.slide').getAttribute('data-id'));}
+  window.addEventListener('hashchange',fromHash);
+  fromHash();
+</script>
+</body>
+</html>

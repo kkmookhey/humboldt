@@ -1,0 +1,98 @@
+{
+  "id": "d0-01-zero-trust",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "deck": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-01-zero-trust-deck/deck.html",
+  "instructions": "Narrate as a senior Microsoft security architect delivering exam preparation to a peer. Formal, precise, measured — authoritative, calm, never chatty or hyped. Natural pronunciation of acronyms. No filler words.",
+  "examDomain": "Foundations · Microsoft security frameworks (AZ-500 / SC-100)",
+  "title": {
+    "kicker": "AZ-500 / SC-100 · Foundations",
+    "title": "Zero Trust Strategy",
+    "lines": [
+      "Verify explicitly · Least privilege · Assume breach"
+    ]
+  },
+  "intro": "Zero Trust is the strategy that every other Microsoft security framework operationalizes, so it is the right place to begin the foundations. It rests on one idea: never trust, always verify. The old model trusted the network — inside the perimeter was safe, outside was dangerous. That assumption fails against modern attacks like identity compromise, phishing, and session hijacking, which do not care where you sit on the network. Zero Trust replaces trust by default with trust by exception. In this module: the three principles, the seven technology pillars, the adoption model, and how Zero Trust relates to the other frameworks you will design against.",
+  "sections": [
+    {
+      "id": "principles",
+      "section": "The three principles",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-01-zero-trust-deck/deck.html#principles",
+      "narration": "Three principles anchor the entire strategy, and the exam tests them directly. First, verify explicitly: authenticate and authorize every request using all available signals — identity, device health, location, behavior, and risk. Second, use least-privilege access: grant only the access needed, for the shortest time required, applying just-in-time and just-enough-access to humans and to workload identities alike. Third, assume breach: design your controls expecting the attacker is already inside, so you segment to minimize blast radius, verify end-to-end, and drive rapid detection and response. Two cautions. Zero Trust is not a product you buy; it is a strategy realized through many controls. And verifying explicitly does not mean multifactor once at login — verification is continuous across the session.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "verify",
+      "section": "Verify explicitly in practice",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-01-zero-trust-deck/deck.html#verify",
+      "narration": "Principle one becomes a concrete control in Entra Conditional Access. Each policy evaluates the signals at sign-in — who is asking, the health and compliance of their device, their location, and their risk level — then grants, blocks, or requires a step-up such as multifactor authentication. Paired with Continuous Access Evaluation, that decision is re-evaluated when conditions change, which is what makes verification continuous rather than a single gate at the front door. This is verify-explicitly made operational in the Identities pillar, and it is the highest-leverage place most organizations start.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "pillars",
+      "section": "The seven technology pillars",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-01-zero-trust-deck/deck.html#pillars",
+      "narration": "The technology pillars are the architecture map. Each pillar answers one question: how do we apply the three principles to this part of the estate? Identities govern the access decision itself. Endpoints establish device trust through health and compliance. Data carries its own protection — classification, labeling, and encryption travel with the asset. Apps control how data is reached at the application and API layer. Infrastructure hardens compute — servers, virtual machines, and containers. Network segments connectivity to stop lateral movement. Those are the six asset pillars. The seventh, sec ops — visibility, automation, and orchestration — is the integrating pillar: it detects, investigates, and responds using signals from all of the others. A common exam trap is confusing the six asset pillars with sec ops; sec ops is the one that stitches them together.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "adoption",
+      "section": "The adoption model",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-01-zero-trust-deck/deck.html#adoption",
+      "narration": "An architect adopts Zero Trust top-down through Microsoft's structured model. Start with business scenarios — the why: which security outcomes and risks matter most to the organization. Move to security disciplines — the what: the strategy, architecture, processes, and controls each scenario requires. Then map to the technology pillars — the where: which of the seven pillars actually implement it. Privileged Identity Management is the canonical least-privilege win here, making administrative access eligible rather than standing, time-bound, and gated behind multifactor authentication. Once the model is set, the Rapid Modernization Plan, RaMP, supplies the prioritized quick-win checklists that get the program moving — and that is the focus of the next module.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "frameworks",
+      "section": "Zero Trust among the frameworks",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-01-zero-trust-deck/deck.html#frameworks",
+      "narration": "This is the question Domain 1 of the SC-100 loves: how does Zero Trust relate to the other frameworks? Zero Trust is the strategy — the principles and the why behind every control. MCRA, the Microsoft Cybersecurity Reference Architectures, is the reference picture that shows Zero Trust applied across the whole estate. The Microsoft cloud security benchmark is the prescriptive checklist of controls you measure against, surfaced as secure score in Defender for Cloud. The Azure Well-Architected Framework, through its security pillar, is Zero Trust applied at the workload-design level. And the Cloud Adoption Framework, through its secure methodology, is Zero Trust applied across the adoption journey and landing zones. One sentence to carry into the exam: Zero Trust is the why and the principles; MCRA is the picture; MCSB is the checklist; the Well-Architected Framework is the workload lens; and the Cloud Adoption Framework is the journey.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember",
+      "title": "Zero Trust in five rules",
+      "accent": "#56d364",
+      "lines": [
+        "placeholder"
+      ]
+    },
+    "narration": "To bring it together. One idea underpins everything: never trust, always verify — and that verification is continuous, not one-time. Hold the three principles: verify explicitly, use least-privilege access, and assume breach. Remember the seven pillars — six asset pillars plus sec ops as the integrating seventh. Adopt top-down: business scenarios, then security disciplines, then technology pillars, then RaMP for quick wins. And place Zero Trust correctly among the frameworks: it is the strategy, while MCRA is the picture, the cloud security benchmark is the checklist, the Well-Architected Framework is the workload lens, and the Cloud Adoption Framework is the journey."
+  },
+  "action": {
+    "kicker": "Do this",
+    "exercises": [
+      {
+        "id": "lab-d0-1",
+        "title": "Exercise 1 — Map your tenant to the three principles",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Here is your first exercise. Take your own tenant and map it to each principle, naming one control you already have and one gap. For verify explicitly, look at Conditional Access and multifactor coverage. For least privilege, check whether Privileged Identity Management makes access eligible rather than standing, and whether access reviews run. For assume breach, examine network segmentation and Defender alerting. You are done when each of the three principles has one named control and one named gap — that inventory is the starting point for everything that follows."
+      },
+      {
+        "id": "lab-d0-2",
+        "title": "Exercise 2 — Draw the maturity grid",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Second exercise: produce a one-page maturity snapshot. Score a single pillar first — choose Identities — and rate it one to five on three axes: explicit verification through Conditional Access coverage, least privilege through PIM and access reviews, and assume-breach through risk-based policies. Write down the single highest-leverage fix that score reveals. Then draw the grid: the three principles across the top, the seven pillars down the side, and mark each cell red, amber, or green. That grid is your Zero Trust maturity snapshot, and it is a perfect SC-100 design artifact."
+      }
+    ]
+  }
+}

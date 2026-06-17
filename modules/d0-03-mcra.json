@@ -1,0 +1,98 @@
+{
+  "id": "d0-03-mcra",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "deck": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-03-mcra-deck/deck.html",
+  "instructions": "Narrate as a senior Microsoft security architect delivering exam preparation to a peer. Formal, precise, measured — authoritative, calm, never chatty or hyped. Natural pronunciation of acronyms. No filler words.",
+  "examDomain": "Foundations · Microsoft security frameworks (AZ-500 / SC-100)",
+  "title": {
+    "kicker": "AZ-500 / SC-100 · Foundations",
+    "title": "Microsoft Cybersecurity Reference Architectures (MCRA)",
+    "lines": [
+      "The picture · Map your estate · Sequence the gaps"
+    ]
+  },
+  "intro": "Zero Trust gives you the principles. The Microsoft cybersecurity reference architectures give you the picture those principles turn into. MCRA is a set of end-to-end technical reference architectures that show how Microsoft's security capabilities fit together across the entire modern estate, drawn against Zero Trust. In this module: what MCRA is, what the deck actually contains, the eight diagram families that form the architecture map, how an architect uses it to gap-map an estate, and where MCRA sits among the other frameworks you already know.",
+  "sections": [
+    {
+      "id": "what-mcra",
+      "section": "What MCRA is",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-03-mcra-deck/deck.html#what-mcra",
+      "narration": "Begin with the one-line definition, because the exam tests it precisely. MCRA is a set of end-to-end technical reference architectures that show how to secure the entire modern estate using Zero Trust. Microsoft calls that estate the hybrid of everything — legacy IT, multicloud, IoT and operational technology, and now AI layered across all of it. Two facts to hold. First, MCRA is delivered as a PowerPoint deck with speaker notes — not a product, not a portal blade, not a benchmark. It is the architecture diagrams themselves. Second, it is built on Zero Trust and is a component of the Security Adoption Framework, the structured model for planning and implementing security modernization. MCRA is the picture; it is not a standalone framework that competes with Zero Trust.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "contains",
+      "section": "What the deck contains",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-03-mcra-deck/deck.html#contains",
+      "narration": "The deck is more than diagrams. Alongside the reference architectures, it documents antipatterns — the common mistakes — paired with best practices for getting it right. It sets out threat trends and attack patterns, and makes the case for end-to-end security with ruthless prioritization of the work. It provides guidance for adopting an end-to-end Zero Trust approach. And critically for the architect, it maps Microsoft capabilities to Zero Trust standards and to organizational roles. That combination — the picture, plus the reasoning and the mappings around it — is what makes MCRA a planning instrument rather than a poster.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "diagram-families",
+      "section": "The eight diagram families",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-03-mcra-deck/deck.html#diagram-families",
+      "narration": "The architecture map is organized into eight diagram families, and the names are exam-relevant. First, Microsoft cybersecurity capabilities — the master map, every capability on one slide, and the most-referenced diagram. Second, Zero Trust user access — how identity, device, and adaptive access combine to verify each request. Third, security operations — XDR plus SIEM, detection, investigation, and response, the work the SOC ties together. Fourth, operational technology, securing OT and industrial control systems alongside IT. Fifth, multicloud and cross-platform. Sixth, attack chain coverage, mapping which capabilities break which stage. Seventh, infrastructure and development security, including DevSecOps. And eighth, security organizational functions — the people side, how roles map to the architecture. Microsoft Sentinel, shown here, is the SIEM and SOAR capability the security operations family points to.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "how-to-use",
+      "section": "How an architect uses MCRA",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-03-mcra-deck/deck.html#how-to-use",
+      "narration": "An architect uses MCRA as a target-state architecture template — a picture you overlay your own estate onto. The working method is straightforward. Open the capabilities slide, overlay your current controls, and mark each one as something you own, partially own, or lack. Then sequence the gaps by risk. Microsoft documents three use cases. As a starting template, to define your target state across an estate spanning on-premises, mobile, multiple clouds, and OT. As a comparison reference against what you already license — organizations routinely discover capabilities they already own but were not using. And as a learning tool, because in presentation mode each capability carries a ScreenTip with a short description and a documentation link. Defender for Cloud, shown here, is one capability area where that posture work becomes measurable. Stay at architecture altitude — MCRA is a target-state template, not a step-by-step configuration guide.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "frameworks",
+      "section": "Where MCRA sits among the frameworks",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-03-mcra-deck/deck.html#frameworks",
+      "narration": "Domain one loves the question of how these frameworks fit together, so hold the consistent framing. Zero Trust is the strategy — verify explicitly, least privilege, assume breach. MCRA is the picture, the reference architecture that shows Zero Trust applied across the whole estate. The Microsoft cloud security benchmark, MCSB, is the checklist of prescriptive controls you measure against in Defender for Cloud. The well-architected framework is the workload lens, and the cloud adoption framework is the journey. One distinction the exam pays for: do not confuse MCRA with MCSB. MCRA is the architecture, the picture; MCSB is the prescriptive control benchmark. SC-100 Domain one deliberately pairs them — you design solutions that align with both the reference architecture and the control benchmark together.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember",
+      "title": "MCRA in five rules",
+      "accent": "#56d364",
+      "lines": [
+        "placeholder"
+      ]
+    },
+    "narration": "To bring it together. MCRA is a set of end-to-end reference architectures for the hybrid-of-everything estate — legacy IT, multicloud, OT, and AI — delivered as a PowerPoint deck, not a product. It is built on Zero Trust and is a component of the Security Adoption Framework. Its architecture map is eight diagram families: capabilities, Zero Trust user access, security operations, operational technology, multicloud, attack chain coverage, infrastructure and development security, and organizational functions. You use it as a target-state template — map your estate, mark what you own, partially own, or lack, and sequence the gaps by risk. And hold the distinction the exam tests: MCRA is the picture, MCSB is the checklist. Design against the pair."
+  },
+  "action": {
+    "kicker": "Do this",
+    "exercises": [
+      {
+        "id": "lab-mcra-1",
+        "title": "Exercise 1 — Map your controls onto the capabilities slide",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Here is your first exercise. Download the current MCRA PowerPoint deck and open the Microsoft cybersecurity capabilities diagram — the master map. For each capability on that slide, mark it against your own tenant as something you own, partially deployed, or have as a gap. The result is a one-slide capability heat-map of your environment, and a strong SC-100 design artifact. You are done when every capability on the slide carries an own, partial, or gap mark."
+      },
+      {
+        "id": "lab-mcra-2",
+        "title": "Exercise 2 — Walk one family, then pair gaps to MCSB",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Second exercise: practice the MCRA-plus-MCSB reasoning Domain one tests. Pick one diagram family — Zero Trust user access, or security operations. In presentation mode, read each capability's ScreenTip, and for each capability write down three things: the Microsoft capability, the control you use today, and the integration point you are not yet using. Then take three gaps from the first exercise and, for each, name the MCSB control domain that would govern it. You are done when three gaps are each mapped to an MCSB control domain — that pairing is exactly how Domain one asks you to reason."
+      }
+    ]
+  }
+}

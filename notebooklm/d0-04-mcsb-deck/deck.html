@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>D0 · Microsoft Cloud Security Benchmark</title>
+<style>
+  :root{
+    --bg:#0a0e14; --bg2:#0d1320; --panel:#111927; --panel2:#0f1622;
+    --ink:#e6edf3; --dim:#9aa7b8; --faint:#5b6b80; --line:#1f2a3a;
+    --green:#56d364; --orange:#f0883e; --blue:#58a6ff; --red:#f85149; --violet:#bc8cff;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  .slide{position:fixed;inset:0;display:none;flex-direction:column;
+    padding:78px 110px 70px;
+    background:radial-gradient(1400px 760px at 78% -8%,#10203a 0%,rgba(16,32,58,0) 60%),
+               radial-gradient(1100px 620px at 0% 108%,#10261c 0%,rgba(16,38,28,0) 55%),
+               linear-gradient(160deg,var(--bg) 0%,var(--bg2) 100%);}
+  .slide.active{display:flex}
+  /* top bar */
+  .top{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);
+    font-size:21px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase}
+  .top .brand{color:var(--dim)} .top .brand b{color:var(--blue);font-weight:600}
+  .kicker{font-family:var(--mono);font-size:24px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--blue);margin:54px 0 14px}
+  .kicker.green{color:var(--green)} .kicker.orange{color:var(--orange)}
+  h1{font-size:78px;line-height:1.04;font-weight:800;letter-spacing:-.018em;max-width:1500px}
+  h1 .sub{display:block;font-size:38px;font-weight:500;color:var(--dim);margin-top:18px;letter-spacing:-.005em}
+  .lead{font-size:33px;line-height:1.5;color:var(--dim);max-width:1320px;margin-top:30px}
+  .lead b{color:var(--ink);font-weight:600}
+  ul{list-style:none;margin-top:40px;display:flex;flex-direction:column;gap:26px;max-width:1480px}
+  li{font-size:31px;line-height:1.4;color:#c9d6e5;padding-left:46px;position:relative}
+  li::before{content:"";position:absolute;left:0;top:14px;width:18px;height:18px;border-radius:5px;
+    background:var(--blue);box-shadow:0 0 0 5px rgba(88,166,255,.16)}
+  li.g::before{background:var(--green);box-shadow:0 0 0 5px rgba(86,211,100,.16)}
+  li.o::before{background:var(--orange);box-shadow:0 0 0 5px rgba(240,136,62,.16)}
+  li b{color:#fff;font-weight:650} li .m{font-family:var(--mono);color:var(--blue);font-size:.92em}
+  .spacer{flex:1}
+  .foot{font-family:var(--mono);font-size:19px;color:var(--faint);letter-spacing:.04em}
+  /* layout helpers */
+  .row{display:flex;gap:54px;align-items:center;margin-top:30px}
+  .col{flex:1}
+  /* three-phase diagram */
+  .phases{display:flex;align-items:stretch;gap:0;margin-top:54px}
+  .ph{flex:1;background:linear-gradient(165deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:20px;padding:38px 36px;position:relative}
+  .ph .n{font-family:var(--mono);font-size:30px;color:var(--bg);font-weight:800;
+    width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+  .ph1 .n{background:var(--green)} .ph2 .n{background:var(--orange)} .ph3 .n{background:var(--blue)}
+  .ph h3{font-size:33px;font-weight:750;line-height:1.12;margin-bottom:14px}
+  .ph p{font-size:24px;line-height:1.42;color:var(--dim)}
+  .arrow{align-self:center;color:var(--faint);font-size:46px;padding:0 18px;flex:0 0 auto}
+  .note{margin-top:40px;font-size:27px;color:var(--ink);font-family:var(--mono);
+    background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.4);border-radius:14px;
+    padding:22px 30px;letter-spacing:.01em}
+  .note b{color:var(--red)}
+  /* 3-2-1 cards */
+  .cards{display:flex;gap:34px;margin-top:50px}
+  .card{flex:1;background:linear-gradient(165deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:20px;padding:40px 36px;text-align:center}
+  .card .big{font-family:var(--mono);font-size:84px;font-weight:800;color:var(--green);line-height:1}
+  .card .lbl{font-size:27px;color:var(--ink);margin-top:18px;font-weight:600}
+  .card .sm{font-size:21px;color:var(--dim);margin-top:10px;line-height:1.4}
+  .chips{display:flex;gap:18px;flex-wrap:wrap;margin-top:42px}
+  .chip{font-family:var(--mono);font-size:23px;letter-spacing:.04em;color:#cfe3ff;
+    background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.35);border-radius:999px;padding:14px 28px}
+  .chip.g{color:#c7f4d0;background:rgba(86,211,100,.1);border-color:rgba(86,211,100,.4)}
+  /* grounded screenshot */
+  .screenwrap{margin-top:34px;display:flex;gap:50px;align-items:flex-start}
+  .browser{flex:1.55;border-radius:16px;overflow:hidden;border:1px solid var(--line);
+    box-shadow:0 40px 90px rgba(0,0,0,.55);background:#0b0f16}
+  .chrome{display:flex;align-items:center;gap:12px;background:#161b22;padding:16px 22px;border-bottom:1px solid var(--line)}
+  .chrome i{width:15px;height:15px;border-radius:50%;display:inline-block}
+  .chrome .r{background:#ff5f57}.chrome .y{background:#febc2e}.chrome .g{background:#28c840}
+  .chrome span{font-family:var(--mono);font-size:19px;color:var(--faint);margin-left:14px}
+  .browser img{display:block;width:100%}
+  .ground-side{flex:1;display:flex;flex-direction:column;gap:24px;padding-top:8px}
+  .tag{align-self:flex-start;font-family:var(--mono);font-size:19px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--green);background:rgba(86,211,100,.1);border:1px solid rgba(86,211,100,.35);border-radius:8px;padding:9px 16px}
+  .ground-side h3{font-size:36px;font-weight:750;line-height:1.15}
+  .ground-side p{font-size:27px;line-height:1.5;color:var(--dim)}
+  .ground-side p b{color:var(--ink)}
+  /* title slide */
+  .title-slide{justify-content:center}
+  .title-slide .eyebrow{font-family:var(--mono);font-size:26px;letter-spacing:.28em;color:var(--blue);text-transform:uppercase}
+  .title-slide h1{font-size:104px;margin-top:26px}
+  .title-slide .lead{font-size:38px;margin-top:34px}
+  .verbs{display:flex;gap:18px;margin-top:50px;font-family:var(--mono);font-size:26px;color:var(--faint);letter-spacing:.06em}
+  .verbs b{color:var(--green);font-weight:600}
+  /* recap */
+  .recap li::before{background:var(--green);box-shadow:0 0 0 5px rgba(86,211,100,.16)}
+  .recap li .m{color:var(--green)}
+  /* lab */
+  .lab .kicker{color:var(--orange)}
+  .lab li::before{background:var(--orange);box-shadow:0 0 0 5px rgba(240,136,62,.16)}
+  .lab .goal{font-size:30px;color:var(--orange);font-family:var(--mono);margin-top:30px;letter-spacing:.02em}
+  .done{margin-top:36px;font-family:var(--mono);font-size:26px;color:var(--green)}
+</style>
+</head>
+<body>
+
+<!-- INTRO / TITLE -->
+<section class="slide title-slide" data-id="intro">
+  <div class="eyebrow">AZ-500 / SC-100 · Foundations</div>
+  <h1>Microsoft Cloud<br>Security Benchmark</h1>
+  <div class="lead">The prescriptive <b>checklist</b> of cloud-agnostic controls — measured by default in <b>Microsoft Defender for Cloud</b>, pre-mapped to CIS, NIST, and PCI.</div>
+  <div class="verbs"><b>PLAN</b> → <b>MONITOR</b> → <b>ESTABLISH</b></div>
+</section>
+
+<!-- WHAT MCSB IS -->
+<section class="slide" data-id="whatis">
+  <div class="top"><span>What MCSB is</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">Prescriptive, measurable controls</div>
+  <h1 style="font-size:60px">One control framework across every cloud</h1>
+  <ul>
+    <li><b>Prescriptive, cloud-agnostic controls</b> for securing workloads, data, and services across <b>Azure, AWS, and GCP</b> — measure once, report against many.</li>
+    <li>Each control pairs a <b>technology-agnostic principle</b> (the <i>what</i>) with Azure- and AWS-specific <b>implementation guidance</b> (the <i>how</i>).</li>
+    <li class="g">Successor to the <b>Azure Security Benchmark</b>, rebranded to MCSB in <b>October 2022</b> and widened from Azure-only to <b>multicloud</b>.</li>
+    <li>It is <b>controls, not a product</b> — you don't deploy MCSB, you measure against it and enforce it with Azure Policy.</li>
+  </ul>
+</section>
+
+<!-- CONTROL FAMILIES -->
+<section class="slide" data-id="families">
+  <div class="top"><span>The structure</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker green">12 v1 control domains — the checklist</div>
+  <h1 style="font-size:56px">From the network in, to governance over all of it</h1>
+  <div class="chips">
+    <span class="chip">NETWORK SECURITY</span>
+    <span class="chip">IDENTITY MANAGEMENT</span>
+    <span class="chip">PRIVILEGED ACCESS</span>
+    <span class="chip">DATA PROTECTION</span>
+    <span class="chip">ASSET MANAGEMENT</span>
+    <span class="chip">LOGGING &amp; THREAT DETECTION</span>
+    <span class="chip">INCIDENT RESPONSE</span>
+    <span class="chip">POSTURE &amp; VULN MANAGEMENT</span>
+    <span class="chip">ENDPOINT SECURITY</span>
+    <span class="chip">BACKUP &amp; RECOVERY</span>
+    <span class="chip">DEVOPS SECURITY</span>
+    <span class="chip g">GOVERNANCE &amp; STRATEGY</span>
+  </div>
+  <div class="note" style="background:rgba(88,166,255,.08);border-color:rgba(88,166,255,.4)"><b style="color:var(--blue)">v2 (preview)</b> &nbsp;adds an Artificial Intelligence Security domain, 420+ Azure Policy mappings, and MITRE ATT&amp;CK risk guidance.</div>
+</section>
+
+<!-- OPERATIONALIZE — Defender for Cloud / Secure Score (grounded) -->
+<section class="slide" data-id="operationalize">
+  <div class="top"><span>How it's operationalized</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">Applied by default · drives Secure Score</div>
+  <h1 style="font-size:58px">The benchmark behind the score</h1>
+  <div class="screenwrap">
+    <div class="ground-side">
+      <span class="tag">Grounded · AZ-500 · Defender for Cloud</span>
+      <h3>Assessed continuously, not once</h3>
+      <p>MCSB is the <b>default standard</b> assessed in Defender for Cloud, and its passing and failing assessments <b>drive your Secure Score</b> — here, <b>45 of 63 controls passed</b>.</p>
+      <p>The loop is <b>Plan → Monitor → Establish</b>: plan to the controls, monitor compliance, establish Azure Policy guardrails.</p>
+    </div>
+    <div class="browser">
+      <div class="chrome"><i class="r"></i><i class="y"></i><i class="g"></i><span>portal.azure.com — Microsoft Defender for Cloud · Overview</span></div>
+      <img src="img/defender-secure-score.png" alt="Defender for Cloud secure score and MCSB compliance">
+    </div>
+  </div>
+</section>
+
+<!-- COMPLIANCE DASHBOARD + framework mappings (grounded) -->
+<section class="slide" data-id="compliance">
+  <div class="top"><span>Measure once, report against many</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker green">Pre-mapped to CIS, NIST, PCI</div>
+  <h1 style="font-size:56px">The Regulatory compliance dashboard</h1>
+  <div class="screenwrap">
+    <div class="browser">
+      <div class="chrome"><i class="r"></i><i class="y"></i><i class="g"></i><span>portal.azure.com — Defender for Cloud · Regulatory compliance</span></div>
+      <img src="img/defender-compliance.png" alt="Regulatory compliance dashboard showing MCSB as the default standard">
+    </div>
+    <div class="ground-side">
+      <span class="tag">Grounded · AZ-500 · Regulatory compliance</span>
+      <h3>MCSB is the default standard</h3>
+      <p>Every MCSB control is <b>pre-mapped</b> to CIS, NIST SP 800-53, and PCI-DSS — so one assessment populates many reports.</p>
+      <p>A mapping shows <b>where an Azure feature can address</b> an industry control — it does not by itself prove full compliance.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONNECTIVE TISSUE -->
+<section class="slide" data-id="connective">
+  <div class="top"><span>The framework family</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">Where MCSB sits among the frameworks</div>
+  <h1 style="font-size:58px">MCSB is the checklist</h1>
+  <ul>
+    <li><b>Zero Trust</b> is the strategy · <b>MCRA</b> is the picture · <b class="m" style="color:#fff">MCSB is the checklist</b> · <b>WAF</b> is the workload lens · <b>CAF</b> is the journey.</li>
+    <li class="g">When the exam asks how you <b>measure and report</b> security posture, the answer is <b>MCSB in Defender for Cloud</b>.</li>
+    <li><b>MCSB vs RaMP</b>: MCSB is the <b>benchmark</b> you measure against; the Rapid Modernization Plan is the prioritized <b>project plan</b> for getting there.</li>
+    <li>SC-100 tests it twice: <b>Domain 1</b> — design to MCRA and MCSB; <b>Domain 3</b> — posture management with Defender for Cloud and MCSB.</li>
+  </ul>
+</section>
+
+<!-- RECAP -->
+<section class="slide recap" data-id="recap">
+  <div class="top"><span>Remember</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker green">The Microsoft cloud security benchmark in five rules</div>
+  <h1 style="font-size:58px">What the exam expects you to know</h1>
+  <ul>
+    <li><span class="m">1 ·</span> MCSB is <b>prescriptive, cloud-agnostic controls</b> across Azure, AWS, and GCP — successor to ASB (Oct 2022).</li>
+    <li><span class="m">2 ·</span> <b>12 v1 domains</b>, network security through governance and strategy; <b>v2 preview adds AI Security</b>.</li>
+    <li><span class="m">3 ·</span> It's <b>controls, not a product</b> — measure against it, enforce with Azure Policy.</li>
+    <li><span class="m">4 ·</span> <b>Default standard</b> in Defender for Cloud's Regulatory compliance dashboard; it <b>drives Secure Score</b>.</li>
+    <li><span class="m">5 ·</span> <b>Pre-mapped</b> to CIS, NIST, and PCI — measure once, report against many. <b>The checklist</b> in the framework family.</li>
+  </ul>
+</section>
+
+<!-- LAB 1 -->
+<section class="slide lab" data-id="lab-mcsb-1">
+  <div class="top"><span>Hands-on · 1 of 2</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker orange">Do this</div>
+  <h1 style="font-size:58px">Drill the dashboard behind the score</h1>
+  <div class="goal">GOAL · See the MCSB-to-Secure-Score loop made concrete</div>
+  <ul>
+    <li class="o">In Defender for Cloud, open <b>Regulatory compliance</b> and confirm <b>MCSB is the default applied standard</b>.</li>
+    <li class="o">Drill into one <b>failing control family</b> — Data Protection or Network Security.</li>
+    <li class="o">Read one failing assessment end to end: the <b>control, affected resources, and remediation</b>.</li>
+  </ul>
+  <div class="done">✓ DONE WHEN · You can trace one failing control to the resources moving your score</div>
+</section>
+
+<!-- LAB 2 -->
+<section class="slide lab" data-id="lab-mcsb-2">
+  <div class="top"><span>Hands-on · 2 of 2</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker orange">Do this</div>
+  <h1 style="font-size:58px">Trace one control across frameworks</h1>
+  <div class="goal">GOAL · Prove "measure once, report against many" on a single row</div>
+  <ul>
+    <li class="o">Open the MCSB <b>mapping spreadsheet</b> and pick one control — for instance <b>DP-1</b>, discover and classify sensitive data.</li>
+    <li class="o">Write down its <b>CIS</b>, <b>NIST SP 800-53</b>, and <b>PCI-DSS</b> equivalents.</li>
+    <li class="o">Then score one domain — <b>Identity Management</b> — pass / partial / fail against what you actually run.</li>
+  </ul>
+  <div class="done">✓ DONE WHEN · One row maps cleanly to three frameworks, and one domain has a scored posture table</div>
+</section>
+
+<script>
+  function showSlide(id){
+    var ss=document.querySelectorAll('.slide'),i,found=false;
+    for(i=0;i<ss.length;i++){var on=ss[i].getAttribute('data-id')===id;ss[i].classList.toggle('active',on);if(on)found=true;}
+    if(!found && ss.length){ss[0].classList.add('active');}
+  }
+  function fromHash(){var h=decodeURIComponent(location.hash.replace(/^#/,''));showSlide(h|| (document.querySelector('.slide')||{}).getAttribute&&document.querySelector('.slide').getAttribute('data-id'));}
+  window.addEventListener('hashchange',fromHash);
+  fromHash();
+</script>
+</body>
+</html>

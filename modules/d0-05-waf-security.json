@@ -1,0 +1,64 @@
+{
+  "id": "d0-05-waf-security",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "deck": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-05-waf-security-deck/deck.html",
+  "instructions": "Narrate as a senior Microsoft security architect delivering exam preparation to a peer. Formal, precise, measured — authoritative, calm, never chatty or hyped. Natural pronunciation of acronyms. No filler words.",
+  "examDomain": "Foundations · Microsoft security frameworks (AZ-500 / SC-100)",
+  "title": {
+    "kicker": "D0 · Foundations",
+    "title": "Azure Well-Architected Framework: Security",
+    "lines": ["The workload-design lens"]
+  },
+  "intro": "The Azure Well-Architected Framework is Microsoft's set of design principles for building quality workloads, across five pillars: reliability, security, cost optimization, operational excellence, and performance efficiency. The security pillar applies security at the workload-design level. It is the lens an architect uses to design, review, and trade off a single workload so that it resists attack and upholds the C-I-A triad — confidentiality, integrity, and availability — on a Zero Trust foundation. In one line: the Well-Architected Framework is the workload lens.",
+  "sections": [
+    {
+      "id": "pillars", "section": "Security is one of five pillars",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-05-waf-security-deck/deck.html#pillars",
+      "kicker": "-", "cardTitle": "-", "bullets": [],
+      "narration": "Security is one pillar of five, and that placement matters. Reliability, security, cost optimization, operational excellence, and performance efficiency are co-equal design concerns, and they pull against each other. The security pillar's job is not to measure controls — that is the cloud security benchmark's role. Its job is to help you design one specific workload well: where to place a trust boundary, which control to apply to which flow, and what that choice costs you elsewhere. And because workloads evolve, you apply it on a recurring basis — a Well-Architected Review you run, act on, and re-run as the architecture changes."
+    },
+    {
+      "id": "principles", "section": "The 5 security design principles",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-05-waf-security-deck/deck.html#principles",
+      "kicker": "-", "cardTitle": "-", "bullets": [],
+      "narration": "The pillar rests on five security design principles, and they are the anchor the exam tests. One: plan your security readiness — bake security into design and operations, use segmentation to set boundaries, and maintain an incident response plan. Two: design to protect confidentiality — least-privilege access, data classification, and encryption at rest, in transit, and in use. Three: design to protect integrity — authenticate and authorize, protect the software supply chain, and keep backups immutable and encrypted. Four: design to protect availability — stop resource exhaustion such as denial-of-service, and give recovery resources the same rigor as production. Five: sustain and evolve your posture — asset inventory, threat modeling, periodic testing, and effective detection and response. Every principle is driven by the Zero Trust tenets: verify explicitly, least privilege, assume breach."
+    },
+    {
+      "id": "maturity", "section": "The 5-level maturity model",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-05-waf-security-deck/deck.html#maturity",
+      "kicker": "-", "cardTitle": "-", "bullets": [],
+      "narration": "The pillar also gives you a five-level security maturity model — a progressive path for strengthening a workload over its lifecycle. Level one, core security: a minimum viable baseline, with identity externalized to a provider, data encrypted, and secrets protected. Level two, threat prevention: secure the deployment pipeline, classify data, and harden the attack surface. Level three, risk assessment: threat modeling with STRIDE, advanced encryption, and an incident response plan. Level four, system hardening: refine controls using production insight, with microsegmentation and just-in-time access. Level five, advanced defense: specialized protection, security information and event management with Sentinel, and adversarial testing. You place your workload honestly, then move up one level at a time. It is a planning path, not a compliance score."
+    },
+    {
+      "id": "tradeoffs", "section": "Every control carries a tradeoff",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-05-waf-security-deck/deck.html#tradeoffs",
+      "kicker": "-", "cardTitle": "-", "bullets": [],
+      "narration": "Here is the pillar's signature contribution, and the distinction the exam rewards. The cloud security benchmark tells you which control to apply. The Well-Architected Framework tells you what designing that control in costs you everywhere else. Every control carries a tradeoff: microsegmentation buys isolation but adds cost and complexity; bring-your-own-key buys control but adds key-management burden; just-in-time access buys least privilege but adds operational friction. If an answer treats security as free, it is not thinking in Well-Architected terms. Name the tradeoff — that sentence is the muscle the exam is testing."
+    },
+    {
+      "id": "connective", "section": "Where it sits among the frameworks",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-05-waf-security-deck/deck.html#connective",
+      "kicker": "-", "cardTitle": "-", "bullets": [],
+      "narration": "So hold the five frameworks in one line. Zero Trust is the strategy. M-C-R-A is the picture. The cloud security benchmark is the checklist. The Well-Architected Framework is the workload lens. And the Cloud Adoption Framework is the journey. The Well-Architected security pillar is Zero Trust and the C-I-A triad applied at the level of one workload's design. On the SC-100 exam, Domain one pairs it with the Cloud Adoption Framework, landing zones, and DevSecOps — expect a scenario where you must pick the right framework for the altitude of the question. One caution: the Well-Architected security pillar is not the Azure Web Application Firewall service. The exam references both, so read which one is meant."
+    }
+  ],
+  "recap": {
+    "card": { "kicker": "Remember", "title": "The Well-Architected security pillar in five rules", "accent": "#56d364", "lines": ["placeholder"] },
+    "narration": "To bring it together. The Well-Architected Framework has five pillars; security is the one applied at workload-design level, built on the C-I-A triad and Zero Trust. Learn the five design principles: readiness, confidentiality, integrity, availability, and sustaining your posture. Use the five-level maturity model to sequence the work, one level at a time. Remember the pillar's signature: every control carries a tradeoff, and naming it is the skill. And keep the frameworks straight — Zero Trust the strategy, the benchmark the checklist, the Well-Architected Framework the workload lens."
+  },
+  "action": {
+    "kicker": "Do this",
+    "exercises": [
+      {
+        "id": "lab-waf-1", "title": "Exercise 1 — Run the Security checklist & place the workload", "accent": "#f0883e", "lines": ["placeholder"],
+        "narration": "First exercise, and it is the Well-Architected Review itself. Pick one real workload and walk the security checklist — the twelve recommendations, S-E-01 through S-E-12 — marking each met, partial, or a gap. The gaps are your design backlog. Then place that workload honestly on the five-level maturity model: if data-at-rest encryption or a standard identity provider is not in place, you are at level one, no matter how advanced your monitoring is. Name the single next move that lifts you one level."
+      },
+      {
+        "id": "lab-waf-2", "title": "Exercise 2 — Name one tradeoff out loud", "accent": "#f0883e", "lines": ["placeholder"],
+        "narration": "Second exercise: build the tradeoff muscle. Take one control you would add — microsegmentation, bring-your-own-key, just-in-time access, or a firewall on ingress — and say the sentence out loud: this control improves a security property, but it costs me reliability, or cost, or performance, or operations, because of a specific reason. When you can name the cost of a control as fluently as its benefit, you are designing the way the Well-Architected Framework, and the exam, expect."
+      }
+    ]
+  }
+}
