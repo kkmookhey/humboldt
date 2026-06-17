@@ -1,0 +1,107 @@
+{
+  "id": "d0-02-ramp",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "deck": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-02-ramp-deck/deck.html",
+  "instructions": "Narrate as a senior Microsoft security architect delivering exam preparation to a peer. Formal, precise, measured — authoritative, calm, never chatty or hyped. Natural pronunciation of acronyms. No filler words.",
+  "examDomain": "Foundations · Microsoft security frameworks (AZ-500 / SC-100)",
+  "title": {
+    "kicker": "AZ-500 / SC-100 · Foundations",
+    "title": "RaMP — The Zero Trust Rapid Modernization Plan",
+    "lines": [
+      "Prioritize · Sequence · Ship quick wins"
+    ]
+  },
+  "intro": "Zero Trust tells you why and what. It does not, on its own, tell you where to begin. That is the gap the rapid modernization plan closes. The rapid modernization plan, written R-a-M-P and pronounced ramp, is Microsoft's project-managed, prioritized checklist set that turns Zero Trust strategy into action. It captures the fastest-impact quick wins first. In this module: what ramp is, how it differs from the full deployment plans, its flagship validate-trust checklist, the ransomware workstream, and how ramp fits with the other frameworks you already know.",
+  "sections": [
+    {
+      "id": "what-ramp",
+      "section": "What RaMP is",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-02-ramp-deck/deck.html#what-ramp",
+      "narration": "Ramp is the execution accelerator for Zero Trust. It enumerates the technical objectives of each area in priority order, documents the steps needed to achieve them, and names the project members who must be involved — so an organization can capture the highest-leverage work first, framed as a time-boxed project rather than an open-ended program. State this plainly, because the exam tests it: ramp is not a separate framework competing with Zero Trust. It is the execution layer of Zero Trust. Its three defining traits are prioritized checklists, clear owners, and target timelines.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "ramp-vs-plans",
+      "section": "RaMP vs. the full deployment plans",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-02-ramp-deck/deck.html#ramp-vs-plans",
+      "narration": "The distinction the exam rewards is ramp versus the full deployment plans. The deployment plans give comprehensive, pillar-complete coverage — detailed design and deployment guidance for each technology area. Their question is, how do we apply Zero Trust everywhere. Ramp is narrower and sharper. It sequences the highest-leverage initiatives first, gives each a clear owner and a target date, and asks a different question: what do we do first to reduce the most risk. The output of the deployment plans is a fully realized architecture. The output of ramp is a tracked project. Ramp does not replace the deployment plans — it front-loads them. It is prioritized, not exhaustive, and that sequencing by impact is its entire value.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "validate-trust",
+      "section": "The flagship checklist — validate trust",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-02-ramp-deck/deck.html#validate-trust",
+      "narration": "The flagship ramp checklist is titled, explicitly validate trust for all access requests. It operationalizes the verify-explicitly principle, establishing identity as the control plane and validating trust before access is granted. It spans four areas, built out in sequence: Identities, Endpoints, Apps, and Network — not identity alone. On Identities, secured privileged access, Privileged Identity Management, MFA, risk-based Conditional Access, and passwordless. On Endpoints, device enrollment and compliance. On Apps, modern authentication and app governance. On Network, encryption, micro-segmentation, and real-time threat detection. Conditional Access is where that trust is evaluated, on every sign-in, before access is allowed.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "priv-access",
+      "section": "Secure privileged access first",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-02-ramp-deck/deck.html#priv-access",
+      "narration": "Both anchor checklists lead with the same move: secure privileged access first. The more privileged access an attacker gains, the greater the damage, so this is the highest-leverage quick win. Privileged Identity Management is the lever. It makes administrative access eligible rather than standing — just-in-time, time-bound, and gated behind multifactor authentication and approval. A compromised account can no longer pivot to everything at once. Hold this as the exam's expected answer: when a scenario asks where do we start, the Zero-Trust-aligned response is run ramp — secure privileged access and validate trust first.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "ransomware",
+      "section": "The ransomware workstream",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-02-ramp-deck/deck.html#ransomware",
+      "narration": "The second anchor workstream is ransomware recovery and data protection, framed as resilience. It opens with a ransomware privileged-access strategy — secure admin workstations, randomized local passwords, blocked privilege escalation, and end-to-end session security through Conditional Access — then protects and monitors the identity systems, mitigates lateral traversal, and ensures rapid threat response. Crucially, this work is time-boxed against explicit thirty, ninety, and one-hundred-eighty-day targets, which is what makes ramp project-managed rather than aspirational. This is the workstream the SC-100 ransomware resiliency objective leans on. Note the pattern: a privileged-access strategy leads here as well.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "frameworks",
+      "section": "How RaMP relates to the other frameworks",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-02-ramp-deck/deck.html#frameworks",
+      "narration": "Domain one loves the question of how these frameworks fit together, so hold the consistent framing. Zero Trust is the strategy. MCRA is the picture, the reference architecture. The Microsoft cloud security benchmark is the checklist of prescriptive controls you measure against in Defender for Cloud. The well-architected framework is the workload lens, and the cloud adoption framework is the journey. Ramp is the execution accelerator — how you get Zero Trust moving this quarter, not next year. One caution the exam rewards: do not confuse ramp with the cloud security benchmark. The benchmark is the prescriptive control standard you measure against; ramp is the prioritized project plan for getting Zero Trust moving.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember",
+      "title": "RaMP in five rules",
+      "accent": "#56d364",
+      "lines": [
+        "placeholder"
+      ]
+    },
+    "narration": "To bring it together. Ramp is the project-managed, prioritized quick-wins checklist set, with owners and target timelines as first-class elements. It is the execution accelerator for Zero Trust, not a competing framework. It is prioritized, not comprehensive — it front-loads the full deployment plans rather than replacing them. Its flagship checklist, explicitly validate trust, spans Identities, Endpoints, Apps, and Network. And secure privileged access comes first — that ordering is the exam's expected answer to where do we start. Prioritize, sequence, ship the quick wins."
+  },
+  "action": {
+    "kicker": "Do this",
+    "exercises": [
+      {
+        "id": "lab-ramp-1",
+        "title": "Exercise 1 — Run the validate-trust checklist",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Here is your first exercise. Walk the Identities list of the validate-trust checklist against your own tenant: secured privileged access, Privileged Identity Management configured as eligible rather than standing, multifactor authentication, Conditional Access requiring MFA, sign-in-risk policies, and passwordless credentials. Mark each as done, in-progress, or not started. Take your first three not-started items — those are your quick wins. Then, using the ramp accountability model, assign each an owner and a thirty- or ninety-day target. You are done when you have an owner and a date against your top three identity gaps, because that owner-and-date table is itself a ramp project plan, and a strong SC-100 design artifact."
+      },
+      {
+        "id": "lab-ramp-2",
+        "title": "Exercise 2 — Stand up three ransomware quick wins",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Second exercise: make the ransomware workstream concrete. From the ransomware checklist, pick three time-boxed targets — one hundred percent of admins on secure workstations, one hundred percent of local passwords randomized, and privilege-escalation mitigations deployed. Map each to the Microsoft control that delivers it: secure admin workstations, Windows LAPS, and Privileged Identity Management paired with Conditional Access. Then put a thirty, ninety, or one-hundred-eighty-day date against each. You are done when every quick win has both a control and a target date written down."
+      }
+    ]
+  }
+}

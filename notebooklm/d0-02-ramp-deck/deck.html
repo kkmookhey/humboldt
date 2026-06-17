@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AZ-500 / SC-100 · RaMP — Rapid Modernization Plan</title>
+<style>
+  :root{
+    --bg:#0a0e14; --bg2:#0d1320; --panel:#111927; --panel2:#0f1622;
+    --ink:#e6edf3; --dim:#9aa7b8; --faint:#5b6b80; --line:#1f2a3a;
+    --green:#56d364; --orange:#f0883e; --blue:#58a6ff; --red:#f85149; --violet:#bc8cff;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  .slide{position:fixed;inset:0;display:none;flex-direction:column;
+    padding:78px 110px 70px;
+    background:radial-gradient(1400px 760px at 78% -8%,#10203a 0%,rgba(16,32,58,0) 60%),
+               radial-gradient(1100px 620px at 0% 108%,#10261c 0%,rgba(16,38,28,0) 55%),
+               linear-gradient(160deg,var(--bg) 0%,var(--bg2) 100%);}
+  .slide.active{display:flex}
+  /* top bar */
+  .top{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);
+    font-size:21px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase}
+  .top .brand{color:var(--dim)} .top .brand b{color:var(--blue);font-weight:600}
+  .kicker{font-family:var(--mono);font-size:24px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--blue);margin:54px 0 14px}
+  .kicker.green{color:var(--green)} .kicker.orange{color:var(--orange)}
+  h1{font-size:78px;line-height:1.04;font-weight:800;letter-spacing:-.018em;max-width:1500px}
+  h1 .sub{display:block;font-size:38px;font-weight:500;color:var(--dim);margin-top:18px;letter-spacing:-.005em}
+  .lead{font-size:33px;line-height:1.5;color:var(--dim);max-width:1320px;margin-top:30px}
+  .lead b{color:var(--ink);font-weight:600}
+  ul{list-style:none;margin-top:40px;display:flex;flex-direction:column;gap:26px;max-width:1480px}
+  li{font-size:31px;line-height:1.4;color:#c9d6e5;padding-left:46px;position:relative}
+  li::before{content:"";position:absolute;left:0;top:14px;width:18px;height:18px;border-radius:5px;
+    background:var(--blue);box-shadow:0 0 0 5px rgba(88,166,255,.16)}
+  li.g::before{background:var(--green);box-shadow:0 0 0 5px rgba(86,211,100,.16)}
+  li.o::before{background:var(--orange);box-shadow:0 0 0 5px rgba(240,136,62,.16)}
+  li b{color:#fff;font-weight:650} li .m{font-family:var(--mono);color:var(--blue);font-size:.92em}
+  .spacer{flex:1}
+  .foot{font-family:var(--mono);font-size:19px;color:var(--faint);letter-spacing:.04em}
+  /* layout helpers */
+  .row{display:flex;gap:54px;align-items:center;margin-top:30px}
+  .col{flex:1}
+  /* three-phase diagram */
+  .phases{display:flex;align-items:stretch;gap:0;margin-top:54px}
+  .ph{flex:1;background:linear-gradient(165deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:20px;padding:38px 36px;position:relative}
+  .ph .n{font-family:var(--mono);font-size:30px;color:var(--bg);font-weight:800;
+    width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+  .ph1 .n{background:var(--green)} .ph2 .n{background:var(--orange)} .ph3 .n{background:var(--blue)}
+  .ph h3{font-size:33px;font-weight:750;line-height:1.12;margin-bottom:14px}
+  .ph p{font-size:24px;line-height:1.42;color:var(--dim)}
+  .arrow{align-self:center;color:var(--faint);font-size:46px;padding:0 18px;flex:0 0 auto}
+  .note{margin-top:40px;font-size:27px;color:var(--ink);font-family:var(--mono);
+    background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.4);border-radius:14px;
+    padding:22px 30px;letter-spacing:.01em}
+  .note b{color:var(--red)}
+  /* 3-2-1 cards */
+  .cards{display:flex;gap:34px;margin-top:50px}
+  .card{flex:1;background:linear-gradient(165deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:20px;padding:40px 36px;text-align:center}
+  .card .big{font-family:var(--mono);font-size:84px;font-weight:800;color:var(--green);line-height:1}
+  .card .lbl{font-size:27px;color:var(--ink);margin-top:18px;font-weight:600}
+  .card .sm{font-size:21px;color:var(--dim);margin-top:10px;line-height:1.4}
+  .chips{display:flex;gap:18px;flex-wrap:wrap;margin-top:42px}
+  .chip{font-family:var(--mono);font-size:23px;letter-spacing:.04em;color:#cfe3ff;
+    background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.35);border-radius:999px;padding:14px 28px}
+  .chip.g{color:#c7f4d0;background:rgba(86,211,100,.1);border-color:rgba(86,211,100,.4)}
+  /* grounded screenshot */
+  .screenwrap{margin-top:34px;display:flex;gap:50px;align-items:flex-start}
+  .browser{flex:1.55;border-radius:16px;overflow:hidden;border:1px solid var(--line);
+    box-shadow:0 40px 90px rgba(0,0,0,.55);background:#0b0f16}
+  .chrome{display:flex;align-items:center;gap:12px;background:#161b22;padding:16px 22px;border-bottom:1px solid var(--line)}
+  .chrome i{width:15px;height:15px;border-radius:50%;display:inline-block}
+  .chrome .r{background:#ff5f57}.chrome .y{background:#febc2e}.chrome .g{background:#28c840}
+  .chrome span{font-family:var(--mono);font-size:19px;color:var(--faint);margin-left:14px}
+  .browser img{display:block;width:100%}
+  .ground-side{flex:1;display:flex;flex-direction:column;gap:24px;padding-top:8px}
+  .tag{align-self:flex-start;font-family:var(--mono);font-size:19px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--green);background:rgba(86,211,100,.1);border:1px solid rgba(86,211,100,.35);border-radius:8px;padding:9px 16px}
+  .ground-side h3{font-size:36px;font-weight:750;line-height:1.15}
+  .ground-side p{font-size:27px;line-height:1.5;color:var(--dim)}
+  .ground-side p b{color:var(--ink)}
+  /* title slide */
+  .title-slide{justify-content:center}
+  .title-slide .eyebrow{font-family:var(--mono);font-size:26px;letter-spacing:.28em;color:var(--blue);text-transform:uppercase}
+  .title-slide h1{font-size:104px;margin-top:26px}
+  .title-slide .lead{font-size:38px;margin-top:34px}
+  .verbs{display:flex;gap:18px;margin-top:50px;font-family:var(--mono);font-size:26px;color:var(--faint);letter-spacing:.06em}
+  .verbs b{color:var(--green);font-weight:600}
+  /* recap */
+  .recap li::before{background:var(--green);box-shadow:0 0 0 5px rgba(86,211,100,.16)}
+  .recap li .m{color:var(--green)}
+  /* lab */
+  .lab .kicker{color:var(--orange)}
+  .lab li::before{background:var(--orange);box-shadow:0 0 0 5px rgba(240,136,62,.16)}
+  .lab .goal{font-size:30px;color:var(--orange);font-family:var(--mono);margin-top:30px;letter-spacing:.02em}
+  .done{margin-top:36px;font-family:var(--mono);font-size:26px;color:var(--green)}
+</style>
+</head>
+<body>
+
+<!-- INTRO / TITLE -->
+<section class="slide title-slide" data-id="intro">
+  <div class="eyebrow">AZ-500 / SC-100 · Foundations</div>
+  <h1>RaMP<br><span class="sub" style="font-size:46px;font-weight:600;color:var(--ink)">The Zero Trust Rapid Modernization Plan</span></h1>
+  <div class="lead">Zero Trust tells you <b>why</b> and <b>what</b>. RaMP is how you start moving on it <b>this quarter</b> — the project-managed, prioritized quick-wins checklist set.</div>
+  <div class="verbs"><b>PRIORITIZE</b> → <b>SEQUENCE</b> → <b>SHIP QUICK WINS</b></div>
+</section>
+
+<!-- WHAT RAMP IS -->
+<section class="slide" data-id="what-ramp">
+  <div class="top"><span>What RaMP is</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">The execution accelerator for Zero Trust</div>
+  <h1 style="font-size:60px">Strategy into action — quick wins first</h1>
+  <div class="lead">RaMP enumerates the technical objectives of each area <b>in priority order</b>, documents the steps, and names the <b>people who must be involved</b> — so an organization captures the <b>fastest-impact work first</b>, as a tracked project.</div>
+  <div class="chips">
+    <span class="chip">PRIORITIZED CHECKLISTS</span>
+    <span class="chip">CLEAR OWNERS</span>
+    <span class="chip">TARGET TIMELINES</span>
+    <span class="chip g">NOT A SEPARATE FRAMEWORK</span>
+    <span class="chip g">THE ZERO TRUST EXECUTION LAYER</span>
+  </div>
+</section>
+
+<!-- RAMP VS DEPLOYMENT PLANS -->
+<section class="slide" data-id="ramp-vs-plans">
+  <div class="top"><span>RaMP vs. the full deployment plans</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker green">The distinction the exam rewards</div>
+  <h1 style="font-size:58px">Front-load the work — don't replace it</h1>
+  <div class="phases">
+    <div class="ph ph1"><div class="n">R</div><h3>RaMP</h3><p><b style="color:#c9d6e5">Fastest-impact quick wins.</b> Prioritized checklists with owners and target dates. Asks: "what do we do <b style="color:#c9d6e5">first</b> to reduce the most risk?" Output is a tracked project.</p></div>
+    <div class="arrow">vs</div>
+    <div class="ph ph3"><div class="n">D</div><h3>Deployment plans</h3><p><b style="color:#c9d6e5">Comprehensive, pillar-complete coverage.</b> Detailed design per technology area. Asks: "how do we apply Zero Trust <b style="color:#c9d6e5">everywhere</b>?" Output is a full architecture.</p></div>
+  </div>
+  <div class="note" style="background:rgba(86,211,100,.08);border-color:rgba(86,211,100,.4)"><b style="color:var(--green)">RaMP front-loads the deployment plans.</b> &nbsp;It is prioritized, not exhaustive — sequencing by impact is the whole value.</div>
+</section>
+
+<!-- VALIDATE TRUST + Conditional Access grounding -->
+<section class="slide" data-id="validate-trust">
+  <div class="top"><span>The flagship checklist</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">"Explicitly validate trust for all access requests"</div>
+  <h1 style="font-size:54px">Validate trust before granting access</h1>
+  <div class="screenwrap">
+    <div class="ground-side">
+      <span class="tag">Grounded · AZ-500 · Entra Conditional Access</span>
+      <h3>Four areas, built in sequence</h3>
+      <p><b>Identities → Endpoints → Apps → Network.</b> Identity is the control plane; <b>Conditional Access</b> is where trust is evaluated on every sign-in before access is granted.</p>
+      <div class="chips" style="margin-top:6px">
+        <span class="chip">IDENTITIES</span><span class="chip">ENDPOINTS</span><span class="chip">APPS</span><span class="chip">NETWORK</span>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="chrome"><i class="r"></i><i class="y"></i><i class="g"></i><span>portal.azure.com — Microsoft Entra Conditional Access</span></div>
+      <img src="img/conditional-access.png" alt="Conditional Access overview">
+    </div>
+  </div>
+</section>
+
+<!-- PRIVILEGED ACCESS FIRST + PIM grounding -->
+<section class="slide" data-id="priv-access">
+  <div class="top"><span>Where you start</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker orange">Secure privileged access comes first</div>
+  <h1 style="font-size:56px">The flagship quick win</h1>
+  <div class="screenwrap">
+    <div class="browser">
+      <div class="chrome"><i class="r"></i><i class="y"></i><i class="g"></i><span>portal.azure.com — Microsoft Entra Privileged Identity Management</span></div>
+      <img src="img/pim.png" alt="Entra PIM quick start">
+    </div>
+    <div class="ground-side">
+      <span class="tag">Grounded · AZ-500 · Entra PIM</span>
+      <h3>Eligible, not standing</h3>
+      <p>Both anchor checklists lead with protecting admin accounts. <b>PIM</b> makes privileged access <b>just-in-time</b>, time-bound, and MFA-gated — so a compromised account can't pivot to everything.</p>
+      <p>When a scenario asks "where do we start," the answer is <b>secure privileged access and validate trust first</b>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RANSOMWARE WORKSTREAM -->
+<section class="slide" data-id="ransomware">
+  <div class="top"><span>The second anchor workstream</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker green">Ransomware recovery &amp; data protection — time-boxed</div>
+  <h1 style="font-size:56px">Limit the impact of attacks</h1>
+  <div class="cards">
+    <div class="card"><div class="big">30</div><div class="lbl">days</div><div class="sm">secure admin workstations · randomized local passwords</div></div>
+    <div class="card"><div class="big">90</div><div class="lbl">days</div><div class="sm">block privilege escalation · protect identity systems</div></div>
+    <div class="card"><div class="big">180</div><div class="lbl">days</div><div class="sm">mitigate lateral traversal · rapid threat response</div></div>
+  </div>
+  <div class="note" style="background:rgba(88,166,255,.07);border-color:rgba(88,166,255,.35)"><b style="color:var(--blue)">A privileged-access strategy again leads.</b> &nbsp;This is the workstream the SC-100 ransomware resiliency objective leans on.</div>
+</section>
+
+<!-- HOW RAMP RELATES TO THE FRAMEWORKS -->
+<section class="slide" data-id="frameworks">
+  <div class="top"><span>The connective tissue</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">How RaMP relates to the other frameworks</div>
+  <h1 style="font-size:58px">One picture, six pieces</h1>
+  <ul>
+    <li><b>Zero Trust</b> is the <b>strategy</b> — why and what.</li>
+    <li><b>MCRA</b> is the <b>picture</b> — the reference architecture.</li>
+    <li><b>MCSB</b> is the <b>checklist</b> — prescriptive controls you measure in Defender for Cloud.</li>
+    <li><b>WAF</b> is the <b>workload lens</b>; <b>CAF</b> is the <b>journey</b>.</li>
+    <li class="g"><b>RaMP</b> is the <b>execution accelerator</b> — how you get Zero Trust moving this quarter, not next year.</li>
+  </ul>
+  <div class="note" style="margin-top:32px;background:rgba(240,136,62,.07);border-color:rgba(240,136,62,.4)"><b style="color:var(--orange)">Don't confuse RaMP with MCSB.</b> &nbsp;MCSB is the prescriptive control benchmark; RaMP is the prioritized project plan.</div>
+</section>
+
+<!-- RECAP -->
+<section class="slide recap" data-id="recap">
+  <div class="top"><span>Remember</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker green">RaMP in five rules</div>
+  <h1 style="font-size:60px">The Zero Trust on-ramp</h1>
+  <ul>
+    <li><span class="m">1 ·</span> RaMP is the <b>project-managed, prioritized quick-wins</b> checklist set — owners and timelines included.</li>
+    <li><span class="m">2 ·</span> It is the <b>execution accelerator for Zero Trust</b>, not a competing framework.</li>
+    <li><span class="m">3 ·</span> Prioritized, not comprehensive — it <b>front-loads</b> the full deployment plans.</li>
+    <li><span class="m">4 ·</span> Flagship checklist is <b>"explicitly validate trust"</b> across Identities, Endpoints, Apps, Network.</li>
+    <li><span class="m">5 ·</span> <b>Secure privileged access comes first</b> — that ordering is the exam's "where do we start" answer.</li>
+  </ul>
+</section>
+
+<!-- LAB 1 -->
+<section class="slide lab" data-id="lab-ramp-1">
+  <div class="top"><span>Hands-on · 1 of 2</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker orange">Do this</div>
+  <h1 style="font-size:58px">Run the "validate trust" checklist</h1>
+  <div class="goal">GOAL · Turn the flagship checklist into a tracked RaMP project plan</div>
+  <ul>
+    <li class="o">Walk the <b>Identities</b> list against your tenant: secured privileged access, PIM (eligible, not standing), MFA, Conditional Access requiring MFA, sign-in-risk policies, passwordless. Mark each <b>Done / In-progress / Not started</b>.</li>
+    <li class="o">Take your first three <b>"Not started"</b> items — those are your quick wins.</li>
+    <li class="o">Assign each an <b>owner and a thirty- or ninety-day target</b> using the RaMP accountability model. That owner-and-date table <b>is</b> a RaMP project plan.</li>
+  </ul>
+  <div class="done">✓ DONE WHEN · You have an owner and a date against your top three identity gaps</div>
+</section>
+
+<!-- LAB 2 -->
+<section class="slide lab" data-id="lab-ramp-2">
+  <div class="top"><span>Hands-on · 2 of 2</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker orange">Do this</div>
+  <h1 style="font-size:58px">Stand up three ransomware quick wins</h1>
+  <div class="goal">GOAL · Make the second workstream concrete and time-boxed</div>
+  <ul>
+    <li class="o">From the ransomware checklist, pick three time-boxed targets: <b>100% of admins on secure workstations</b>, <b>100% of local passwords randomized</b>, <b>privilege-escalation mitigations deployed</b>.</li>
+    <li class="o">Map each to the Microsoft control that delivers it — <b>secure admin workstations</b>, <b>Windows LAPS</b>, <b>PIM + Conditional Access</b>.</li>
+    <li class="o">Put a <b>thirty / ninety / one-hundred-eighty-day</b> date against each.</li>
+  </ul>
+  <div class="done">✓ DONE WHEN · Each quick win has a control and a target date written down</div>
+</section>
+
+<script>
+  function showSlide(id){
+    var ss=document.querySelectorAll('.slide'),i,found=false;
+    for(i=0;i<ss.length;i++){var on=ss[i].getAttribute('data-id')===id;ss[i].classList.toggle('active',on);if(on)found=true;}
+    if(!found && ss.length){ss[0].classList.add('active');}
+  }
+  function fromHash(){var h=decodeURIComponent(location.hash.replace(/^#/,''));showSlide(h|| (document.querySelector('.slide')||{}).getAttribute&&document.querySelector('.slide').getAttribute('data-id'));}
+  window.addEventListener('hashchange',fromHash);
+  fromHash();
+</script>
+</body>
+</html>

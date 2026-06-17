@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AZ-500 / SC-100 · Microsoft Cybersecurity Reference Architectures (MCRA)</title>
+<style>
+  :root{
+    --bg:#0a0e14; --bg2:#0d1320; --panel:#111927; --panel2:#0f1622;
+    --ink:#e6edf3; --dim:#9aa7b8; --faint:#5b6b80; --line:#1f2a3a;
+    --green:#56d364; --orange:#f0883e; --blue:#58a6ff; --red:#f85149; --violet:#bc8cff;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  .slide{position:fixed;inset:0;display:none;flex-direction:column;
+    padding:78px 110px 70px;
+    background:radial-gradient(1400px 760px at 78% -8%,#10203a 0%,rgba(16,32,58,0) 60%),
+               radial-gradient(1100px 620px at 0% 108%,#10261c 0%,rgba(16,38,28,0) 55%),
+               linear-gradient(160deg,var(--bg) 0%,var(--bg2) 100%);}
+  .slide.active{display:flex}
+  /* top bar */
+  .top{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);
+    font-size:21px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase}
+  .top .brand{color:var(--dim)} .top .brand b{color:var(--blue);font-weight:600}
+  .kicker{font-family:var(--mono);font-size:24px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--blue);margin:54px 0 14px}
+  .kicker.green{color:var(--green)} .kicker.orange{color:var(--orange)}
+  h1{font-size:78px;line-height:1.04;font-weight:800;letter-spacing:-.018em;max-width:1500px}
+  h1 .sub{display:block;font-size:38px;font-weight:500;color:var(--dim);margin-top:18px;letter-spacing:-.005em}
+  .lead{font-size:33px;line-height:1.5;color:var(--dim);max-width:1320px;margin-top:30px}
+  .lead b{color:var(--ink);font-weight:600}
+  ul{list-style:none;margin-top:40px;display:flex;flex-direction:column;gap:26px;max-width:1480px}
+  li{font-size:31px;line-height:1.4;color:#c9d6e5;padding-left:46px;position:relative}
+  li::before{content:"";position:absolute;left:0;top:14px;width:18px;height:18px;border-radius:5px;
+    background:var(--blue);box-shadow:0 0 0 5px rgba(88,166,255,.16)}
+  li.g::before{background:var(--green);box-shadow:0 0 0 5px rgba(86,211,100,.16)}
+  li.o::before{background:var(--orange);box-shadow:0 0 0 5px rgba(240,136,62,.16)}
+  li b{color:#fff;font-weight:650} li .m{font-family:var(--mono);color:var(--blue);font-size:.92em}
+  .spacer{flex:1}
+  .foot{font-family:var(--mono);font-size:19px;color:var(--faint);letter-spacing:.04em}
+  /* layout helpers */
+  .row{display:flex;gap:54px;align-items:center;margin-top:30px}
+  .col{flex:1}
+  /* three-phase diagram */
+  .phases{display:flex;align-items:stretch;gap:0;margin-top:54px}
+  .ph{flex:1;background:linear-gradient(165deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:20px;padding:38px 36px;position:relative}
+  .ph .n{font-family:var(--mono);font-size:30px;color:var(--bg);font-weight:800;
+    width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+  .ph1 .n{background:var(--green)} .ph2 .n{background:var(--orange)} .ph3 .n{background:var(--blue)}
+  .ph h3{font-size:33px;font-weight:750;line-height:1.12;margin-bottom:14px}
+  .ph p{font-size:24px;line-height:1.42;color:var(--dim)}
+  .arrow{align-self:center;color:var(--faint);font-size:46px;padding:0 18px;flex:0 0 auto}
+  .note{margin-top:40px;font-size:27px;color:var(--ink);font-family:var(--mono);
+    background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.4);border-radius:14px;
+    padding:22px 30px;letter-spacing:.01em}
+  .note b{color:var(--red)}
+  /* 3-2-1 cards */
+  .cards{display:flex;gap:34px;margin-top:50px}
+  .card{flex:1;background:linear-gradient(165deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:20px;padding:40px 36px;text-align:center}
+  .card .big{font-family:var(--mono);font-size:84px;font-weight:800;color:var(--green);line-height:1}
+  .card .lbl{font-size:27px;color:var(--ink);margin-top:18px;font-weight:600}
+  .card .sm{font-size:21px;color:var(--dim);margin-top:10px;line-height:1.4}
+  .chips{display:flex;gap:18px;flex-wrap:wrap;margin-top:42px}
+  .chip{font-family:var(--mono);font-size:23px;letter-spacing:.04em;color:#cfe3ff;
+    background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.35);border-radius:999px;padding:14px 28px}
+  .chip.g{color:#c7f4d0;background:rgba(86,211,100,.1);border-color:rgba(86,211,100,.4)}
+  /* grounded screenshot */
+  .screenwrap{margin-top:34px;display:flex;gap:50px;align-items:flex-start}
+  .browser{flex:1.55;border-radius:16px;overflow:hidden;border:1px solid var(--line);
+    box-shadow:0 40px 90px rgba(0,0,0,.55);background:#0b0f16}
+  .chrome{display:flex;align-items:center;gap:12px;background:#161b22;padding:16px 22px;border-bottom:1px solid var(--line)}
+  .chrome i{width:15px;height:15px;border-radius:50%;display:inline-block}
+  .chrome .r{background:#ff5f57}.chrome .y{background:#febc2e}.chrome .g{background:#28c840}
+  .chrome span{font-family:var(--mono);font-size:19px;color:var(--faint);margin-left:14px}
+  .browser img{display:block;width:100%}
+  .ground-side{flex:1;display:flex;flex-direction:column;gap:24px;padding-top:8px}
+  .tag{align-self:flex-start;font-family:var(--mono);font-size:19px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--green);background:rgba(86,211,100,.1);border:1px solid rgba(86,211,100,.35);border-radius:8px;padding:9px 16px}
+  .ground-side h3{font-size:36px;font-weight:750;line-height:1.15}
+  .ground-side p{font-size:27px;line-height:1.5;color:var(--dim)}
+  .ground-side p b{color:var(--ink)}
+  /* title slide */
+  .title-slide{justify-content:center}
+  .title-slide .eyebrow{font-family:var(--mono);font-size:26px;letter-spacing:.28em;color:var(--blue);text-transform:uppercase}
+  .title-slide h1{font-size:104px;margin-top:26px}
+  .title-slide .lead{font-size:38px;margin-top:34px}
+  .verbs{display:flex;gap:18px;margin-top:50px;font-family:var(--mono);font-size:26px;color:var(--faint);letter-spacing:.06em}
+  .verbs b{color:var(--green);font-weight:600}
+  /* recap */
+  .recap li::before{background:var(--green);box-shadow:0 0 0 5px rgba(86,211,100,.16)}
+  .recap li .m{color:var(--green)}
+  /* lab */
+  .lab .kicker{color:var(--orange)}
+  .lab li::before{background:var(--orange);box-shadow:0 0 0 5px rgba(240,136,62,.16)}
+  .lab .goal{font-size:30px;color:var(--orange);font-family:var(--mono);margin-top:30px;letter-spacing:.02em}
+  .done{margin-top:36px;font-family:var(--mono);font-size:26px;color:var(--green)}
+</style>
+</head>
+<body>
+
+<!-- INTRO / TITLE -->
+<section class="slide title-slide" data-id="intro">
+  <div class="eyebrow">AZ-500 / SC-100 · Foundations</div>
+  <h1>Microsoft Cybersecurity<br>Reference Architectures</h1>
+  <div class="lead">The reference <b>picture</b> — how Microsoft's security capabilities fit together across the whole estate, drawn against <b>Zero Trust</b>.</div>
+  <div class="verbs"><b>THE PICTURE</b> → <b>MAP YOUR ESTATE</b> → <b>SEQUENCE THE GAPS</b></div>
+</section>
+
+<!-- WHAT MCRA IS -->
+<section class="slide" data-id="what-mcra">
+  <div class="top"><span>What MCRA is</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">A set of reference architectures, not a product</div>
+  <h1 style="font-size:58px">The target-state picture of the whole estate</h1>
+  <div class="lead">MCRA is a set of <b>end-to-end technical reference architectures</b> showing how to secure the <b>"hybrid of everything"</b> — legacy IT, multicloud, IoT/OT, and AI — using Zero Trust.</div>
+  <div class="chips">
+    <span class="chip">DELIVERED AS A POWERPOINT DECK</span>
+    <span class="chip">WITH SPEAKER NOTES</span>
+    <span class="chip g">BUILT ON ZERO TRUST</span>
+    <span class="chip g">A COMPONENT OF THE SAF</span>
+  </div>
+  <div class="note"><b>Not a product, portal blade, or benchmark.</b> &nbsp;It is the architecture diagrams — the picture, not the checklist.</div>
+</section>
+
+<!-- WHAT THE DECK CONTAINS -->
+<section class="slide" data-id="contains">
+  <div class="top"><span>What the deck contains</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker green">More than diagrams</div>
+  <h1 style="font-size:60px">Diagrams, plus the reasoning around them</h1>
+  <ul>
+    <li><b>Antipatterns &amp; best practices</b> — common mistakes, and what good looks like.</li>
+    <li><b>Threat trends &amp; attack patterns</b> — the case for end-to-end security and <b>ruthless prioritization</b>.</li>
+    <li class="g"><b>End-to-end Zero Trust guidance</b> — how to adopt the approach across the estate.</li>
+    <li class="g"><b>Mappings</b> — Microsoft capabilities to <b>Zero Trust standards</b> and to <b>organizational roles</b>.</li>
+  </ul>
+</section>
+
+<!-- THE DIAGRAM FAMILIES -->
+<section class="slide" data-id="diagram-families">
+  <div class="top"><span>The architecture map</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">The eight diagram families</div>
+  <h1 style="font-size:54px">One picture per capability domain</h1>
+  <div class="phases" style="margin-top:42px">
+    <div class="ph ph1"><div class="n">ID</div><h3>Capabilities &amp; Identity</h3><p>The master <b style="color:#c9d6e5">cybersecurity capabilities</b> map, plus <b style="color:#c9d6e5">Zero Trust user access</b> — identity, device, adaptive access.</p></div>
+    <div class="arrow">·</div>
+    <div class="ph ph2"><div class="n">OP</div><h3>SecOps &amp; OT</h3><p><b style="color:#c9d6e5">Security operations</b> — XDR plus SIEM — and <b style="color:#c9d6e5">operational technology</b> alongside IT.</p></div>
+    <div class="arrow">·</div>
+    <div class="ph ph3"><div class="n">IN</div><h3>Infra, Multicloud &amp; Org</h3><p><b style="color:#c9d6e5">Infrastructure &amp; dev security</b>, <b style="color:#c9d6e5">multicloud</b>, <b style="color:#c9d6e5">attack-chain coverage</b>, and <b style="color:#c9d6e5">security org functions</b>.</p></div>
+  </div>
+  <div class="screenwrap" style="margin-top:30px">
+    <div class="browser">
+      <div class="chrome"><i class="r"></i><i class="y"></i><i class="g"></i><span>portal.azure.com — Microsoft Sentinel · Data connectors</span></div>
+      <img src="img/sentinel.png" alt="Microsoft Sentinel data connectors">
+    </div>
+    <div class="ground-side">
+      <span class="tag">Grounded · AZ-500 · Microsoft Sentinel</span>
+      <h3>SecOps is one capability area</h3>
+      <p>The <b>Security operations</b> family covers XDR and SIEM — detection, investigation, response. Microsoft Sentinel is the SIEM/SOAR capability that family points to.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW AN ARCHITECT USES IT -->
+<section class="slide" data-id="how-to-use">
+  <div class="top"><span>How an architect uses it</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker">Gap-map your estate against the picture</div>
+  <h1 style="font-size:58px">A target-state template you overlay onto your estate</h1>
+  <div class="screenwrap">
+    <div class="ground-side">
+      <span class="tag">Grounded · AZ-500 · Defender for Cloud</span>
+      <h3>Own, partially own, or lack</h3>
+      <p>Open the <b>capabilities</b> slide, overlay your current controls, mark what you <b>own / partially own / lack</b>, then sequence the gaps by risk.</p>
+      <p>It serves as a <b>starting template</b>, a <b>comparison reference</b> against what you already license, and a <b>learning tool</b> — each capability carries a ScreenTip.</p>
+    </div>
+    <div class="browser">
+      <div class="chrome"><i class="r"></i><i class="y"></i><i class="g"></i><span>portal.azure.com — Microsoft Defender for Cloud</span></div>
+      <img src="img/defender.png" alt="Defender for Cloud secure posture">
+    </div>
+  </div>
+</section>
+
+<!-- FRAMEWORK CONNECTIVE TISSUE -->
+<section class="slide" data-id="frameworks">
+  <div class="top"><span>Where MCRA sits</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker green">The framework connective tissue</div>
+  <h1 style="font-size:56px">Strategy → picture → checklist → lenses</h1>
+  <ul>
+    <li><span class="m">ZT ·</span> <b>Zero Trust</b> is the strategy — verify explicitly, least privilege, assume breach.</li>
+    <li class="g"><span class="m">MCRA ·</span> <b>MCRA</b> is the picture — Zero Trust drawn across the whole estate.</li>
+    <li><span class="m">MCSB ·</span> <b>MCSB</b> is the checklist — prescriptive controls you measure in Defender for Cloud.</li>
+    <li><span class="m">WAF ·</span> <b>WAF</b> is the workload lens; <b>CAF</b> is the cloud-adoption journey.</li>
+  </ul>
+  <div class="note" style="background:rgba(88,166,255,.08);border-color:rgba(88,166,255,.4)"><b style="color:var(--blue)">SC-100 Domain 1 pairs them:</b> &nbsp;MCRA is the architecture, MCSB is the control benchmark. Design against both.</div>
+</section>
+
+<!-- RECAP -->
+<section class="slide recap" data-id="recap">
+  <div class="top"><span>Remember</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker green">MCRA in five rules</div>
+  <h1 style="font-size:60px">The reference picture, in five lines</h1>
+  <ul>
+    <li><span class="m">1 ·</span> MCRA is <b>reference architectures</b> for the "hybrid of everything" estate — a deck, not a product.</li>
+    <li><span class="m">2 ·</span> It is <b>built on Zero Trust</b> and is a component of the <b>Security Adoption Framework</b>.</li>
+    <li><span class="m">3 ·</span> <b>Eight diagram families</b> — capabilities, ZT user access, SecOps, OT, multicloud, attack chain, infra/dev, org functions.</li>
+    <li><span class="m">4 ·</span> Use it as a <b>target-state template</b> — map your estate, mark gaps, sequence by risk.</li>
+    <li><span class="m">5 ·</span> <b>MCRA is the picture; MCSB is the checklist</b> — Domain 1 tests them as a pair.</li>
+  </ul>
+</section>
+
+<!-- LAB 1 -->
+<section class="slide lab" data-id="lab-mcra-1">
+  <div class="top"><span>Hands-on · 1 of 2</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker orange">Do this</div>
+  <h1 style="font-size:60px">Map your controls onto the capabilities slide</h1>
+  <div class="goal">GOAL · Produce a one-slide capability heat-map of your tenant</div>
+  <ul>
+    <li class="o">Download the current <b>MCRA PowerPoint</b> and open the <b>Microsoft cybersecurity capabilities</b> diagram.</li>
+    <li class="o">For each capability, mark it <b>own / partially deployed / gap</b> against your tenant.</li>
+    <li class="o">The result is a one-slide <b>capability heat-map</b> — a strong SC-100 design artifact.</li>
+  </ul>
+  <div class="done">✓ DONE WHEN · Every capability on the slide carries an own / partial / gap mark</div>
+</section>
+
+<!-- LAB 2 -->
+<section class="slide lab" data-id="lab-mcra-2">
+  <div class="top"><span>Hands-on · 2 of 2</span><span class="brand"><b>NETWORK INTELLIGENCE</b> · FOUNDATIONS</span></div>
+  <div class="kicker orange">Do this</div>
+  <h1 style="font-size:58px">Walk one family, then pair gaps to MCSB</h1>
+  <div class="goal">GOAL · Practice the MCRA-plus-MCSB reasoning Domain 1 tests</div>
+  <ul>
+    <li class="o">Pick <b>Zero Trust user access</b> (or <b>SecOps</b>). In presentation mode, read each capability's <b>ScreenTip</b>.</li>
+    <li class="o">For each, write the Microsoft capability, the control you use today, and the <b>integration point</b> you don't yet use.</li>
+    <li class="o">Take <b>three gaps</b> from Exercise 1 and name the <b>MCSB control domain</b> that would govern each.</li>
+  </ul>
+  <div class="done">✓ DONE WHEN · Three gaps are each mapped to an MCSB control domain</div>
+</section>
+
+<script>
+  function showSlide(id){
+    var ss=document.querySelectorAll('.slide'),i,found=false;
+    for(i=0;i<ss.length;i++){var on=ss[i].getAttribute('data-id')===id;ss[i].classList.toggle('active',on);if(on)found=true;}
+    if(!found && ss.length){ss[0].classList.add('active');}
+  }
+  function fromHash(){var h=decodeURIComponent(location.hash.replace(/^#/,''));showSlide(h|| (document.querySelector('.slide')||{}).getAttribute&&document.querySelector('.slide').getAttribute('data-id'));}
+  window.addEventListener('hashchange',fromHash);
+  fromHash();
+</script>
+</body>
+</html>

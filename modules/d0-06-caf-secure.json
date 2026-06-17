@@ -1,0 +1,107 @@
+{
+  "id": "d0-06-caf-secure",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "deck": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-06-caf-secure-deck/deck.html",
+  "instructions": "Narrate as a senior Microsoft security architect delivering exam preparation to a peer. Formal, precise, measured — authoritative, calm, never chatty or hyped. Natural pronunciation of acronyms. No filler words.",
+  "examDomain": "Foundations · Microsoft security frameworks (AZ-500 / SC-100)",
+  "title": {
+    "kicker": "AZ-500 / SC-100 · Foundations",
+    "title": "Cloud Adoption Framework — Secure",
+    "lines": [
+      "Assess · Secure · Sustain"
+    ]
+  },
+  "intro": "The Cloud Adoption Framework is Microsoft's structured roadmap for the entire cloud-adoption lifecycle, from business strategy through running workloads day to day. The Secure methodology is the security thread that runs through every phase of that lifecycle. It is not a separate stage you reach later, and it is not the security design of a single workload. This module is where Secure sits on the framework map, the four themes that organize its work, the landing zones it hardens, and how it relates to the other frameworks the exam tests.",
+  "sections": [
+    {
+      "id": "cafmap",
+      "section": "The CAF map",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-06-caf-secure-deck/deck.html#cafmap",
+      "narration": "The Cloud Adoption Framework organizes Azure guidance into seven methodologies, in two groups. The foundational group is sequential: Strategy, Plan, Ready, and Adopt. You define business outcomes, build the plan, prepare the Azure environment of landing zones, then migrate, modernize, or build cloud-native workloads. The operational group runs in parallel once workloads are live: Govern, Secure, and Manage. Secure is methodology six, operational and continuous. But hold the key point for the exam. Although it is numbered sixth, the Secure overview is explicit that security guidance applies across all phases. A gap in strategy or readiness weakens posture as much as a gap in operations, so you apply Secure end to end.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "themes",
+      "section": "The four Secure themes",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-06-caf-secure-deck/deck.html#themes",
+      "narration": "The Secure methodology organizes its work into four recurring themes, and every phase article surfaces tasks against them. First, modernize the security posture: continuously elevate defenses through identity strengthening, segmentation, just-in-time and least-privilege access, and platform-baseline automation. Second, prepare for and respond to incidents across the full lifecycle, from readiness and detection through containment, recovery, and post-incident learning. Third, adopt the C I A triad: map controls explicitly to confidentiality, integrity, and availability, and do not reduce it to encryption alone, because integrity and availability carry equal weight. Fourth, sustain the posture through the disciplined cycle of measuring, remediating, and validating. All four themes harden the landing zone, so security is built in by design rather than bolted on at the end.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "improve",
+      "section": "Continuous security improvement",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-06-caf-secure-deck/deck.html#improve",
+      "narration": "The fourth theme, sustaining posture, is what makes the Secure methodology continuous rather than a one-time exercise. The methodology directs you to validate through policy, infrastructure as code, continuous compliance scanning, and secure-score tracking. On screen is Microsoft Defender for Cloud, where the Microsoft cloud security benchmark shows controls passed feeding directly into the secure score below it. This is posture sustainment made concrete: you measure the estate against the baseline, remediate the prioritized gaps, and re-measure, while incident retrospectives and threat intelligence feed back into the backlog. The scoreboard never closes, and that running cycle is the security improvement the Secure methodology is designed to drive.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "connective",
+      "section": "How it relates to the other frameworks",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-06-caf-secure-deck/deck.html#connective",
+      "narration": "Now place the Secure methodology among its siblings, because Domain one of the SC-100 loves this question. Zero Trust is the strategy and the principles. MCRA is the picture, the reference architecture of Microsoft capabilities across the estate. MCSB is the checklist, the prescriptive controls you measure against in Defender for Cloud. The Well-Architected Framework is the workload lens, the security design of one specific workload. And the Cloud Adoption Framework Secure methodology is the journey: security applied across the whole adoption lifecycle and the landing zones every workload lands in. The line the exam tests hardest is CAF versus WAF. CAF Secure governs security across the organization's adoption lifecycle and platform; the Well-Architected Framework governs the security design of a single workload. Organization-wide journey and platform, versus single-workload design.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "examfit",
+      "section": "How SC-100 tests it",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-06-caf-secure-deck/deck.html#examfit",
+      "narration": "Domain one of the SC-100, design solutions that align with security best practices and priorities, names the Cloud Adoption Framework explicitly. You are expected to design, or evaluate an existing, strategy for security and governance based on the Cloud Adoption Framework and the Well-Architected Framework. You design solutions for implementing and governing security using Azure landing zones, hardened by design at the Ready phase. And you design a DevSecOps process aligned with the framework: infrastructure as code, policy as code, and continuous compliance scanning, so controls travel with the workload through its lifecycle. Landing zones and DevSecOps are first-class objectives here, not background detail. Keep the traps in mind: the Secure methodology is not a one-time phase, it is not the Well-Architected Framework security pillar, and it aligns to the Zero Trust adoption framework rather than replacing it.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember",
+      "title": "The Cloud Adoption Framework — Secure in five rules",
+      "accent": "#56d364",
+      "lines": [
+        "placeholder"
+      ]
+    },
+    "narration": "To bring it together. The Cloud Adoption Framework is the whole adoption lifecycle, and the Secure methodology is a thread that runs through every phase, not a stage reached later. There are seven methodologies, split into foundational and sequential versus operational and parallel, with Secure as methodology six. The Secure work organizes into four themes: modernize posture, prepare for and respond to incidents, adopt the C I A triad, and sustain posture. It hardens secure-by-design landing zones and embeds DevSecOps in the pipeline. And among the frameworks it is the journey, aligning to Zero Trust rather than replacing it. Assess, secure, sustain.",
+    "kicker": "-",
+    "cardTitle": "-",
+    "bullets": []
+  },
+  "action": {
+    "kicker": "Do this",
+    "exercises": [
+      {
+        "id": "lab-caf-1",
+        "title": "Exercise 1 — Map your org to the Secure phases",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Here is your first exercise. Place your organization on the seven-methodology map, from Strategy through Manage, and identify the phase you are currently in. For that phase, name one concrete task under each of the four Secure themes: one posture-modernization task, one incident-readiness task, one C I A triad control, and one sustainment metric. Where you cannot name a task, you have found a gap, and those gaps become your backlog. You are done when you have one named task per theme and a written list of the gaps you could not fill.",
+        "kicker": "-",
+        "cardTitle": "-",
+        "bullets": []
+      },
+      {
+        "id": "lab-caf-2",
+        "title": "Exercise 2 — Audit one landing zone",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Second exercise. Take an existing Azure landing zone and audit it against the modernization theme. Check identity strengthening, network segmentation, just-in-time and least-privilege access, and baseline automation through policy and infrastructure as code. Confirm that secure-score tracking in Microsoft Defender for Cloud is active for the resources in that landing zone. Then record the single highest-leverage gap you find. You are done when one landing zone is scored against the secure baselines and its top gap is written down, because that artifact is exactly the landing-zone governance evidence the SC-100 expects.",
+        "kicker": "-",
+        "cardTitle": "-",
+        "bullets": []
+      }
+    ]
+  }
+}

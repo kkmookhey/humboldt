@@ -1,0 +1,101 @@
+{
+  "id": "d0-04-mcsb",
+  "cloud": "azure",
+  "voice": "sage",
+  "model": "gpt-4o-mini-tts",
+  "deck": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-04-mcsb-deck/deck.html",
+  "instructions": "Narrate as a senior Microsoft security architect delivering exam preparation to a peer. Formal, precise, measured — authoritative, calm, never chatty or hyped. Natural pronunciation of acronyms. No filler words.",
+  "examDomain": "Foundations · Microsoft security frameworks (AZ-500 / SC-100)",
+  "title": {
+    "kicker": "AZ-500 / SC-100 · Foundations",
+    "title": "Microsoft Cloud Security Benchmark",
+    "lines": [
+      "Plan · Monitor · Establish"
+    ]
+  },
+  "intro": "Every security framework in this track plays a distinct role. The Microsoft cloud security benchmark is the checklist — the prescriptive, measurable controls you assess your environment against. It is cloud-agnostic, it spans Azure, AWS, and GCP, and it is pre-mapped to the major industry standards. Most importantly, it is applied by default in Microsoft Defender for Cloud, where compliance against it drives your Secure Score. This module is how that checklist works, and how it ties the rest of the frameworks together.",
+  "sections": [
+    {
+      "id": "whatis",
+      "section": "What MCSB is",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-04-mcsb-deck/deck.html#whatis",
+      "narration": "The Microsoft cloud security benchmark is a set of prescriptive, cloud-agnostic security controls — best-practice recommendations for securing workloads, data, and services across Azure, AWS, and GCP. Each control pairs a technology-agnostic statement of what to achieve with Azure-specific and AWS-specific guidance on how to achieve it. It is the successor to the Azure Security Benchmark, rebranded in October 2022, and that rebrand widened its scope from Azure-only to multicloud. Hold two distinctions: it is multicloud, not Azure-only; and it is controls, not a product. You do not deploy MCSB. You measure against it, and you enforce it with Azure Policy.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "families",
+      "section": "The 12 control domains",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-04-mcsb-deck/deck.html#families",
+      "narration": "Version one of the benchmark organizes its controls into twelve domains, and you should know them in order. Network Security, Identity Management, Privileged Access, Data Protection, Asset Management, Logging and Threat Detection, Incident Response, Posture and Vulnerability Management, Endpoint Security, Backup and Recovery, DevOps Security, and Governance and Strategy. The arc runs from the network in, through who you are and what you hold, to what you see and do about it, and finally governance over all of it. Version two, in preview, is the direction of travel: it adds an Artificial Intelligence Security domain, more than four hundred Azure Policy mappings, and risk guidance mapped to MITRE ATT and CK. Do not call AI Security a version-one domain — version one ends at Governance and Strategy.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "operationalize",
+      "section": "Applied in Defender for Cloud",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-04-mcsb-deck/deck.html#operationalize",
+      "narration": "This is the heart of the module. The benchmark is not a document you read once and shelve. It is the default standard, continuously assessed in Microsoft Defender for Cloud, and compliance against it is what drives your Secure Score. On screen, the overview shows the benchmark with forty-five of sixty-three controls passed, feeding directly into the secure score below it. Frame MCSB as the named control set behind that compliance figure. The intended workflow is Plan, Monitor, Establish: plan to the controls and their mappings, monitor compliance across your multicloud estate, and establish guardrails that enforce the controls with Azure Policy.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "compliance",
+      "section": "The Regulatory compliance dashboard",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-04-mcsb-deck/deck.html#compliance",
+      "narration": "Here is the Regulatory compliance dashboard, with the Microsoft cloud security benchmark applied as the default standard. The power of the benchmark is that every control is pre-mapped to the major industry frameworks — CIS, NIST SP 800-53, and PCI-DSS. That is the measure-once, report-against-many claim: a single assessment in Defender for Cloud populates evidence against several standards at once. One caution for the exam. A framework mapping shows where an Azure feature can address an industry control. It does not, by itself, prove full compliance with CIS, NIST, or PCI. The mapping is a starting point for evidence, not the certificate.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    },
+    {
+      "id": "connective",
+      "section": "How it relates to the other frameworks",
+      "url": "file:///Users/kkmookhey/Projects/humboldt/notebooklm/d0-04-mcsb-deck/deck.html#connective",
+      "narration": "Now place the benchmark among its siblings, because Domain one of the SC-100 loves this question. Zero Trust is the strategy. MCRA is the picture. MCSB is the checklist. The Well-Architected Framework is the workload lens. The Cloud Adoption Framework is the journey. When the exam asks how you measure and report security posture, the answer is MCSB in Defender for Cloud. One more contrast to keep straight: MCSB versus RaMP. The benchmark is what you measure against; the Rapid Modernization Plan is the prioritized project plan for getting there. The benchmark tells you where you stand; the plan tells you what to do next.",
+      "kicker": "-",
+      "cardTitle": "-",
+      "bullets": []
+    }
+  ],
+  "recap": {
+    "card": {
+      "kicker": "Remember",
+      "title": "The Microsoft cloud security benchmark in five rules",
+      "accent": "#56d364",
+      "lines": [
+        "placeholder"
+      ]
+    },
+    "narration": "To bring it together. The benchmark is prescriptive, cloud-agnostic controls across Azure, AWS, and GCP — the successor to the Azure Security Benchmark since October 2022. It has twelve version-one domains, running from network security to governance and strategy, with version two preview adding AI Security. It is controls, not a product: you measure against it and enforce it with Azure Policy. It is the default standard in Defender for Cloud's Regulatory compliance dashboard, and it drives your Secure Score. And it is pre-mapped to CIS, NIST, and PCI, so you measure once and report against many. Among the frameworks, it is the checklist. Plan, monitor, establish.",
+    "kicker": "-",
+    "cardTitle": "-",
+    "bullets": []
+  },
+  "action": {
+    "kicker": "Do this",
+    "exercises": [
+      {
+        "id": "lab-mcsb-1",
+        "title": "Exercise 1 — Drill the dashboard behind the score",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Here is your first exercise. In Microsoft Defender for Cloud, open Regulatory compliance and confirm that the Microsoft cloud security benchmark is the default applied standard. Then drill into one failing control family — Data Protection or Network Security is a good choice — and read one failing assessment end to end: the control itself, the affected resources, and the remediation steps. That is the MCSB-to-Secure-Score loop made concrete. You are done when you can trace one failing control to the specific resources moving your score."
+      },
+      {
+        "id": "lab-mcsb-2",
+        "title": "Exercise 2 — Trace one control across frameworks",
+        "accent": "#f0883e",
+        "lines": [
+          "placeholder"
+        ],
+        "narration": "Second exercise. Open the MCSB mapping spreadsheet and pick a single control — for instance DP-1, discover and classify sensitive data. Write down its CIS, NIST SP 800-53, and PCI-DSS equivalents. That single row proves the measure-once, report-against-many claim. Then choose one domain, Identity Management is a strong pick, and score each control pass, partial, or fail against what you actually have deployed, naming the highest-leverage remediation. You are done when one row maps cleanly to three frameworks, and one domain has a scored posture table — a clean SC-100 posture-assessment artifact."
+      }
+    ]
+  }
+}
